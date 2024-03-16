@@ -128,3 +128,13 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Ignoring Images
+public/images/*
+public/productsFiles/*
+public/diamondFiles/*
+public/gemstoneFiles/*
+public/invoicePdf/*
+
+*.cert
+*.key

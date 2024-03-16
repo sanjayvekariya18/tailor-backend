@@ -1,0 +1,13 @@
+* Dependency
+npm i bcryptjs compression cookie-parser cors dotenv express express-fileupload express-session helmet http-status joi jsonwebtoken lodash moment path validatorjs winston xss-clean sequelize
+
+* Dev Dependency
+npm i --save-d @types/bcryptjs @types/compression @types/cookie-parser @types/cors @types/dotenv @types/express @types/express-fileupload @types/express-session @types/jsonwebtoken @types/lodash @types/validatorjs eslint nodemon ts-loader ts-node typescript @types/sequelize
+
+* DB Packages
+
+- For Postgres :-
+npm i pg pg-hstore 
+
+- For MySql :-
+npm i mysql2
