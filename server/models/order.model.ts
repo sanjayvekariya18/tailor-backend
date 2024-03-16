@@ -5,7 +5,7 @@ export interface OrderAttributes {
 	order_id?: string;
 	customer_id: string;
 	total: number;
-	payment: number;
+	payment?: number;
 	order_date: Date;
 	delivery_date: Date;
 	shirt_pocket: number;
@@ -14,7 +14,7 @@ export interface OrderAttributes {
 	type: number;
 }
 
-export interface OrderInput extends Optional<OrderAttributes, "order_id"> {}
+export interface OrderInput extends Optional<OrderAttributes, "order_id" | "payment"> {}
 export interface OrderOutput extends Required<OrderAttributes> {}
 
 class Order extends Model<OrderAttributes, OrderInput> implements OrderAttributes {
@@ -55,8 +55,9 @@ Order.init(
 			allowNull: false,
 		},
 		payment: {
+			defaultValue: 0,
 			type: DataTypes.INTEGER,
-			allowNull: false,
+			allowNull: true,
 		},
 		order_date: {
 			type: DataTypes.DATE,

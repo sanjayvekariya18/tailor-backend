@@ -8,7 +8,7 @@ export default class OrderValidation {
 
 	public create = {
 		total: "required|numeric",
-		payment: "required|numeric",
+		payment: "numeric",
 		order_date: "required|date",
 		delivery_date: "required|after_or_equal:order_date",
 		shirt_pocket: "required|numeric",
@@ -28,7 +28,7 @@ export default class OrderValidation {
 
 	public edit = {
 		total: "required|numeric",
-		payment: "required|numeric",
+		payment: "numeric",
 		order_date: "required|date",
 		delivery_date: "required|after_or_equal:order_date",
 		shirt_pocket: "required|numeric",

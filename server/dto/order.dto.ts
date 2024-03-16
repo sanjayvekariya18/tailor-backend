@@ -28,7 +28,6 @@ class CreateCustomerMeasurement {
 
 export class CreateOrderDTO {
 	total: number;
-	payment: number;
 	order_date: Date;
 	delivery_date: Date;
 	shirt_pocket: number;
@@ -45,7 +44,6 @@ export class CreateOrderDTO {
 	constructor(data: any) {
 		let parseData = JSON.parse(data.customer_measurement);
 		this.total = data.total;
-		this.payment = data.payment;
 		this.order_date = data.order_date;
 		this.delivery_date = data.delivery_date;
 		this.shirt_pocket = data.shirt_pocket;

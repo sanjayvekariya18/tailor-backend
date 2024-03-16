@@ -112,4 +112,19 @@ export default class OrderController {
 			return res.api.create(data);
 		},
 	};
+
+	public payment = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			let orderId: string = req.params["order_id"] as string;
+			const orderData = req.body;
+			console.log(orderData);
+
+			const checkOrderData = await this.orderService.findOne({ order_id: orderId });
+			if (checkOrderData == null) {
+				throw new BadResponseHandler("Order Data Not Found");
+			}
+			let data = await this.orderService.payment(orderData.payment, orderId);
+			return res.api.create(data);
+		},
+	};
 }

@@ -37,13 +37,13 @@ const createTables = async () => {
 	// 		errorTable.push(`Login Table Error : ${error}`);
 	// 	});
 
-	await Category.sync({ alter: { drop: false } })
-		.then(() => {
-			successFullTable.push(`Category Table Created`);
-		})
-		.catch((error) => {
-			errorTable.push(`Category Table Error : ${error}`);
-		});
+	// await Category.sync({ alter: { drop: false } })
+	// 	.then(() => {
+	// 		successFullTable.push(`Category Table Created`);
+	// 	})
+	// 	.catch((error) => {
+	// 		errorTable.push(`Category Table Error : ${error}`);
+	// 	});
 
 	// await ChestDetails.sync({ alter: { drop: false } })
 	// 	.then(() => {
@@ -69,13 +69,14 @@ const createTables = async () => {
 	// 		errorTable.push(`CustomerMeasurement Table Error : ${error}`);
 	// 	});
 
-	// await Order.sync({ alter: { drop: false } })
-	// 	.then(() => {
-	// 		successFullTable.push(`Order Table Created`);
-	// 	})
-	// 	.catch((error) => {
-	// 		errorTable.push(`Order Table Error : ${error}`);
-	// 	});
+	await Order.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`Order Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`Order Table Error : ${error}`);
+		});
+
 	// await OrderImages.sync({ alter: { drop: false } })
 	// 	.then(() => {
 	// 		successFullTable.push(`OrderImages Table Created`);

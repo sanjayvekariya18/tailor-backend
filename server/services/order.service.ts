@@ -53,7 +53,6 @@ export default class OrderService {
 			let newOrderData = {
 				customer_id: customerId,
 				total: orderData.total,
-				payment: orderData.payment,
 				order_date: orderData.order_date,
 				delivery_date: orderData.delivery_date,
 				shirt_pocket: orderData.shirt_pocket,
@@ -84,7 +83,6 @@ export default class OrderService {
 			let newOrderData = {
 				customer_id: customer_id,
 				total: orderData.total,
-				payment: orderData.payment,
 				order_date: orderData.order_date,
 				delivery_date: orderData.delivery_date,
 				shirt_pocket: orderData.shirt_pocket,
@@ -100,5 +98,9 @@ export default class OrderService {
 			});
 			return "Customer, CustomerMeasurement Data, OrderImage, Order Edited Successfully Add";
 		});
+	};
+
+	public payment = async (payment: number, order_id: string) => {
+		await Order.update({ payment: payment }, { where: { order_id: order_id } });
 	};
 }

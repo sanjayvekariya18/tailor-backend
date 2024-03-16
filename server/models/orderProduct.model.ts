@@ -1,5 +1,6 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
+import { WORKER_ASSIGN_TASK } from "../constants";
 
 export interface OrderProductAttributes {
 	order_product_id?: string;
@@ -9,7 +10,7 @@ export interface OrderProductAttributes {
 	parent?: number;
 	qty: number;
 	price: number;
-	status?: boolean;
+	status: WORKER_ASSIGN_TASK;
 	work_price: number;
 	work_total: number;
 	assign_date: Date;
@@ -26,7 +27,7 @@ class OrderProduct extends Model<OrderProductAttributes, OrderProductInput> impl
 	public parent!: number;
 	public qty!: number;
 	public price!: number;
-	public status!: boolean;
+	public status!: WORKER_ASSIGN_TASK;
 	public work_price!: number;
 	public work_total!: number;
 	public assign_date!: Date;
@@ -76,7 +77,6 @@ OrderProduct.init(
 			onUpdate: "RESTRICT",
 			onDelete: "CASCADE",
 		},
-
 		parent: {
 			defaultValue: 0,
 			type: DataTypes.INTEGER,
@@ -91,9 +91,9 @@ OrderProduct.init(
 			allowNull: false,
 		},
 		status: {
-			defaultValue: false,
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: DataTypes.ENUM(...Object.keys(WORKER_ASSIGN_TASK)),
+			defaultValue: WORKER_ASSIGN_TASK.pending,
+			allowNull: false,
 		},
 		work_price: {
 			type: DataTypes.INTEGER,
