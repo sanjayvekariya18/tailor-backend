@@ -1,13 +1,37 @@
 import { Op, Transaction } from "sequelize";
-import { Customer, CustomerMeasurement, Order, OrderImages } from "../models";
-import { CreateOrderDTO, SearchOrderDTO } from "../dto";
+import { Customer, CustomerMeasurement, Order, OrderImages, OrderProduct } from "../models";
+import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
 import { executeTransaction } from "../config/database";
 import { CustomerMeasurementAttributes } from "../models/customerMeasurement.model";
+import { OrderProductAttributes } from "../models/orderProduct.model";
+import { WORKER_ASSIGN_TASK } from "../constants";
 
 export default class OrderService {
 	public getAll = async (searchParams: SearchOrderDTO) => {
 		return await Order.findAndCountAll({
-			where: {},
+			where: {
+				...(searchParams.customer_id && { customer_id: searchParams.customer_id }),
+				...(searchParams.start_date &&
+					searchParams.end_date && {
+						order_date: {
+							[Op.between]: [searchParams.start_date, searchParams.end_date],
+						},
+					}),
+			},
+			attributes: ["order_id", "customer_id", "total", "payment", "order_date", "delivery_date", "shirt_pocket", "pant_pocket", "pant_pinch", "type"],
+			order: [["order_date", "ASC"]],
+			offset: searchParams.rowsPerPage * searchParams.page,
+			limit: searchParams.rowsPerPage,
+		});
+	};
+
+	public deliveryOrderRemain = async (searchParams: SearchDeliveryOrderRemainDTO) => {
+		return await Order.findAndCountAll({
+			where: {
+				...(searchParams.delivery_date && {
+					delivery_date: searchParams.delivery_date,
+				}),
+			},
 			attributes: ["order_id", "customer_id", "total", "payment", "order_date", "delivery_date", "shirt_pocket", "pant_pocket", "pant_pinch", "type"],
 			order: [["delivery_date", "ASC"]],
 			offset: searchParams.rowsPerPage * searchParams.page,
@@ -60,8 +84,20 @@ export default class OrderService {
 				pant_pinch: orderData.pant_pinch,
 				type: orderData.type,
 			};
+
 			await CustomerMeasurement.bulkCreate(customerMeasurementBulkData, { transaction });
 			await Order.create(newOrderData, { transaction }).then(async (data) => {
+				let orderDetailsBulkData: Array<OrderProductAttributes> = [];
+				orderData.order_details.map((productData) => {
+					orderDetailsBulkData.push({
+						order_id: data.order_id,
+						category_id: productData.category_id,
+						price: productData.price,
+						qty: productData.qty,
+						status: WORKER_ASSIGN_TASK.pending,
+					});
+				});
+				await OrderProduct.bulkCreate(orderDetailsBulkData, { transaction });
 				return await OrderImages.create({ order_id: data.order_id, image_name: orderData.image_name }, { transaction });
 			});
 			return "Customer , CustomerMeasurement Data , OrderImage , Order Created Successfully Add";

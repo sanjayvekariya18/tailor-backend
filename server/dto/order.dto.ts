@@ -1,12 +1,25 @@
 export class SearchOrderDTO {
-	searchTxt?: string;
+	start_date?: Date;
+	end_date?: Date;
 	customer_id?: string;
 	page: number;
 	rowsPerPage: number;
 
 	constructor(data: any) {
-		data.searchTxt != undefined ? (this.searchTxt = data.searchTxt) : delete this.searchTxt;
+		data.start_date != undefined ? (this.start_date = data.start_date) : delete this.start_date;
+		data.end_date != undefined ? (this.end_date = new Date(data.end_date + " 23:59:59.0")) : delete this.end_date;
 		data.customer_id != undefined ? (this.customer_id = data.customer_id) : delete this.customer_id;
+		this.page = data.page != undefined ? Number(data.page) : 0;
+		this.rowsPerPage = data.rowsPerPage != undefined ? Number(data.rowsPerPage) : 10;
+	}
+}
+export class SearchDeliveryOrderRemainDTO {
+	delivery_date?: string;
+	page: number;
+	rowsPerPage: number;
+
+	constructor(data: any) {
+		data.delivery_date != undefined ? (this.delivery_date = data.delivery_date) : delete this.delivery_date;
 		this.page = data.page != undefined ? Number(data.page) : 0;
 		this.rowsPerPage = data.rowsPerPage != undefined ? Number(data.rowsPerPage) : 10;
 	}
@@ -26,6 +39,30 @@ class CreateCustomerMeasurement {
 	}
 }
 
+class CreateOrderProductDTO {
+	order_id: string;
+	category_id: string;
+	worker_id?: string;
+	parent?: number;
+	qty: number;
+	price: number;
+	work_price?: number;
+	work_total?: number;
+	assign_date?: Date;
+
+	constructor(data: any) {
+		this.order_id = data.order_id;
+		this.category_id = data.category_id;
+		data.worker_id != undefined ? (this.worker_id = data.worker_id) : delete this.worker_id;
+		data.parent != undefined ? (this.parent = data.parent) : delete this.parent;
+		this.qty = data.qty;
+		this.price = data.price;
+		data.work_price != undefined ? (this.work_price = data.work_price) : delete this.work_price;
+		data.work_total != undefined ? (this.work_total = data.work_total) : delete this.work_total;
+		data.assign_date != undefined ? (this.assign_date = data.assign_date) : delete this.assign_date;
+	}
+}
+
 export class CreateOrderDTO {
 	total: number;
 	order_date: Date;
@@ -40,9 +77,11 @@ export class CreateOrderDTO {
 	customer_mobile: string;
 	customer_address: string;
 	customer_measurement: Array<CreateCustomerMeasurement> = [];
+	order_details: Array<CreateOrderProductDTO> = [];
 
 	constructor(data: any) {
 		let parseData = JSON.parse(data.customer_measurement);
+		let orderDetailsData = JSON.parse(data.order_details);
 		this.total = data.total;
 		this.order_date = data.order_date;
 		this.delivery_date = data.delivery_date;
@@ -57,6 +96,9 @@ export class CreateOrderDTO {
 		this.customer_address = data.customer_address;
 		parseData.forEach((customerMeasurement: CreateCustomerMeasurement) => {
 			this.customer_measurement.push(new CreateCustomerMeasurement(customerMeasurement));
+		});
+		orderDetailsData.forEach((order_details: CreateOrderProductDTO) => {
+			this.order_details.push(new CreateOrderProductDTO(order_details));
 		});
 	}
 }

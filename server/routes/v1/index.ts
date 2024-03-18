@@ -10,6 +10,7 @@ import workerPaymentRoute from "./workerPayment.route";
 import CustomerRoute from "./customer.route";
 import OrderRoute from "./order.route";
 import ListRoute from "./list.route";
+import OrderProductRoute from "./orderProduct.route";
 import { TokenVerifyMiddleware } from "../../middlewares";
 
 const router = Router();
@@ -24,5 +25,6 @@ router.use("/worker_payment", TokenVerifyMiddleware, workerPaymentRoute);
 router.use("/customer", TokenVerifyMiddleware, CustomerRoute);
 router.use("/order", TokenVerifyMiddleware, OrderRoute);
 router.use("/list", TokenVerifyMiddleware, ListRoute);
+router.use("/order_product", TokenVerifyMiddleware, OrderProductRoute);
 
 export default router;

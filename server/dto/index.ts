@@ -5,8 +5,9 @@ import { SearchWorkerDTO, CreateWorkerDTO, EditWorkerDTO } from "./worker.dto";
 import { CreateChestDetailsDTO, EditChestDetailsDTO } from "./chestDetails.dto";
 import { SearchWorkerPaymentDTO, CreateWorkerPaymentDTO, EditWorkerPaymentDTO } from "./workerPayment.controller";
 import { SearchCustomerDTO, CreateCustomerDTO, EditCustomerDTO } from "./customer.dto";
-import { SearchOrderDTO, CreateOrderDTO } from "./order.dto";
+import { SearchOrderDTO, CreateOrderDTO, SearchDeliveryOrderRemainDTO } from "./order.dto";
 import { CreateOrderImageDTO, EditOrderImageDTO } from "./orderImage.dto";
+import { SearchOrderProductDTO, assignTask, createOrderProductDTO } from "./orderProduct.dto";
 
 export {
 	LoginDTO,
@@ -30,4 +31,8 @@ export {
 	CreateOrderDTO,
 	CreateOrderImageDTO,
 	EditOrderImageDTO,
+	SearchDeliveryOrderRemainDTO,
+	SearchOrderProductDTO,
+	assignTask,
+	createOrderProductDTO,
 };

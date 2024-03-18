@@ -7,3 +7,4 @@ export { default as CheatDetailsValidation } from "./chestDetails.validation";
 export { default as WorkerPaymentValidation } from "./workerPayment.validation";
 export { default as CustomerValidation } from "./customer.validation";
 export { default as OrderValidation } from "./order.validation";
+export { default as OrderProductValidation } from "./orderProduct.validation";

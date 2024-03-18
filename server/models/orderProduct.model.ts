@@ -5,25 +5,26 @@ import { WORKER_ASSIGN_TASK } from "../constants";
 export interface OrderProductAttributes {
 	order_product_id?: string;
 	order_id: string;
-	worker_id: string;
 	category_id: string;
+	worker_id?: string;
 	parent?: number;
 	qty: number;
 	price: number;
 	status: WORKER_ASSIGN_TASK;
-	work_price: number;
-	work_total: number;
-	assign_date: Date;
+	work_price?: number;
+	work_total?: number;
+	assign_date?: Date;
 }
 
-export interface OrderProductInput extends Optional<OrderProductAttributes, "order_product_id" | "parent" | "status"> {}
+export interface OrderProductInput
+	extends Optional<OrderProductAttributes, "order_product_id" | "worker_id" | "parent" | "status" | "work_price" | "work_total" | "assign_date"> {}
 export interface OrderProductOutput extends Required<OrderProductAttributes> {}
 
 class OrderProduct extends Model<OrderProductAttributes, OrderProductInput> implements OrderProductAttributes {
 	public order_product_id!: string;
 	public order_id!: string;
-	public worker_id!: string;
 	public category_id!: string;
+	public worker_id!: string;
 	public parent!: number;
 	public qty!: number;
 	public price!: number;
@@ -67,7 +68,7 @@ OrderProduct.init(
 		},
 		worker_id: {
 			type: DataTypes.UUID,
-			allowNull: false,
+			allowNull: true,
 			references: {
 				model: {
 					tableName: "worker",
@@ -97,15 +98,15 @@ OrderProduct.init(
 		},
 		work_price: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
+			allowNull: true,
 		},
 		work_total: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
+			allowNull: true,
 		},
 		assign_date: {
 			type: DataTypes.DATE,
-			allowNull: false,
+			allowNull: true,
 		},
 	},
 	{

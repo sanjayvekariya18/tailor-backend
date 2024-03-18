@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { fileType, isEmpty, saveFile } from "../utils/helper";
 import { OrderValidation } from "../validations";
 import { CategoryService, CustomerService, MeasurementService, OrderService } from "../services";
-import { CreateOrderDTO, SearchOrderDTO } from "../dto";
+import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
 import { image } from "../constants";
 import { BadResponseHandler } from "../errorHandler";
 import { string } from "joi";
@@ -18,6 +18,14 @@ export default class OrderController {
 		validation: this.orderValidation.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const data = await this.orderService.getAll(new SearchOrderDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
+	public deliveryOrderRemain = {
+		validation: this.orderValidation.deliveryDateRemain,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.orderService.deliveryOrderRemain(new SearchDeliveryOrderRemainDTO(req.query));
 			return res.api.create(data);
 		},
 	};

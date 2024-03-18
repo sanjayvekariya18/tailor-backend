@@ -5,3 +5,4 @@ export { default as ChestDetailsController } from "./chestDetails.controller";
 export { default as WorkerPaymentController } from "./workerPayment.controller";
 export { default as CustomerController } from "./customer.controller";
 export { default as OrderController } from "./order.controller";
+export { default as OrderProductController } from "./orderProduct.controller";

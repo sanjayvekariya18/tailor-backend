@@ -57,11 +57,6 @@ export default class MeasurementController {
 			if (isEmpty(checkMeasurementDataId)) {
 				return res.api.badResponse({ message: "Measurement Data Not Found" });
 			}
-
-			const checkMeasurementData = await this.measurementService.findOne({ measurement_name: reqMeasurementData.measurement_name });
-			if (!isEmpty(checkMeasurementData)) {
-				return res.api.badResponse({ message: "Measurement Already Exit" });
-			}
 			const checkCategoryData = await this.categoryService.findOne({ category_id: reqMeasurementData.category_id });
 			if (isEmpty(checkCategoryData)) {
 				return res.api.badResponse({ message: "Category Not Found" });
