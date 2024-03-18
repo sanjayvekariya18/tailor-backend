@@ -5,7 +5,7 @@ import { sequelizeConnection } from "../config/database";
 
 export default class MeasurementService {
 	public getAll = async (searchParams: any) => {
-		return await Measurement.findAndCountAll({
+		return await Measurement.findAll({
 			where: {
 				...(searchParams.category_id && { category_id: searchParams.category_id }),
 				...(searchParams.searchTxt && {

@@ -53,7 +53,7 @@ export default class WorkerController {
 				}
 			}
 			const allCategory: any = [];
-			const getAllCategory = await this.categoryService.findAll().then((data) => {
+			await this.categoryService.findAll().then((data) => {
 				data.map((categoryId) => {
 					allCategory.push(categoryId.category_id);
 				});
@@ -63,7 +63,6 @@ export default class WorkerController {
 					throw new BadResponseHandler("CateGory Not Found");
 				}
 			});
-
 			await this.workerService.create(workerData);
 			return res.api.create("worker Created Successfully");
 		},
@@ -117,7 +116,7 @@ export default class WorkerController {
 				}
 			}
 			const allCategory: any = [];
-			const getAllCategory = await this.categoryService.findAll().then((data) => {
+			await this.categoryService.findAll().then((data) => {
 				data.map((categoryId) => {
 					allCategory.push(categoryId.category_id);
 				});

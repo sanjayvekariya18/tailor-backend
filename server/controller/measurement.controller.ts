@@ -21,13 +21,17 @@ export default class MeasurementController {
 		validation: this.measurementValidation.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const measurementData = new CreateMeasurementDTO(req.body);
-			const checkMeasurementData = await this.measurementService.findOne({ measurement_name: measurementData.measurement_name });
-			if (!isEmpty(checkMeasurementData)) {
-				return res.api.badResponse({ message: "Measurement Name Already Exit" });
-			}
 			const checkCategoryData = await this.categoryService.findOne({ category_id: measurementData.category_id });
+			const checkMeasurementData = await this.measurementService.findOne({
+				measurement_name: measurementData.category_id,
+				category_id: measurementData.category_id,
+			});
 			if (isEmpty(checkCategoryData)) {
 				return res.api.badResponse({ message: "Category Not Found" });
+			}
+
+			if (!isEmpty(checkMeasurementData)) {
+				return res.api.badResponse({ message: "Measurement Name Already Exit" });
 			}
 			const data = await this.measurementService.create(measurementData);
 			return res.api.create(data);

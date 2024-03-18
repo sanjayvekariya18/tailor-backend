@@ -9,6 +9,9 @@ export default class WorkerValidation {
 		worker_name: "required|string",
 		worker_mobile: "required|string",
 		worker_address: "required|string",
+		worker_price: "required|array|min:1",
+		"worker_price.*.category_id": "required|string",
+		"worker_price.*.price": "required|numeric",
 	};
 
 	public edit = {
