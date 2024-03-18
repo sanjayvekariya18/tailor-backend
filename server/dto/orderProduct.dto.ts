@@ -1,3 +1,5 @@
+import { WORKER_ASSIGN_TASK } from "../constants";
+
 export class SearchOrderProductDTO {
 	assign_date?: Date;
 	worker_id?: string;
@@ -37,9 +39,11 @@ export class createOrderProductDTO {
 	work_price: number;
 	work_total: number;
 	assign_date: Date;
+	status: WORKER_ASSIGN_TASK;
 	constructor(data: any) {
 		data.order_product_id != undefined ? (this.order_product_id = data.order_product_id) : delete this.order_product_id;
 		this.order_id = data.order_id;
+		this.status = data.status;
 		this.category_id = data.category_id;
 		this.worker_id = data.worker_id;
 		this.qty = data.qty;

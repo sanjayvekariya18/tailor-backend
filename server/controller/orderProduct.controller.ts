@@ -3,8 +3,10 @@ import { fileType, isEmpty, saveFile } from "../utils/helper";
 import { OrderProductValidation, OrderValidation } from "../validations";
 import { CategoryService, CustomerService, MeasurementService, OrderProductService, OrderService } from "../services";
 import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO, SearchOrderProductDTO, createOrderProductDTO } from "../dto";
-import { image } from "../constants";
+import { WORKER_ASSIGN_TASK, image } from "../constants";
 import { BadResponseHandler } from "../errorHandler";
+import { OrderProduct } from "../models";
+import { where } from "sequelize";
 
 export default class OrderController {
 	public orderProductValidation = new OrderProductValidation();
@@ -55,6 +57,7 @@ export default class OrderController {
 				work_price: orderData.work_price,
 				work_total: orderData.work_total,
 				assign_date: orderData.assign_date,
+				status: WORKER_ASSIGN_TASK.assign,
 			};
 
 			let data = await this.orderProductService.assignTask(WorkerTask, newOrderData);
@@ -63,16 +66,16 @@ export default class OrderController {
 		},
 	};
 
-	//     public changeStatus = {
-	//         controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-	// let orderProductId:string = req.params["order_product_id"] as string
-	// let checkOrderProductData = await this.orderProductService.findOne({where:{order_product_id:orderProductId}})
-	// if (checkOrderProductData == null) {
-	//     throw new BadResponseHandler("Order Product Not Found")
-
-	// }
-	//             return await
-
-	//         }
-	//     }
+	public changeStatus = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			let orderProductId: string = req.params["order_product_id"] as string;
+			let checkOrderProductData = await this.orderProductService.findOne({ where: { order_product_id: orderProductId } });
+			if (checkOrderProductData == null) {
+				throw new BadResponseHandler("Order Product Not Found");
+			}
+			return await OrderProduct.update({ status: WORKER_ASSIGN_TASK.complete }, { where: { order_product_id: orderProductId } }).then((data) => {
+				return res.api.create("Worker Task Completed");
+			});
+		},
+	};
 }
