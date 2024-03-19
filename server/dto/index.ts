@@ -8,6 +8,7 @@ import { SearchCustomerDTO, CreateCustomerDTO, EditCustomerDTO } from "./custome
 import { SearchOrderDTO, CreateOrderDTO, SearchDeliveryOrderRemainDTO } from "./order.dto";
 import { CreateOrderImageDTO, EditOrderImageDTO } from "./orderImage.dto";
 import { SearchOrderProductDTO, assignTask, createOrderProductDTO } from "./orderProduct.dto";
+import { SearchPurchaseDTO, createPurchaseDTO, EditPurchaseDTO } from "./purchase.dto";
 
 export {
 	LoginDTO,
@@ -35,4 +36,7 @@ export {
 	SearchOrderProductDTO,
 	assignTask,
 	createOrderProductDTO,
+	SearchPurchaseDTO,
+	createPurchaseDTO,
+	EditPurchaseDTO,
 };

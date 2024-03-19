@@ -91,21 +91,21 @@ const createTables = async () => {
 	// 	.catch((error) => {
 	// 		errorTable.push(`OrderPayment Table Error : ${error}`);
 	// 	});
-	await OrderProduct.sync({ alter: { drop: false } })
-		.then(() => {
-			successFullTable.push(`OrderProduct Table Created`);
-		})
-		.catch((error) => {
-			errorTable.push(`OrderProduct Table Error : ${error}`);
-		});
-
-	// await Purchase.sync({ alter: { drop: false } })
+	// await OrderProduct.sync({ alter: { drop: false } })
 	// 	.then(() => {
-	// 		successFullTable.push(`Purchase Table Created`);
+	// 		successFullTable.push(`OrderProduct Table Created`);
 	// 	})
 	// 	.catch((error) => {
-	// 		errorTable.push(`Purchase Table Error : ${error}`);
+	// 		errorTable.push(`OrderProduct Table Error : ${error}`);
 	// 	});
+
+	await Purchase.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`Purchase Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`Purchase Table Error : ${error}`);
+		});
 	// await PurchasePayment.sync({ alter: { drop: false } })
 	// 	.then(() => {
 	// 		successFullTable.push(`PurchasePayment Table Created`);

@@ -29,10 +29,6 @@ export default class MeasurementController {
 			if (isEmpty(checkCategoryData)) {
 				return res.api.badResponse({ message: "Category Not Found" });
 			}
-
-			if (!isEmpty(checkMeasurementData)) {
-				return res.api.badResponse({ message: "Measurement Name Already Exit" });
-			}
 			const data = await this.measurementService.create(measurementData);
 			return res.api.create(data);
 		},

@@ -5,14 +5,14 @@ export interface PurchaseAttributes {
 	purchase_id?: string;
 	party_name: string;
 	amount: number;
-	payment: number;
+	payment?: number;
 	outstand: number;
-	details: string;
-	challan: string;
+	details?: string;
+	challan?: string;
 	purchase_date: Date;
 }
 
-export interface PurchaseInput extends Optional<PurchaseAttributes, "purchase_id"> {}
+export interface PurchaseInput extends Optional<PurchaseAttributes, "purchase_id" | "payment" | "details" | "challan"> {}
 export interface PurchaseOutput extends Required<PurchaseAttributes> {}
 
 class Purchase extends Model<PurchaseAttributes, PurchaseInput> implements PurchaseAttributes {
@@ -44,15 +44,15 @@ Purchase.init(
 		},
 		payment: {
 			type: DataTypes.FLOAT,
-			allowNull: false,
+			allowNull: true,
 		},
 		outstand: {
-			type: DataTypes.DATE,
+			type: DataTypes.FLOAT,
 			allowNull: false,
 		},
 		details: {
-			type: DataTypes.DATE,
-			allowNull: false,
+			type: DataTypes.TEXT,
+			allowNull: true,
 		},
 		challan: {
 			type: DataTypes.STRING,
