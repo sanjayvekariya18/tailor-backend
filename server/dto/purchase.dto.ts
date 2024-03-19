@@ -33,7 +33,6 @@ export class createPurchaseDTO {
 export class EditPurchaseDTO {
 	party_name?: string;
 	amount?: number;
-	payment?: number;
 	outstand?: number;
 	details?: string;
 	challan?: string;
@@ -41,7 +40,6 @@ export class EditPurchaseDTO {
 	constructor(data: any) {
 		data.party_name != undefined ? (this.party_name = data.party_name) : delete this.party_name;
 		data.amount != undefined ? (this.amount = data.amount) : delete this.amount;
-		data.payment != undefined ? (this.payment = data.payment) : delete this.payment;
 		data.outstand != undefined ? (this.outstand = data.outstand) : delete this.outstand;
 		data.details != undefined ? (this.details = data.details) : delete this.details;
 		data.challan != undefined ? (this.challan = data.challan) : delete this.challan;

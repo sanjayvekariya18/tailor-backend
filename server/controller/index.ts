@@ -7,3 +7,4 @@ export { default as CustomerController } from "./customer.controller";
 export { default as OrderController } from "./order.controller";
 export { default as OrderProductController } from "./orderProduct.controller";
 export { default as PurchaseController } from "./purchase.controller";
+export { default as PurchasePaymentController } from "./purchasePayment.controller";

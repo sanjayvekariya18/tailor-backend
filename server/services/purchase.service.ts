@@ -1,6 +1,6 @@
 import { Op } from "sequelize";
 import { EditPurchaseDTO, SearchPurchaseDTO, createPurchaseDTO } from "../dto";
-import { Purchase } from "../models";
+import { Purchase, PurchasePayment } from "../models";
 
 export default class PurchaseService {
 	public getAll = async (searchParams: SearchPurchaseDTO) => {
@@ -38,7 +38,14 @@ export default class PurchaseService {
 	};
 
 	public create = async (purchaseData: createPurchaseDTO) => {
-		return await Purchase.create(purchaseData).then(() => {
+		return await Purchase.create(purchaseData).then(async (data) => {
+			if (purchaseData.payment !== undefined) {
+				await PurchasePayment.create({
+					purchase_id: data.purchase_id,
+					payment_date: purchaseData.purchase_date,
+					amount: purchaseData.payment,
+				});
+			}
 			return "purchase Data Added successfully";
 		});
 	};
