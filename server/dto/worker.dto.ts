@@ -48,9 +48,10 @@ export class EditWorkerDTO {
 	worker_proof?: string;
 	worker_price: Array<CreateWorkerPriceDTO> = [];
 	constructor(data: any) {
-		console.log(data);
-		let parseData = JSON.parse(data.worker_price);
-		console.log(parseData);
+		let parseData = [];
+		if (data.worker_price != undefined) {
+			parseData = JSON.parse(data.worker_price);
+		}
 		data.worker_name != undefined ? (this.worker_name = data.worker_name) : delete this.worker_name;
 		data.worker_mobile != undefined ? (this.worker_mobile = data.worker_mobile) : delete this.worker_mobile;
 		data.worker_address != undefined ? (this.worker_address = data.worker_address) : delete this.worker_address;

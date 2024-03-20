@@ -44,6 +44,7 @@ Purchase.init(
 		},
 		payment: {
 			type: DataTypes.FLOAT,
+			defaultValue: null,
 			allowNull: true,
 		},
 		outstand: {
@@ -56,7 +57,7 @@ Purchase.init(
 		},
 		challan: {
 			type: DataTypes.STRING,
-			allowNull: false,
+			allowNull: true,
 		},
 		purchase_date: {
 			type: DataTypes.DATE,

@@ -14,12 +14,14 @@ export class SearchOrderDTO {
 	}
 }
 export class SearchDeliveryOrderRemainDTO {
-	delivery_date?: string;
+	start_date?: Date;
+	end_date?: Date;
 	page: number;
 	rowsPerPage: number;
 
 	constructor(data: any) {
-		data.delivery_date != undefined ? (this.delivery_date = data.delivery_date) : delete this.delivery_date;
+		data.start_date != undefined ? (this.start_date = data.start_date) : delete this.start_date;
+		data.end_date != undefined ? (this.end_date = new Date(data.end_date + " 23:59:59.0")) : delete this.end_date;
 		this.page = data.page != undefined ? Number(data.page) : 0;
 		this.rowsPerPage = data.rowsPerPage != undefined ? Number(data.rowsPerPage) : 10;
 	}

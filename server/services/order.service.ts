@@ -1,5 +1,5 @@
 import { Op, Transaction } from "sequelize";
-import { Customer, CustomerMeasurement, Order, OrderImages, OrderProduct } from "../models";
+import { ChestDetails, Customer, CustomerMeasurement, Order, OrderImages, OrderProduct } from "../models";
 import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
 import { executeTransaction } from "../config/database";
 import { CustomerMeasurementAttributes } from "../models/customerMeasurement.model";
@@ -28,9 +28,12 @@ export default class OrderService {
 	public deliveryOrderRemain = async (searchParams: SearchDeliveryOrderRemainDTO) => {
 		return await Order.findAndCountAll({
 			where: {
-				...(searchParams.delivery_date && {
-					delivery_date: searchParams.delivery_date,
-				}),
+				...(searchParams.start_date &&
+					searchParams.end_date && {
+						delivery_date: {
+							[Op.between]: [searchParams.start_date, searchParams.end_date],
+						},
+					}),
 			},
 			attributes: ["order_id", "customer_id", "total", "payment", "order_date", "delivery_date", "shirt_pocket", "pant_pocket", "pant_pinch", "type"],
 			order: [["delivery_date", "ASC"]],

@@ -8,7 +8,8 @@ export default class OrderValidation {
 	};
 
 	public deliveryDateRemain = {
-		delivery_date: "date",
+		start_date: "date",
+		end_date: "date|after_or_equal:start_date",
 		page: "numeric|min:0",
 		rowsPerPage: "numeric|min:1",
 	};

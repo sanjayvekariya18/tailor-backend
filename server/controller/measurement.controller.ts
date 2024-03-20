@@ -3,6 +3,7 @@ import { isEmpty } from "../utils/helper";
 import { CategoryService, MeasurementService } from "../services";
 import { MeasurementValidation } from "../validations";
 import { CreateMeasurementDTO, SearchMeasurementDTO } from "../dto";
+import { Op } from "sequelize";
 
 export default class MeasurementController {
 	private measurementService = new MeasurementService();
@@ -22,10 +23,14 @@ export default class MeasurementController {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const measurementData = new CreateMeasurementDTO(req.body);
 			const checkCategoryData = await this.categoryService.findOne({ category_id: measurementData.category_id });
-			const checkMeasurementData = await this.measurementService.findOne({
+			const checkMeasurementName = await this.measurementService.findOne({
 				measurement_name: measurementData.category_id,
 				category_id: measurementData.category_id,
 			});
+			if (isEmpty(checkMeasurementName)) {
+				return res.api.badResponse({ message: "Measurement Name Already Exits" });
+			}
+
 			if (isEmpty(checkCategoryData)) {
 				return res.api.badResponse({ message: "Category Not Found" });
 			}
@@ -57,6 +62,7 @@ export default class MeasurementController {
 			if (isEmpty(checkCategoryData)) {
 				return res.api.badResponse({ message: "Category Not Found" });
 			}
+
 			const data = await this.measurementService.edit(reqMeasurementData, measurementID);
 			return res.api.create(data);
 		},
