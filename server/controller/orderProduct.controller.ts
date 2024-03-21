@@ -66,6 +66,11 @@ export default class OrderController {
 		},
 	};
 
+	public workerAssignTask = {
+		validation: this.orderProductValidation.create,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {},
+	};
+
 	public changeStatus = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			let orderProductId: string = req.params["order_product_id"] as string;

@@ -18,26 +18,6 @@ export default class MeasurementController {
 		},
 	};
 
-	public create = {
-		validation: this.measurementValidation.create,
-		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const measurementData = new CreateMeasurementDTO(req.body);
-			const checkCategoryData = await this.categoryService.findOne({ category_id: measurementData.category_id });
-			const checkMeasurementName = await this.measurementService.findOne({
-				measurement_name: measurementData.category_id,
-				category_id: measurementData.category_id,
-			});
-			if (isEmpty(checkMeasurementName)) {
-				return res.api.badResponse({ message: "Measurement Name Already Exits" });
-			}
-
-			if (isEmpty(checkCategoryData)) {
-				return res.api.badResponse({ message: "Category Not Found" });
-			}
-			const data = await this.measurementService.create(measurementData);
-			return res.api.create(data);
-		},
-	};
 	public findAll = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const categoryID: string = req.params["category_id"] as string;
@@ -46,6 +26,28 @@ export default class MeasurementController {
 				return res.api.badResponse({ message: "Measurement Data Not Found" });
 			}
 			return res.api.create(getCategoryData);
+		},
+	};
+
+	public create = {
+		validation: this.measurementValidation.create,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const measurementData = new CreateMeasurementDTO(req.body);
+			const checkCategoryData = await this.categoryService.findOne({ category_id: measurementData.category_id });
+			const checkMeasurementName = await this.measurementService.findOne({
+				measurement_name: measurementData.measurement_name,
+				category_id: measurementData.category_id,
+			});
+
+			if (checkMeasurementName !== null) {
+				return res.api.badResponse({ message: "Measurement Name Already Exits" });
+			}
+
+			if (isEmpty(checkCategoryData)) {
+				return res.api.badResponse({ message: "Category Not Found" });
+			}
+			const data = await this.measurementService.create(measurementData);
+			return res.api.create(data);
 		},
 	};
 
@@ -61,6 +63,15 @@ export default class MeasurementController {
 			const checkCategoryData = await this.categoryService.findOne({ category_id: reqMeasurementData.category_id });
 			if (isEmpty(checkCategoryData)) {
 				return res.api.badResponse({ message: "Category Not Found" });
+			}
+
+			const checkMeasurementName = await this.measurementService.findOne({
+				measurement_name: reqMeasurementData.measurement_name,
+				category_id: reqMeasurementData.category_id,
+			});
+
+			if (checkMeasurementName !== null) {
+				return res.api.badResponse({ message: "Measurement Name Already Exits" });
 			}
 
 			const data = await this.measurementService.edit(reqMeasurementData, measurementID);

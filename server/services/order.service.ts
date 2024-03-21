@@ -142,4 +142,14 @@ export default class OrderService {
 	public payment = async (payment: number, order_id: string) => {
 		await Order.update({ payment: payment }, { where: { order_id: order_id } });
 	};
+
+	public delete = async (order_id: string) => {
+		return await executeTransaction(async (transaction: Transaction) => {
+			return await Order.destroy({ where: { order_id: order_id }, transaction }).then(async () => {
+				return await OrderImages.destroy({ where: { order_id: order_id }, transaction }).then(() => {
+					return "Order Deleted successfully";
+				});
+			});
+		});
+	};
 }

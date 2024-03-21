@@ -125,13 +125,24 @@ export default class OrderController {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			let orderId: string = req.params["order_id"] as string;
 			const orderData = req.body;
-			console.log(orderData);
 
 			const checkOrderData = await this.orderService.findOne({ order_id: orderId });
 			if (checkOrderData == null) {
 				throw new BadResponseHandler("Order Data Not Found");
 			}
 			let data = await this.orderService.payment(orderData.payment, orderId);
+			return res.api.create(data);
+		},
+	};
+
+	public delete = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const orderId: string = req.params["order_id"] as string;
+			const checkOrderDataId = await this.orderService.findOne({ category_id: orderId });
+			if (checkOrderDataId == null) {
+				return res.api.badResponse({ message: "Order Not Found" });
+			}
+			let data = this.orderService.delete(orderId);
 			return res.api.create(data);
 		},
 	};

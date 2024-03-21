@@ -15,6 +15,12 @@ import {
 } from "../models";
 
 const initSchemaRelationship = () => {
+	// category
+	Category.hasOne(CustomerMeasurement, { foreignKey: "category_id", sourceKey: "category_id" });
+	Category.hasOne(Measurement, { foreignKey: "category_id", sourceKey: "category_id" });
+	Category.hasOne(WorkerPrice, { foreignKey: "category_id", sourceKey: "category_id" });
+	Category.hasOne(OrderProduct, { foreignKey: "category_id", sourceKey: "category_id" });
+
 	//Customer  Measurement
 	CustomerMeasurement.hasOne(Customer, { foreignKey: "customer_id", sourceKey: "customer_id" });
 	CustomerMeasurement.hasOne(Category, { foreignKey: "category_id", sourceKey: "category_id" });
@@ -34,6 +40,11 @@ const initSchemaRelationship = () => {
 
 	//Purchase Payment
 	PurchasePayment.hasOne(Purchase, { foreignKey: "purchase_id", sourceKey: "purchase_id" });
+
+	//Worker
+	Worker.hasMany(WorkerPrice, { foreignKey: "worker_id", sourceKey: "worker_id" });
+	Worker.hasOne(WorkerPayment, { foreignKey: "worker_id", sourceKey: "worker_id" });
+	Worker.hasOne(OrderProduct, { foreignKey: "worker_id", sourceKey: "worker_id" });
 
 	//Worker Price
 	WorkerPrice.hasOne(Category, { foreignKey: "category_id", sourceKey: "category_id" });

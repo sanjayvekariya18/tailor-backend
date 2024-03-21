@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import { WorkerPayment } from "../models";
+import { Worker, WorkerPayment } from "../models";
 import { CreateWorkerPaymentDTO, EditWorkerPaymentDTO } from "../dto";
 
 export default class WorkerPaymentService {
@@ -15,6 +15,7 @@ export default class WorkerPaymentService {
 					}),
 			},
 			attributes: ["worker_payment_id", "worker_id", "amount", "payment_date", "type"],
+			include: [{ model: Worker, attributes: ["worker_name", "worker_mobile", "worker_address", "worker_photo"] }],
 			order: [["payment_date", "ASC"]],
 			offset: searchParams.rowsPerPage * searchParams.page,
 			limit: searchParams.rowsPerPage,
