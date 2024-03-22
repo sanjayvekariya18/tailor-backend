@@ -1,8 +1,5 @@
-import { OrderProduct } from "../models";
-import { SearchOrderProductDTO, assignTask, createOrderProductDTO } from "../dto";
-import { Transaction } from "sequelize";
-import { executeTransaction } from "../config/database";
-
+import { OrderProduct, WorkerPrice } from "../models";
+import { SearchOrderProductDTO, createOrderProductDTO } from "../dto";
 export default class OrderProductService {
 	public getAll = async (searchParams: SearchOrderProductDTO) => {
 		return await OrderProduct.findAndCountAll({
@@ -27,11 +24,8 @@ export default class OrderProductService {
 		});
 	};
 
-	public assignTask = async (workerTask: assignTask, orderProductData: createOrderProductDTO) => {
-		return await executeTransaction(async (transaction: Transaction) => {
-			await OrderProduct.update(workerTask, { where: { order_id: workerTask.order_id }, transaction });
-			await OrderProduct.create(orderProductData, { transaction });
-			return "OrderProduct Assign Successfully";
-		});
+	public assignTask = async (orderProductData: createOrderProductDTO) => {
+		await OrderProduct.create(orderProductData);
+		return "OrderProduct Assign Successfully";
 	};
 }

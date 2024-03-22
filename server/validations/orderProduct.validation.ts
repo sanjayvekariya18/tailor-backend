@@ -11,13 +11,10 @@ export default class OrderProductValidation {
 	public create = {
 		order_id: "required|string",
 		category_id: "required|string",
-		worker_id: "string",
-		parent: "numeric",
-		qty: "numeric",
-		price: "numeric",
+		worker_id: "required|string",
+		qty: "required|numeric",
+		price: "required|numeric",
 		status: "string|in:" + Object.keys(WORKER_ASSIGN_TASK),
-		work_price: "numeric",
-		work_total: "numeric",
-		assign_date: "date",
+		assign_date: "required|date",
 	};
 }

@@ -14,42 +14,23 @@ export class SearchOrderProductDTO {
 	}
 }
 
-export class assignTask {
-	order_id: string;
-	worker_id: string;
-	qty: number;
-	worker_price: number;
-	work_total: number;
-	constructor(data: any) {
-		this.order_id = data.order_id;
-		this.worker_id = data.worker_id;
-		this.qty = data.qty;
-		this.worker_price = data.worker_price;
-		this.work_total = data.work_total;
-	}
-}
-
 export class createOrderProductDTO {
-	order_product_id?: string;
 	order_id: string;
 	category_id: string;
 	worker_id: string;
 	qty: number;
 	price: number;
-	work_price: number;
-	work_total: number;
-	assign_date: Date;
+	work_price?: number;
+	work_total?: number;
 	status: WORKER_ASSIGN_TASK;
+	assign_date: Date;
 	constructor(data: any) {
-		data.order_product_id != undefined ? (this.order_product_id = data.order_product_id) : delete this.order_product_id;
 		this.order_id = data.order_id;
-		this.status = data.status;
 		this.category_id = data.category_id;
 		this.worker_id = data.worker_id;
 		this.qty = data.qty;
 		this.price = data.price;
-		this.work_price = data.work_price;
-		this.work_total = data.work_total;
+		this.status = WORKER_ASSIGN_TASK.assign;
 		this.assign_date = data.assign_date;
 	}
 }

@@ -106,6 +106,7 @@ OrderProduct.init(
 		},
 		assign_date: {
 			type: DataTypes.DATE,
+			defaultValue: null,
 			allowNull: true,
 		},
 	},

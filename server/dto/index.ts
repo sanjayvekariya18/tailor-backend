@@ -7,7 +7,7 @@ import { SearchWorkerPaymentDTO, CreateWorkerPaymentDTO, EditWorkerPaymentDTO } 
 import { SearchCustomerDTO, CreateCustomerDTO, EditCustomerDTO } from "./customer.dto";
 import { SearchOrderDTO, CreateOrderDTO, SearchDeliveryOrderRemainDTO } from "./order.dto";
 import { CreateOrderImageDTO, EditOrderImageDTO } from "./orderImage.dto";
-import { SearchOrderProductDTO, assignTask, createOrderProductDTO } from "./orderProduct.dto";
+import { SearchOrderProductDTO, createOrderProductDTO } from "./orderProduct.dto";
 import { SearchPurchaseDTO, createPurchaseDTO, EditPurchaseDTO } from "./purchase.dto";
 import { PurchasePaymentDTO } from "./purchasePayment.dto";
 export {
@@ -34,7 +34,6 @@ export {
 	EditOrderImageDTO,
 	SearchDeliveryOrderRemainDTO,
 	SearchOrderProductDTO,
-	assignTask,
 	createOrderProductDTO,
 	SearchPurchaseDTO,
 	createPurchaseDTO,

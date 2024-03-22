@@ -5,7 +5,7 @@ import { CategoryService, CustomerService, MeasurementService, OrderProductServi
 import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO, SearchOrderProductDTO, createOrderProductDTO } from "../dto";
 import { WORKER_ASSIGN_TASK, image } from "../constants";
 import { BadResponseHandler } from "../errorHandler";
-import { OrderProduct } from "../models";
+import { OrderProduct, WorkerPrice } from "../models";
 import { where } from "sequelize";
 
 export default class OrderController {
@@ -28,40 +28,37 @@ export default class OrderController {
 			const orderData = new createOrderProductDTO(req.body);
 			let categoryData = await this.categoryService.findOne({ where: { category_id: orderData.category_id } });
 			let checkOrderData = await this.orderService.findOne({ where: { order_id: orderData.order_id } });
-			let assignTask = await this.orderProductService.findOne({ where: { order_product_id: orderData.order_product_id } });
+			let assignTask = await this.orderProductService.findOne({
+				where: { order_id: orderData.order_id, category_id: orderData.category_id, assign_date: null },
+			});
+			let getWorkerPrice = await WorkerPrice.findOne({ where: { worker_id: orderData.worker_id, category_id: orderData.category_id } });
 			if (assignTask == null) {
 				throw new BadResponseHandler("Order Product Not Found");
 			}
-
 			if (checkOrderData == null) {
 				throw new BadResponseHandler("Order Not Found");
 			}
-
 			if (categoryData == null) {
 				throw new BadResponseHandler("Category Not Found");
 			}
 
-			let WorkerTask = {
-				order_id: orderData.order_id,
-				worker_id: orderData.worker_id,
-				qty: assignTask.qty - orderData.qty,
-				worker_price: orderData.work_price,
-				work_total: orderData.work_total,
-			};
+			if (getWorkerPrice == null) {
+				throw new BadResponseHandler("Worker Price Not Found");
+			}
+
 			let newOrderData = {
 				order_id: orderData.order_id,
 				category_id: orderData.category_id,
 				worker_id: orderData.worker_id,
 				qty: orderData.qty,
 				price: orderData.price,
-				work_price: orderData.work_price,
-				work_total: orderData.work_total,
+				work_price: getWorkerPrice.price,
+				work_total: getWorkerPrice.price * orderData.qty,
 				assign_date: orderData.assign_date,
 				status: WORKER_ASSIGN_TASK.assign,
 			};
 
-			let data = await this.orderProductService.assignTask(WorkerTask, newOrderData);
-
+			let data = await this.orderProductService.assignTask(newOrderData);
 			return res.api.create(data);
 		},
 	};

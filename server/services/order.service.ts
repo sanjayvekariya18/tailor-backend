@@ -129,10 +129,22 @@ export default class OrderService {
 				pant_pinch: orderData.pant_pinch,
 				type: orderData.type,
 			};
+			let orderDetailsBulkData: Array<OrderProductAttributes> = [];
+			orderData.order_details.map((productData) => {
+				orderDetailsBulkData.push({
+					order_id: order_id,
+					category_id: productData.category_id,
+					price: productData.price,
+					qty: productData.qty,
+					status: WORKER_ASSIGN_TASK.pending,
+				});
+			});
 			await CustomerMeasurement.destroy({ where: { customer_id: customer_id } }).then(async (data) => {
 				return await CustomerMeasurement.bulkCreate(customerMeasurementBulkData, { transaction });
 			});
 			await Order.update(newOrderData, { where: { order_id: order_id }, transaction }).then(async (data) => {
+				await OrderProduct.destroy({ where: { order_id: order_id }, transaction });
+				await OrderProduct.bulkCreate(orderDetailsBulkData, { transaction });
 				return await OrderImages.update({ order_id: order_id, image_name: orderData.image_name }, { where: { order_id: order_id }, transaction });
 			});
 			return "Customer, CustomerMeasurement Data, OrderImage, Order Edited Successfully Add";
