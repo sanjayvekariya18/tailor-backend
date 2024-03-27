@@ -1,16 +1,22 @@
 import { Op, Transaction } from "sequelize";
 import { ChestDetails, Customer, CustomerMeasurement, Order, OrderImages, OrderProduct } from "../models";
 import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
-import { executeTransaction } from "../config/database";
+import { executeTransaction, sequelizeConnection } from "../config/database";
 import { CustomerMeasurementAttributes } from "../models/customerMeasurement.model";
 import { OrderProductAttributes } from "../models/orderProduct.model";
 import { WORKER_ASSIGN_TASK } from "../constants";
 
 export default class OrderService {
+	private Sequelize = sequelizeConnection.Sequelize;
 	public getAll = async (searchParams: SearchOrderDTO) => {
 		return await Order.findAndCountAll({
 			where: {
 				...(searchParams.customer_id && { customer_id: searchParams.customer_id }),
+				...(searchParams.mobile_no && {
+					customer_id: {
+						[Op.in]: this.Sequelize.literal(`(SELECT customer_id FROM customer WHERE customer_mobile LIKE '${searchParams.mobile_no}%' )`),
+					},
+				}),
 				...(searchParams.start_date &&
 					searchParams.end_date && {
 						order_date: {

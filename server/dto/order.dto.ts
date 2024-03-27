@@ -2,15 +2,17 @@ export class SearchOrderDTO {
 	start_date?: Date;
 	end_date?: Date;
 	customer_id?: string;
+	mobile_no?: string;
 	page: number;
 	rowsPerPage: number;
 
 	constructor(data: any) {
-		data.start_date != undefined ? (this.start_date = data.start_date) : delete this.start_date;
-		data.end_date != undefined ? (this.end_date = new Date(data.end_date + " 23:59:59.0")) : delete this.end_date;
-		data.customer_id != undefined ? (this.customer_id = data.customer_id) : delete this.customer_id;
-		this.page = data.page != undefined ? Number(data.page) : 0;
-		this.rowsPerPage = data.rowsPerPage != undefined ? Number(data.rowsPerPage) : 10;
+		data.start_date != undefined && data.start_date != "" ? (this.start_date = data.start_date) : delete this.start_date;
+		data.end_date != undefined && data.end_date != "" ? (this.end_date = new Date(data.end_date + " 23:59:59.0")) : delete this.end_date;
+		data.customer_id != undefined && data.customer_id != "" ? (this.customer_id = data.customer_id) : delete this.customer_id;
+		data.mobile_no != undefined && data.mobile_no != "" ? (this.mobile_no = data.mobile_no) : delete this.mobile_no;
+		this.page = data.page != undefined && data.page != "" ? Number(data.page) : 0;
+		this.rowsPerPage = data.rowsPerPage != undefined && data.rowsPerPage != "" ? Number(data.rowsPerPage) : 10;
 	}
 }
 export class SearchDeliveryOrderRemainDTO {
