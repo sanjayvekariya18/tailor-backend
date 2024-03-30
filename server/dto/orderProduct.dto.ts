@@ -17,21 +17,23 @@ export class SearchOrderProductDTO {
 }
 
 export class createOrderProductDTO {
+	// order_product_id: string;
 	order_id: string;
 	category_id: string;
 	worker_id: string;
 	qty: number;
-	price: number;
+	price?: number;
 	work_price?: number;
 	work_total?: number;
 	status: WORKER_ASSIGN_TASK;
 	assign_date: Date;
 	constructor(data: any) {
+		// this.order_product_id = data.order_product_id;
 		this.order_id = data.order_id;
 		this.category_id = data.category_id;
 		this.worker_id = data.worker_id;
 		this.qty = data.qty;
-		this.price = data.price;
+		this.price = data.price != undefined && data.price != "" ? Number(data.price) : 0;
 		this.status = WORKER_ASSIGN_TASK.assign;
 		this.assign_date = data.assign_date;
 	}

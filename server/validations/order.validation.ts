@@ -7,6 +7,11 @@ export default class OrderValidation {
 		rowsPerPage: "numeric|min:1",
 	};
 
+	public findOneMeasurement = {
+		customer_id: "required|string",
+		customer_mobile: "string|length:10",
+	};
+
 	public deliveryDateRemain = {
 		start_date: "date",
 		end_date: "date|after_or_equal:start_date",
@@ -22,7 +27,7 @@ export default class OrderValidation {
 		shirt_pocket: "required|numeric",
 		pant_pocket: "required|numeric",
 		pant_pinch: "required|numeric",
-		type: "required|numeric",
+		type: "numeric",
 		customer_id: "string",
 		customer_name: "required|string",
 		customer_mobile: "required|string",
@@ -46,15 +51,15 @@ export default class OrderValidation {
 		shirt_pocket: "required|numeric",
 		pant_pocket: "required|numeric",
 		pant_pinch: "required|numeric",
-		type: "required|numeric",
-		customer_id: "required|string",
-		customer_name: "required|string",
-		customer_mobile: "required|string",
-		customer_address: "required|string",
-		customer_measurement: "required|array|min:1",
-		"customer_measurement.*.category_id": "required|string",
-		"customer_measurement.*.measurement_id": "required|string",
-		"customer_measurement.*.measurement": "required|string",
-		"customer_measurement.*.measurement_2": "string",
+		type: "numeric",
+		// customer_id: "required|string",
+		// customer_name: "required|string",
+		// customer_mobile: "required|string",
+		// customer_address: "required|string",
+		// customer_measurement: "required|array|min:1",
+		// "customer_measurement.*.category_id": "required|string",
+		// "customer_measurement.*.measurement_id": "required|string",
+		// "customer_measurement.*.measurement": "required|string",
+		// "customer_measurement.*.measurement_2": "string",
 	};
 }

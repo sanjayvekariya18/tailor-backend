@@ -1,11 +1,12 @@
 import { Op, Transaction } from "sequelize";
-import { ChestDetails, Customer, CustomerMeasurement, Order, OrderImages, OrderProduct } from "../models";
+import { Category, Customer, CustomerMeasurement, Order, OrderImages, OrderProduct } from "../models";
 import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 import { CustomerMeasurementAttributes } from "../models/customerMeasurement.model";
 import { OrderProductAttributes } from "../models/orderProduct.model";
 import { WORKER_ASSIGN_TASK } from "../constants";
 import { NotFoundHandler } from "../errorHandler";
+import { findCustomerMeasurementDTO } from "../dto/order.dto";
 
 export default class OrderService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -46,6 +47,34 @@ export default class OrderService {
 		});
 	};
 
+	public findOneCustomerMeasurement = async (searchParams: findCustomerMeasurementDTO) => {
+		console.log(searchParams);
+		const customer_data = await Customer.findOne({
+			where: {
+				...(searchParams.customer_id && { customer_id: searchParams.customer_id }),
+				...(searchParams.mobile_no && { customer_mobile: searchParams.mobile_no }),
+			},
+			include: [{ model: CustomerMeasurement }],
+			attributes: ["customer_id", "customer_name", "customer_mobile", "customer_address"],
+		});
+
+		// const response = {
+		//     customer_data:{},
+		//     measurements:[]
+		// }
+
+		// if (customer_data) {
+		//     response.customer_data = {...customer_data}
+		//     const measurement_data = await CustomerMeasurement.findAll({
+		//         where:{
+		//             customer_id:customer_data.customer_id
+		//         },
+		//         include:[{}]
+		//     })
+		// }
+		return customer_data;
+	};
+
 	public getOrderDetails = async (order_id: string) => {
 		const order_data = await Order.findByPk(order_id, {
 			include: [{ model: Customer }, { model: OrderProduct }, { model: OrderImages }],
@@ -58,12 +87,10 @@ export default class OrderService {
 			const customer_measurement_data = await CustomerMeasurement.findAll({
 				where: { customer_id: order_data.customer_id, category_id: { [Op.in]: category_ids } },
 			});
-
 			response_data.OrderProducts.forEach((row: any) => {
 				const customer_measurement = customer_measurement_data.filter((data) => data.category_id == row.category_id);
 				row.customer_measurement = customer_measurement;
 			});
-
 			return response_data;
 		} else {
 			throw new NotFoundHandler("Order Not found");

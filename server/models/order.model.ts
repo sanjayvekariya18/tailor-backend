@@ -11,10 +11,10 @@ export interface OrderAttributes {
 	shirt_pocket: number;
 	pant_pocket: number;
 	pant_pinch: number;
-	type: number;
+	type?: number;
 }
 
-export interface OrderInput extends Optional<OrderAttributes, "order_id" | "payment"> {}
+export interface OrderInput extends Optional<OrderAttributes, "order_id" | "payment" | "type"> {}
 export interface OrderOutput extends Required<OrderAttributes> {}
 
 class Order extends Model<OrderAttributes, OrderInput> implements OrderAttributes {
@@ -81,7 +81,8 @@ Order.init(
 		},
 		type: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
+			defaultValue: 0,
+			allowNull: true,
 		},
 	},
 	{

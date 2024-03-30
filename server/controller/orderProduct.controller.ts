@@ -26,11 +26,14 @@ export default class OrderController {
 		validation: this.orderProductValidation.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const orderData = new createOrderProductDTO(req.body);
-			let categoryData = await this.categoryService.findOne({ where: { category_id: orderData.category_id } });
-			let checkOrderData = await this.orderService.findOne({ where: { order_id: orderData.order_id } });
+			let categoryData = await this.categoryService.findOne({ category_id: orderData.category_id });
+			let checkOrderData = await this.orderService.findOne({ order_id: orderData.order_id });
 			let assignTask = await this.orderProductService.findOne({
-				where: { order_id: orderData.order_id, category_id: orderData.category_id, assign_date: null },
+				order_id: orderData.order_id,
+				category_id: orderData.category_id,
+				assign_date: null,
 			});
+
 			let getWorkerPrice = await WorkerPrice.findOne({ where: { worker_id: orderData.worker_id, category_id: orderData.category_id } });
 			if (assignTask == null) {
 				throw new BadResponseHandler("Order Product Not Found");
@@ -45,6 +48,9 @@ export default class OrderController {
 			if (getWorkerPrice == null) {
 				throw new BadResponseHandler("Worker Price Not Found");
 			}
+			if (assignTask?.qty < orderData.qty) {
+				throw new BadResponseHandler("Enter Valid qty ");
+			}
 
 			let newOrderData = {
 				order_id: orderData.order_id,
@@ -57,15 +63,12 @@ export default class OrderController {
 				assign_date: orderData.assign_date,
 				status: WORKER_ASSIGN_TASK.assign,
 			};
+			let availableQty = assignTask?.qty - orderData.qty;
+			console.log(availableQty);
 
-			let data = await this.orderProductService.assignTask(newOrderData);
+			let data = await this.orderProductService.assignTask(newOrderData, assignTask.order_product_id, availableQty);
 			return res.api.create(data);
 		},
-	};
-
-	public workerAssignTask = {
-		validation: this.orderProductValidation.create,
-		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {},
 	};
 
 	public changeStatus = {

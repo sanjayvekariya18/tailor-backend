@@ -26,6 +26,9 @@ const initSchemaRelationship = () => {
 	CustomerMeasurement.hasOne(Category, { foreignKey: "category_id", sourceKey: "category_id" });
 	CustomerMeasurement.hasOne(Measurement, { foreignKey: "measurement_id", sourceKey: "measurement_id" });
 
+	// Customer
+	Customer.hasMany(CustomerMeasurement, { foreignKey: "customer_id", sourceKey: "customer_id" });
+
 	// Measurement
 	Measurement.hasOne(Category, { foreignKey: "category_id", sourceKey: "category_id" });
 

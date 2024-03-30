@@ -9,7 +9,7 @@ export interface OrderProductAttributes {
 	worker_id?: string;
 	parent?: number;
 	qty: number;
-	price: number;
+	price?: number;
 	status: WORKER_ASSIGN_TASK;
 	work_price?: number;
 	work_total?: number;
@@ -17,7 +17,10 @@ export interface OrderProductAttributes {
 }
 
 export interface OrderProductInput
-	extends Optional<OrderProductAttributes, "order_product_id" | "worker_id" | "parent" | "status" | "work_price" | "work_total" | "assign_date"> {}
+	extends Optional<
+		OrderProductAttributes,
+		"order_product_id" | "worker_id" | "parent" | "status" | "work_price" | "work_total" | "price" | "assign_date"
+	> {}
 export interface OrderProductOutput extends Required<OrderProductAttributes> {}
 
 class OrderProduct extends Model<OrderProductAttributes, OrderProductInput> implements OrderProductAttributes {
@@ -89,7 +92,8 @@ OrderProduct.init(
 		},
 		price: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
+			defaultValue: 0,
+			allowNull: true,
 		},
 		status: {
 			type: DataTypes.ENUM(...Object.keys(WORKER_ASSIGN_TASK)),

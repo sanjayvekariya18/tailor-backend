@@ -6,8 +6,13 @@ import { requestValidate } from "../../utils/helper";
 const router = Router();
 const orderController = new OrderController();
 
-router.get("/:id", use(orderController.getOrderDetails.controller));
 router.get("/", requestValidate(orderController.getAll.validation), use(orderController.getAll.controller));
+router.get(
+	"/get_measurement",
+	requestValidate(orderController.findOneCustomerMeasurement.validation),
+	use(orderController.findOneCustomerMeasurement.controller)
+);
+router.get("/:id", use(orderController.getOrderDetails.controller));
 router.get(
 	"/delivery_order_reminder",
 	requestValidate(orderController.deliveryOrderRemain.validation),

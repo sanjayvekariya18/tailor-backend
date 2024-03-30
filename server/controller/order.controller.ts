@@ -5,6 +5,7 @@ import { CategoryService, MeasurementService, OrderService } from "../services";
 import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
 import { image } from "../constants";
 import { BadResponseHandler } from "../errorHandler";
+import { findCustomerMeasurementDTO } from "../dto/order.dto";
 
 export default class OrderController {
 	private orderService = new OrderService();
@@ -16,6 +17,14 @@ export default class OrderController {
 		validation: this.orderValidation.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const data = await this.orderService.getAll(new SearchOrderDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
+	public findOneCustomerMeasurement = {
+		validation: this.orderValidation.findOneMeasurement,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.orderService.findOneCustomerMeasurement(new findCustomerMeasurementDTO(req.query));
 			return res.api.create(data);
 		},
 	};
@@ -144,11 +153,11 @@ export default class OrderController {
 	public delete = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const orderId: string = req.params["order_id"] as string;
-			const checkOrderDataId = await this.orderService.findOne({ category_id: orderId });
+			const checkOrderDataId = await this.orderService.findOne({ order_id: orderId });
 			if (checkOrderDataId == null) {
 				return res.api.badResponse({ message: "Order Not Found" });
 			}
-			let data = this.orderService.delete(orderId);
+			let data = await this.orderService.delete(orderId);
 			return res.api.create(data);
 		},
 	};

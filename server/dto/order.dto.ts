@@ -15,12 +15,22 @@ export class SearchOrderDTO {
 		this.rowsPerPage = data.rowsPerPage != undefined && data.rowsPerPage != "" ? Number(data.rowsPerPage) : 10;
 	}
 }
+
+export class findCustomerMeasurementDTO {
+	customer_id?: string;
+	mobile_no?: string;
+
+	constructor(data: any) {
+		data.customer_id != undefined && data.customer_id != "" ? (this.customer_id = data.customer_id) : delete this.customer_id;
+		data.mobile_no != undefined && data.mobile_no != "" ? (this.mobile_no = data.mobile_no) : delete this.mobile_no;
+	}
+}
+
 export class SearchDeliveryOrderRemainDTO {
 	start_date?: Date;
 	end_date?: Date;
 	page: number;
 	rowsPerPage: number;
-
 	constructor(data: any) {
 		data.start_date != undefined ? (this.start_date = data.start_date) : delete this.start_date;
 		data.end_date != undefined ? (this.end_date = new Date(data.end_date + " 23:59:59.0")) : delete this.end_date;
@@ -74,7 +84,7 @@ export class CreateOrderDTO {
 	shirt_pocket: number;
 	pant_pocket: number;
 	pant_pinch: number;
-	type: number;
+	type?: number;
 	image_name: string;
 	customer_id?: string;
 	customer_name: string;
@@ -92,7 +102,7 @@ export class CreateOrderDTO {
 		this.shirt_pocket = data.shirt_pocket;
 		this.pant_pocket = data.pant_pocket;
 		this.pant_pinch = data.pant_pinch;
-		this.type = data.type;
+		data.type != undefined ? (this.type = data.type) : delete this.type;
 		this.image_name = data.image_name;
 		data.customer_id != undefined ? (this.customer_id = data.customer_id) : delete this.customer_id;
 		this.customer_name = data.customer_name;
