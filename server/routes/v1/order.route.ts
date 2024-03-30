@@ -6,6 +6,7 @@ import { requestValidate } from "../../utils/helper";
 const router = Router();
 const orderController = new OrderController();
 
+router.get("/:id", use(orderController.getOrderDetails.controller));
 router.get("/", requestValidate(orderController.getAll.validation), use(orderController.getAll.controller));
 router.get(
 	"/delivery_order_reminder",

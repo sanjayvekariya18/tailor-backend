@@ -59,6 +59,7 @@ export default class WorkerController {
 					workerData.worker_proof = file_path.upload_path;
 				}
 			}
+
 			const allCategory: any = [];
 			await this.categoryService.findAll().then((data) => {
 				data.map((categoryId) => {
@@ -67,7 +68,7 @@ export default class WorkerController {
 			});
 			workerData.worker_price.map((data) => {
 				if (!allCategory.includes(data.category_id)) {
-					throw new BadResponseHandler("CateGory Not Found");
+					throw new BadResponseHandler("Category Not Found");
 				}
 			});
 			await this.workerService.create(workerData);

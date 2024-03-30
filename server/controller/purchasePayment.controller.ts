@@ -14,7 +14,7 @@ export default class PurchaseController {
 		validation: this.purchasePaymentValidation.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const purchasePaymentData = new PurchasePaymentDTO(req.body);
-			const checkPurchaseID = await this.purchaseService.findOne({ where: { purchase_id: purchasePaymentData.purchase_id } });
+			const checkPurchaseID = await this.purchaseService.findOne({ purchase_id: purchasePaymentData.purchase_id });
 			if (checkPurchaseID == null) {
 				throw new BadResponseHandler("Purchase ID Not Found");
 			}
@@ -32,7 +32,7 @@ export default class PurchaseController {
 			if (isEmpty(checkPurchasePaymentData)) {
 				return res.api.badResponse({ message: "Purchase Payment Data Not Found" });
 			}
-			const checkPurchaseID = await this.purchaseService.findOne({ where: { purchase_id: reqPurchasePaymentData.purchase_id } });
+			const checkPurchaseID = await this.purchaseService.findOne({ purchase_id: reqPurchasePaymentData.purchase_id });
 			if (checkPurchaseID == null) {
 				throw new BadResponseHandler("Purchase ID Not Found");
 			}

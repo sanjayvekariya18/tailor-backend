@@ -9,7 +9,7 @@ export default class WorkerPaymentService {
 				...(searchParams.worker_id && { worker_id: searchParams.worker_id }),
 				...(searchParams.start_date &&
 					searchParams.end_date && {
-						start_date: {
+						payment_date: {
 							[Op.between]: [searchParams.start_date, searchParams.end_date],
 						},
 					}),

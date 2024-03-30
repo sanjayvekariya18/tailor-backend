@@ -3,14 +3,16 @@ import { WORKER_ASSIGN_TASK } from "../constants";
 export class SearchOrderProductDTO {
 	assign_date?: Date;
 	worker_id?: string;
+	order_id?: string;
 	page: number;
 	rowsPerPage: number;
 
 	constructor(data: any) {
-		data.assign_date != undefined ? (this.assign_date = data.assign_date) : delete this.assign_date;
-		data.worker_id != undefined ? (this.worker_id = data.worker_id) : delete this.worker_id;
-		this.page = data.page != undefined ? Number(data.page) : 0;
-		this.rowsPerPage = data.rowsPerPage != undefined ? Number(data.rowsPerPage) : 10;
+		data.assign_date != undefined && data.assign_date != "" ? (this.assign_date = data.assign_date) : delete this.assign_date;
+		data.worker_id != undefined && data.worker_id != "" ? (this.worker_id = data.worker_id) : delete this.worker_id;
+		data.order_id != undefined && data.order_id != "" ? (this.order_id = data.order_id) : delete this.order_id;
+		this.page = data.page != undefined && data.page != "" ? Number(data.page) : 0;
+		this.rowsPerPage = data.rowsPerPage != undefined && data.rowsPerPage != "" ? Number(data.rowsPerPage) : 10;
 	}
 }
 

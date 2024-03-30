@@ -44,7 +44,8 @@ export default class CategoryController {
 
 	public getCategoryList = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const data = await this.categoryService.findAll();
+			const sorted: boolean = typeof req.query["sorted"] != "undefined";
+			const data = await this.categoryService.getList(sorted);
 			return res.api.create(data);
 		},
 	};

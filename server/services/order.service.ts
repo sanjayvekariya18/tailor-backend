@@ -5,6 +5,7 @@ import { executeTransaction, sequelizeConnection } from "../config/database";
 import { CustomerMeasurementAttributes } from "../models/customerMeasurement.model";
 import { OrderProductAttributes } from "../models/orderProduct.model";
 import { WORKER_ASSIGN_TASK } from "../constants";
+import { NotFoundHandler } from "../errorHandler";
 
 export default class OrderService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -24,11 +25,49 @@ export default class OrderService {
 						},
 					}),
 			},
-			attributes: ["order_id", "customer_id", "total", "payment", "order_date", "delivery_date", "shirt_pocket", "pant_pocket", "pant_pinch", "type"],
+			include: [{ model: Customer, attributes: [] }],
+			attributes: [
+				"order_id",
+				"customer_id",
+				[this.Sequelize.col("Customer.customer_name"), "customer_name"],
+				[this.Sequelize.col("Customer.customer_mobile"), "customer_mobile"],
+				"total",
+				"payment",
+				"order_date",
+				"delivery_date",
+				"shirt_pocket",
+				"pant_pocket",
+				"pant_pinch",
+				"type",
+			],
 			order: [["order_date", "ASC"]],
 			offset: searchParams.rowsPerPage * searchParams.page,
 			limit: searchParams.rowsPerPage,
 		});
+	};
+
+	public getOrderDetails = async (order_id: string) => {
+		const order_data = await Order.findByPk(order_id, {
+			include: [{ model: Customer }, { model: OrderProduct }, { model: OrderImages }],
+			attributes: ["order_id", "customer_id", "total", "payment", "order_date", "delivery_date", "shirt_pocket", "pant_pocket", "pant_pinch", "type"],
+		});
+
+		if (order_data) {
+			const response_data: any = order_data.get({ plain: true });
+			const category_ids = response_data.OrderProducts.map((row: any) => row.category_id);
+			const customer_measurement_data = await CustomerMeasurement.findAll({
+				where: { customer_id: order_data.customer_id, category_id: { [Op.in]: category_ids } },
+			});
+
+			response_data.OrderProducts.forEach((row: any) => {
+				const customer_measurement = customer_measurement_data.filter((data) => data.category_id == row.category_id);
+				row.customer_measurement = customer_measurement;
+			});
+
+			return response_data;
+		} else {
+			throw new NotFoundHandler("Order Not found");
+		}
 	};
 
 	public deliveryOrderRemain = async (searchParams: SearchDeliveryOrderRemainDTO) => {

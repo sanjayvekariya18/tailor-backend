@@ -3,8 +3,9 @@ import { isEmpty } from "../utils/helper";
 import { CustomerService } from "../services";
 import { CustomerValidation } from "../validations";
 import { CreateCustomerDTO, EditCustomerDTO, SearchCustomerDTO } from "../dto";
+import { Op } from "sequelize";
 
-export default class MeasurementController {
+export default class CustomerController {
 	private customerService = new CustomerService();
 	private customerValidation = new CustomerValidation();
 
@@ -12,6 +13,13 @@ export default class MeasurementController {
 		validation: this.customerValidation.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const data = await this.customerService.getAll(new SearchCustomerDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
+	public getCustomerList = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.customerService.findAll();
 			return res.api.create(data);
 		},
 	};
@@ -39,7 +47,10 @@ export default class MeasurementController {
 				return res.api.badResponse({ message: "Customer Data Not Found" });
 			}
 			if (reqCustomerData.customer_mobile !== undefined) {
-				const CheckCustomerData = await this.customerService.findOne({ customer_mobile: reqCustomerData.customer_mobile });
+				const CheckCustomerData = await this.customerService.findOne({
+					customer_mobile: reqCustomerData.customer_mobile,
+					customer_id: { [Op.not]: customerId },
+				});
 				if (!isEmpty(CheckCustomerData)) {
 					return res.api.badResponse({ message: "Customer Already Exit" });
 				}

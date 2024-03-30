@@ -33,6 +33,7 @@ export class createPurchaseDTO {
 export class EditPurchaseDTO {
 	party_name?: string;
 	amount?: number;
+	payment?: number;
 	outstand?: number;
 	details?: string;
 	challan?: string;

@@ -1,9 +1,10 @@
-import { Op } from "sequelize";
+import { Op, QueryTypes } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 import { Customer } from "../models";
 import { CreateCustomerDTO, EditCustomerDTO } from "../dto";
 
 export default class CustomerService {
+	private Sequelize = sequelizeConnection.Sequelize;
 	public getAll = async (searchParams: any) => {
 		return await Customer.findAndCountAll({
 			where: {
@@ -26,6 +27,15 @@ export default class CustomerService {
 			attributes: ["customer_id", "customer_name", "customer_mobile", "customer_address"],
 			raw: true,
 		});
+	};
+
+	public findAll = async () => {
+		return await sequelizeConnection.query(
+			`
+        SELECT customer_id, CONCAT(customer_name, '-', customer_mobile) AS customer_name FROM customer
+        `,
+			{ type: QueryTypes.SELECT }
+		);
 	};
 
 	public create = async (customerData: CreateCustomerDTO) => {

@@ -31,6 +31,8 @@ const initSchemaRelationship = () => {
 
 	//Order
 	Order.hasOne(Customer, { foreignKey: "customer_id", sourceKey: "customer_id" });
+	Order.hasMany(OrderProduct, { foreignKey: "order_id", sourceKey: "order_id" });
+	Order.hasMany(OrderImages, { foreignKey: "order_id", sourceKey: "order_id" });
 
 	//order images
 	OrderImages.hasOne(Order, { foreignKey: "order_id", sourceKey: "order_id" });

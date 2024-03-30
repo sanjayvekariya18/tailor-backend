@@ -1,23 +1,29 @@
 import { NextFunction, Request, Response } from "express";
-import { fileType, isEmpty, saveFile } from "../utils/helper";
+import { fileType, saveFile } from "../utils/helper";
 import { OrderValidation } from "../validations";
-import { CategoryService, CustomerService, MeasurementService, OrderService } from "../services";
+import { CategoryService, MeasurementService, OrderService } from "../services";
 import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
 import { image } from "../constants";
 import { BadResponseHandler } from "../errorHandler";
-import { string } from "joi";
 
 export default class OrderController {
 	private orderService = new OrderService();
 	private categoryService = new CategoryService();
 	private measurementService = new MeasurementService();
-	private customerService = new CustomerService();
 	private orderValidation = new OrderValidation();
 
 	public getAll = {
 		validation: this.orderValidation.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const data = await this.orderService.getAll(new SearchOrderDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
+	public getOrderDetails = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			let orderId: string = req.params["id"] as string;
+			const data = await this.orderService.getOrderDetails(orderId);
 			return res.api.create(data);
 		},
 	};
