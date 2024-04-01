@@ -27,6 +27,10 @@ export default class OrderValidation {
 		page: "numeric|min:0",
 		rowsPerPage: "numeric|min:1",
 	};
+	public OrderPayment = {
+		payment: "required|string",
+		payment_date: "required|date",
+	};
 
 	public create = {
 		total: "required|numeric",

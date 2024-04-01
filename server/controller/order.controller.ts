@@ -5,7 +5,7 @@ import { CategoryService, MeasurementService, OrderService } from "../services";
 import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
 import { image } from "../constants";
 import { BadResponseHandler } from "../errorHandler";
-import { findCustomerMeasurementDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
+import { OrderPaymentDTO, findCustomerMeasurementDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
 
 export default class OrderController {
 	private orderService = new OrderService();
@@ -138,15 +138,15 @@ export default class OrderController {
 	};
 
 	public payment = {
+		validation: this.orderValidation.OrderPayment,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			let orderId: string = req.params["order_id"] as string;
-			const orderData = req.body;
-
+			const orderData = new OrderPaymentDTO(req.body);
 			const checkOrderData = await this.orderService.findOne({ order_id: orderId });
 			if (checkOrderData == null) {
 				throw new BadResponseHandler("Order Data Not Found");
 			}
-			let data = await this.orderService.payment(orderData.payment, orderId);
+			let data = await this.orderService.payment(orderData, orderId);
 			return res.api.create(data);
 		},
 	};
@@ -155,6 +155,14 @@ export default class OrderController {
 		validation: this.orderValidation.getCustomerPaymentData,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const data = await this.orderService.getCustomerPaymentData(new getCustomerPaymentDataDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
+	public income = {
+		validation: this.orderValidation.getCustomerPaymentData,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.orderService.income(new getCustomerPaymentDataDTO(req.query));
 			return res.api.create(data);
 		},
 	};

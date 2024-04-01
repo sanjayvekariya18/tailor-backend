@@ -1,12 +1,12 @@
 import { Op, QueryTypes, Transaction } from "sequelize";
-import { Customer, CustomerMeasurement, Order, OrderImages, OrderProduct } from "../models";
+import { Customer, CustomerMeasurement, Order, OrderImages, OrderPayment, OrderProduct } from "../models";
 import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 import { CustomerMeasurementAttributes } from "../models/customerMeasurement.model";
 import { OrderProductAttributes } from "../models/orderProduct.model";
 import { WORKER_ASSIGN_TASK } from "../constants";
 import { NotFoundHandler } from "../errorHandler";
-import { findCustomerMeasurementDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
+import { OrderPaymentDTO, findCustomerMeasurementDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
 
 export default class OrderService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -332,8 +332,11 @@ export default class OrderService {
 		});
 	};
 
-	public payment = async (payment: number, order_id: string) => {
-		await Order.update({ payment: payment }, { where: { order_id: order_id } });
+	public payment = async (orderData: OrderPaymentDTO, order_id: string) => {
+		return await executeTransaction(async (transaction: Transaction) => {
+			await Order.update({ payment: orderData.payment }, { where: { order_id: order_id }, transaction });
+			await OrderPayment.create({ order_id: order_id, amount: orderData.payment, payment_date: orderData.payment_date }, { transaction });
+		});
 	};
 
 	public getCustomerPaymentData = async (searchParams: getCustomerPaymentDataDTO) => {
@@ -364,6 +367,35 @@ export default class OrderService {
 			],
 			include: [{ model: Customer, attributes: [] }],
 			order: [["delivery_date", "ASC"]],
+			raw: true,
+		});
+	};
+
+	public income = async (searchParams: getCustomerPaymentDataDTO) => {
+		return await OrderPayment.findAndCountAll({
+			where: {
+				...(searchParams.start_date &&
+					searchParams.end_date && {
+						payment_date: {
+							[Op.between]: [searchParams.start_date, searchParams.end_date],
+						},
+					}),
+			},
+			attributes: [
+				"order_id",
+				[this.Sequelize.col("Order.Customer.customer_name"), "customer_name"],
+				[this.Sequelize.col("Order.Customer.customer_id"), "customer_id"],
+				"amount",
+				"payment_date",
+			],
+			include: [
+				{
+					model: Order,
+					attributes: [],
+					include: [{ model: Customer, attributes: [], where: { ...(searchParams.customer_id && { customer_id: searchParams.customer_id }) } }],
+				},
+			],
+			order: [["payment_date", "ASC"]],
 			raw: true,
 		});
 	};

@@ -22,6 +22,7 @@ router.get(
 	requestValidate(orderController.getCustomerPaymentData.validation),
 	use(orderController.getCustomerPaymentData.controller)
 );
+router.get("/income", requestValidate(orderController.getCustomerPaymentData.validation), use(orderController.income.controller));
 router.get("/:id", use(orderController.getOrderDetails.controller));
 router.post("/", requestValidate(orderController.create.validation), use(orderController.create.controller));
 router.put("/:order_id", requestValidate(orderController.edit.validation), use(orderController.edit.controller));

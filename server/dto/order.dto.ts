@@ -26,6 +26,16 @@ export class findCustomerMeasurementDTO {
 	}
 }
 
+export class OrderPaymentDTO {
+	payment: number;
+	payment_date: Date;
+
+	constructor(data: any) {
+		this.payment = data.payment;
+		this.payment_date = data.payment_date;
+	}
+}
+
 export class SearchDeliveryOrderRemainDTO {
 	start_date?: Date;
 	end_date?: Date;
