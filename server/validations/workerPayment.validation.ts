@@ -11,13 +11,11 @@ export default class WorkerPaymentValidation {
 		worker_id: "required|string",
 		amount: "required|numeric",
 		payment_date: "required|date",
-		type: "required|numeric",
 	};
 
 	public edit = {
 		worker_id: "string",
 		amount: "numeric",
 		payment_date: "date",
-		type: "numeric",
 	};
 }

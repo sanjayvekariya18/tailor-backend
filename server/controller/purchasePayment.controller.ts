@@ -18,7 +18,7 @@ export default class PurchaseController {
 			if (checkPurchaseID == null) {
 				throw new BadResponseHandler("Purchase ID Not Found");
 			}
-			const data = await this.purchasePaymentService.create(purchasePaymentData);
+			const data = await this.purchasePaymentService.create(purchasePaymentData, checkPurchaseID);
 			return res.api.create(data);
 		},
 	};
@@ -36,7 +36,7 @@ export default class PurchaseController {
 			if (checkPurchaseID == null) {
 				throw new BadResponseHandler("Purchase ID Not Found");
 			}
-			const data = await this.purchasePaymentService.edit(reqPurchasePaymentData, purchase_payment_id);
+			const data = await this.purchasePaymentService.edit(reqPurchasePaymentData, purchase_payment_id, checkPurchaseID);
 			return res.api.create(data);
 		},
 	};

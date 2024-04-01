@@ -1,5 +1,5 @@
-import { Op, Transaction } from "sequelize";
-import { Category, Customer, CustomerMeasurement, Order, OrderImages, OrderProduct } from "../models";
+import { Op, QueryTypes, Transaction } from "sequelize";
+import { Customer, CustomerMeasurement, Order, OrderImages, OrderProduct } from "../models";
 import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 import { CustomerMeasurementAttributes } from "../models/customerMeasurement.model";
@@ -10,45 +10,139 @@ import { findCustomerMeasurementDTO } from "../dto/order.dto";
 
 export default class OrderService {
 	private Sequelize = sequelizeConnection.Sequelize;
+	// 	public getAll = async (searchParams: SearchOrderDTO) => {
+	// 				return await sequelizeConnection.query(
+	// 			`SELECT
+	//     o.order_id,
+	//     o.customer_id,
+	//     o.total,
+	//     o.payment,
+	//     o.order_date,
+	//     o.delivery_date,
+	//     o.shirt_pocket,
+	//     o.pant_pocket,
+	//     o.pant_pinch,
+	//     o.type,
+	//     JSON_ARRAYAGG(JSON_OBJECT('category_id', op.category_id, 'category_name', c.category_name, 'qty', op.qty)) AS category,
+	//     cust.customer_name,
+	//     cust.customer_mobile,
+	//     cust.customer_address
+	// FROM
+	//     parthdb.order o
+	// JOIN
+	//     parthdb.customer cust ON o.customer_id = cust.customer_id
+	// LEFT JOIN
+	//     parthdb.order_product op ON o.order_id = op.order_id
+	// LEFT JOIN
+	//     parthdb.category c ON op.category_id = c.category_id
+
+	//     WHERE
+	//     (o.order_date BETWEEN ${searchParams.start_date} AND ${searchParams.end_date})
+	//     AND (o.customer_id = ${searchParams.customer_id} OR ${searchParams.customer_id} IS NULL)
+	//     AND (cust.customer_mobile = ${searchParams.mobile_no} OR ${searchParams.mobile_no} IS NULL)
+	// GROUP BY
+	//     o.order_id,
+	//     o.customer_id,
+	//     o.total,
+	//     o.payment,
+	//     o.order_date,
+	//     o.delivery_date,
+	//     o.shirt_pocket,
+	//     o.pant_pocket,
+	//     o.pant_pinch,
+	//     o.type,
+	//     cust.customer_name,
+	//     cust.customer_mobile,
+	//     cust.customer_address
+	//    LIMIT
+	//     ${searchParams.rowsPerPage}
+	// OFFSET
+	//    ${searchParams.page}
+	// `,
+	// 			{ type: QueryTypes.SELECT }
+	// 		);
+	// 	};
+
 	public getAll = async (searchParams: SearchOrderDTO) => {
-		return await Order.findAndCountAll({
-			where: {
-				...(searchParams.customer_id && { customer_id: searchParams.customer_id }),
-				...(searchParams.mobile_no && {
-					customer_id: {
-						[Op.in]: this.Sequelize.literal(`(SELECT customer_id FROM customer WHERE customer_mobile LIKE '${searchParams.mobile_no}%' )`),
-					},
-				}),
-				...(searchParams.start_date &&
-					searchParams.end_date && {
-						order_date: {
-							[Op.between]: [searchParams.start_date, searchParams.end_date],
-						},
-					}),
-			},
-			include: [{ model: Customer, attributes: [] }],
-			attributes: [
-				"order_id",
-				"customer_id",
-				[this.Sequelize.col("Customer.customer_name"), "customer_name"],
-				[this.Sequelize.col("Customer.customer_mobile"), "customer_mobile"],
-				"total",
-				"payment",
-				"order_date",
-				"delivery_date",
-				"shirt_pocket",
-				"pant_pocket",
-				"pant_pinch",
-				"type",
-			],
-			order: [["order_date", "ASC"]],
-			offset: searchParams.rowsPerPage * searchParams.page,
-			limit: searchParams.rowsPerPage,
+		const query = `
+        SELECT 
+            o.order_id,
+            o.customer_id,
+            o.total,
+            o.payment,
+            o.order_date,
+            o.delivery_date,
+            o.shirt_pocket,
+            o.pant_pocket,
+            o.pant_pinch,
+            o.type,
+            JSON_ARRAYAGG(JSON_OBJECT('category_id', op.category_id, 'category_name', c.category_name, 'qty', op.qty)) AS category,
+            cust.customer_name,
+            cust.customer_mobile,
+            cust.customer_address
+        FROM 
+            parthdb.order o
+        JOIN 
+            parthdb.customer cust ON o.customer_id = cust.customer_id
+        LEFT JOIN 
+            parthdb.order_product op ON o.order_id = op.order_id
+        LEFT JOIN 
+            parthdb.category c ON op.category_id = c.category_id
+        WHERE 
+            (:start_date IS NULL OR o.order_date BETWEEN :start_date AND :end_date)
+            AND (:customer_id IS NULL OR o.customer_id = :customer_id)
+            AND (:mobile_no IS NULL OR cust.customer_mobile = :mobile_no)
+        GROUP BY 
+            o.order_id,
+            o.customer_id,
+            o.total,
+            o.payment,
+            o.order_date,
+            o.delivery_date,
+            o.shirt_pocket,
+            o.pant_pocket,
+            o.pant_pinch,
+            o.type,
+            cust.customer_name,
+            cust.customer_mobile,
+            cust.customer_address 
+        LIMIT 
+            :rowsPerPage
+        OFFSET 
+            :offset`;
+
+		const replacements: { [key: string]: any } = {};
+
+		if (searchParams.start_date !== undefined) {
+			replacements.start_date = searchParams.start_date;
+			replacements.end_date = searchParams.end_date;
+		} else {
+			replacements.start_date = null;
+			replacements.end_date = null;
+		}
+
+		if (searchParams.customer_id != undefined) {
+			replacements.customer_id = searchParams.customer_id;
+		} else {
+			replacements.customer_id = null;
+		}
+
+		if (searchParams.mobile_no !== undefined) {
+			replacements.mobile_no = searchParams.mobile_no;
+		} else {
+			replacements.mobile_no = null;
+		}
+
+		replacements.rowsPerPage = searchParams.rowsPerPage;
+		replacements.offset = searchParams.page * searchParams.rowsPerPage;
+
+		return await sequelizeConnection.query(query, {
+			replacements,
+			type: QueryTypes.SELECT,
 		});
 	};
 
 	public findOneCustomerMeasurement = async (searchParams: findCustomerMeasurementDTO) => {
-		console.log(searchParams);
 		const customer_data = await Customer.findOne({
 			where: {
 				...(searchParams.customer_id && { customer_id: searchParams.customer_id }),

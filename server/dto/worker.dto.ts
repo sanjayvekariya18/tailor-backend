@@ -26,9 +26,7 @@ export class CreateWorkerDTO {
 	worker_proof: string;
 	worker_price: Array<CreateWorkerPriceDTO> = [];
 	constructor(data: any) {
-		console.log(data);
 		let parseData = JSON.parse(data.worker_price);
-		console.log(parseData);
 		this.worker_name = data.worker_name;
 		this.worker_mobile = data.worker_mobile;
 		this.worker_address = data.worker_address;

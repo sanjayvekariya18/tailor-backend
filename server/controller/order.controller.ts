@@ -131,6 +131,7 @@ export default class OrderController {
 					throw new BadResponseHandler("Measurement Not Found");
 				}
 			});
+
 			let data = await this.orderService.edit(orderData, orderId, checkOrderData.customer_id);
 			return res.api.create(data);
 		},

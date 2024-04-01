@@ -38,16 +38,8 @@ export default class PurchaseService {
 	};
 
 	public create = async (purchaseData: createPurchaseDTO) => {
-		return await Purchase.create(purchaseData).then(async (data) => {
-			if (purchaseData.payment !== undefined) {
-				await PurchasePayment.create({
-					purchase_id: data.purchase_id,
-					payment_date: purchaseData.purchase_date,
-					amount: purchaseData.payment,
-				});
-			}
-			return "purchase Data Added successfully";
-		});
+		await Purchase.create(purchaseData);
+		return "purchase Data Added successfully";
 	};
 
 	public edit = async (purchaseData: EditPurchaseDTO, purchase_id: string) => {
