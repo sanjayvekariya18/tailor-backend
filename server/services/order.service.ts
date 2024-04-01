@@ -6,7 +6,7 @@ import { CustomerMeasurementAttributes } from "../models/customerMeasurement.mod
 import { OrderProductAttributes } from "../models/orderProduct.model";
 import { WORKER_ASSIGN_TASK } from "../constants";
 import { NotFoundHandler } from "../errorHandler";
-import { findCustomerMeasurementDTO } from "../dto/order.dto";
+import { findCustomerMeasurementDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
 
 export default class OrderService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -201,7 +201,22 @@ export default class OrderService {
 						},
 					}),
 			},
-			attributes: ["order_id", "customer_id", "total", "payment", "order_date", "delivery_date", "shirt_pocket", "pant_pocket", "pant_pinch", "type"],
+			attributes: [
+				"order_id",
+				"customer_id",
+				[sequelizeConnection.Sequelize.col("Customer.customer_name"), "customer_name"],
+				[sequelizeConnection.Sequelize.col("Customer.customer_mobile"), "customer_mobile"],
+				[sequelizeConnection.Sequelize.col("Customer.customer_address"), "customer_address"],
+				"total",
+				"payment",
+				"order_date",
+				"delivery_date",
+				"shirt_pocket",
+				"pant_pocket",
+				"pant_pinch",
+				"type",
+			],
+			include: [{ model: Customer, attributes: [] }],
 			order: [["delivery_date", "ASC"]],
 			offset: searchParams.rowsPerPage * searchParams.page,
 			limit: searchParams.rowsPerPage,
@@ -319,6 +334,38 @@ export default class OrderService {
 
 	public payment = async (payment: number, order_id: string) => {
 		await Order.update({ payment: payment }, { where: { order_id: order_id } });
+	};
+
+	public getCustomerPaymentData = async (searchParams: getCustomerPaymentDataDTO) => {
+		return await Order.findAndCountAll({
+			where: {
+				...(searchParams.customer_id && { customer_id: searchParams.customer_id }),
+				...(searchParams.start_date &&
+					searchParams.end_date && {
+						order_date: {
+							[Op.between]: [searchParams.start_date, searchParams.end_date],
+						},
+					}),
+			},
+			attributes: [
+				"order_id",
+				"customer_id",
+				[this.Sequelize.col("Customer.customer_name"), "customer_name"],
+				[this.Sequelize.col("Customer.customer_mobile"), "customer_mobile"],
+				[this.Sequelize.col("Customer.customer_address"), "customer_address"],
+				"total",
+				"payment",
+				"order_date",
+				"delivery_date",
+				"shirt_pocket",
+				"pant_pocket",
+				"pant_pinch",
+				"type",
+			],
+			include: [{ model: Customer, attributes: [] }],
+			order: [["delivery_date", "ASC"]],
+			raw: true,
+		});
 	};
 
 	public delete = async (order_id: string) => {

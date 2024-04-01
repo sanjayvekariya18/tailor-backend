@@ -12,12 +12,17 @@ router.get(
 	requestValidate(orderController.findOneCustomerMeasurement.validation),
 	use(orderController.findOneCustomerMeasurement.controller)
 );
-router.get("/:id", use(orderController.getOrderDetails.controller));
 router.get(
 	"/delivery_order_reminder",
 	requestValidate(orderController.deliveryOrderRemain.validation),
 	use(orderController.deliveryOrderRemain.controller)
 );
+router.get(
+	"/customer_payment_data",
+	requestValidate(orderController.getCustomerPaymentData.validation),
+	use(orderController.getCustomerPaymentData.controller)
+);
+router.get("/:id", use(orderController.getOrderDetails.controller));
 router.post("/", requestValidate(orderController.create.validation), use(orderController.create.controller));
 router.put("/:order_id", requestValidate(orderController.edit.validation), use(orderController.edit.controller));
 router.put("/:order_id/payment", use(orderController.payment.controller));

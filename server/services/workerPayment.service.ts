@@ -1,14 +1,20 @@
 import { Op } from "sequelize";
 import { Worker, WorkerPayment } from "../models";
-import { CreateWorkerPaymentDTO, EditWorkerPaymentDTO } from "../dto";
+import { CreateWorkerPaymentDTO, EditWorkerPaymentDTO, SearchWorkerPaymentDTO } from "../dto";
 import { sequelizeConnection } from "../config/database";
 
 export default class WorkerPaymentService {
 	private Sequelize = sequelizeConnection.Sequelize;
-	public getAll = async (searchParams: any) => {
+	public getAll = async (searchParams: SearchWorkerPaymentDTO) => {
 		return await WorkerPayment.findAndCountAll({
 			where: {
 				...(searchParams.worker_id && { worker_id: searchParams.worker_id }),
+				...(searchParams.start_date &&
+					searchParams.end_date && {
+						payment_date: {
+							[Op.between]: [searchParams.start_date, searchParams.end_date],
+						},
+					}),
 			},
 			include: [{ model: Worker, attributes: ["worker_name", "worker_mobile", "worker_address", "worker_photo"] }],
 			attributes: [
