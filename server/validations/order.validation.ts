@@ -7,6 +7,13 @@ export default class OrderValidation {
 		rowsPerPage: "numeric|min:1",
 	};
 
+	public getBill = {
+		customer_id: "string",
+		order_id: "string",
+		page: "numeric|min:0",
+		rowsPerPage: "numeric|min:1",
+	};
+
 	public findOneMeasurement = {
 		customer_id: "required|string",
 		customer_mobile: "string|length:10",

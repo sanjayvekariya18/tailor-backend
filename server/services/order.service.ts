@@ -6,63 +6,10 @@ import { CustomerMeasurementAttributes } from "../models/customerMeasurement.mod
 import { OrderProductAttributes } from "../models/orderProduct.model";
 import { WORKER_ASSIGN_TASK } from "../constants";
 import { NotFoundHandler } from "../errorHandler";
-import { OrderPaymentDTO, findCustomerMeasurementDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
+import { OrderPaymentDTO, SearchOrderBillDTO, findCustomerMeasurementDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
 
 export default class OrderService {
 	private Sequelize = sequelizeConnection.Sequelize;
-	// 	public getAll = async (searchParams: SearchOrderDTO) => {
-	// 				return await sequelizeConnection.query(
-	// 			`SELECT
-	//     o.order_id,
-	//     o.customer_id,
-	//     o.total,
-	//     o.payment,
-	//     o.order_date,
-	//     o.delivery_date,
-	//     o.shirt_pocket,
-	//     o.pant_pocket,
-	//     o.pant_pinch,
-	//     o.type,
-	//     JSON_ARRAYAGG(JSON_OBJECT('category_id', op.category_id, 'category_name', c.category_name, 'qty', op.qty)) AS category,
-	//     cust.customer_name,
-	//     cust.customer_mobile,
-	//     cust.customer_address
-	// FROM
-	//     parthdb.order o
-	// JOIN
-	//     parthdb.customer cust ON o.customer_id = cust.customer_id
-	// LEFT JOIN
-	//     parthdb.order_product op ON o.order_id = op.order_id
-	// LEFT JOIN
-	//     parthdb.category c ON op.category_id = c.category_id
-
-	//     WHERE
-	//     (o.order_date BETWEEN ${searchParams.start_date} AND ${searchParams.end_date})
-	//     AND (o.customer_id = ${searchParams.customer_id} OR ${searchParams.customer_id} IS NULL)
-	//     AND (cust.customer_mobile = ${searchParams.mobile_no} OR ${searchParams.mobile_no} IS NULL)
-	// GROUP BY
-	//     o.order_id,
-	//     o.customer_id,
-	//     o.total,
-	//     o.payment,
-	//     o.order_date,
-	//     o.delivery_date,
-	//     o.shirt_pocket,
-	//     o.pant_pocket,
-	//     o.pant_pinch,
-	//     o.type,
-	//     cust.customer_name,
-	//     cust.customer_mobile,
-	//     cust.customer_address
-	//    LIMIT
-	//     ${searchParams.rowsPerPage}
-	// OFFSET
-	//    ${searchParams.page}
-	// `,
-	// 			{ type: QueryTypes.SELECT }
-	// 		);
-	// 	};
-
 	public getAll = async (searchParams: SearchOrderDTO) => {
 		const query = `
         SELECT 
@@ -76,7 +23,7 @@ export default class OrderService {
             o.pant_pocket,
             o.pant_pinch,
             o.type,
-            JSON_ARRAYAGG(JSON_OBJECT('category_id', op.category_id, 'category_name', c.category_name, 'qty', op.qty)) AS category,
+            JSON_ARRAYAGG(JSON_OBJECT('category_id', op.category_id, 'category_name', c.category_name,'category_image', c.category_image, 'qty', op.qty)) AS category,
             cust.customer_name,
             cust.customer_mobile,
             cust.customer_address
@@ -142,6 +89,76 @@ export default class OrderService {
 		});
 	};
 
+	public orderBill = async (searchParams: SearchOrderBillDTO) => {
+		const query = `
+        SELECT 
+            o.order_id,
+            o.customer_id,
+            o.total,
+            o.payment,
+            o.order_date,
+            o.delivery_date,
+            o.shirt_pocket,
+            o.pant_pocket,
+            o.pant_pinch,
+            o.type,
+            JSON_ARRAYAGG(JSON_OBJECT('category_id', op.category_id, 'category_name', c.category_name,'category_image', c.category_image, 'qty', op.qty ,'price', op.price,'status', op.status)) AS category,
+            cust.customer_name,
+            cust.customer_mobile,
+            cust.customer_address
+        FROM 
+            parthdb.order o
+        JOIN 
+            parthdb.customer cust ON o.customer_id = cust.customer_id
+        LEFT JOIN 
+            parthdb.order_product op ON o.order_id = op.order_id
+        LEFT JOIN 
+            parthdb.category c ON op.category_id = c.category_id
+        WHERE 
+             (:customer_id IS NULL OR o.customer_id = :customer_id)
+            AND (:order_id IS NULL OR o.order_id = :order_id)
+        GROUP BY 
+            o.order_id,
+            o.customer_id,
+            o.total,
+            o.payment,
+            o.order_date,
+            o.delivery_date,
+            o.shirt_pocket,
+            o.pant_pocket,
+            o.pant_pinch,
+            o.type,
+            cust.customer_name,
+            cust.customer_mobile,
+            cust.customer_address 
+        LIMIT 
+            :rowsPerPage
+        OFFSET 
+            :offset`;
+
+		const replacements: { [key: string]: any } = {};
+
+		if (searchParams.customer_id != undefined) {
+			replacements.customer_id = searchParams.customer_id;
+		} else {
+			replacements.customer_id = null;
+		}
+
+		if (searchParams.order_id !== undefined) {
+			replacements.order_id = searchParams.order_id;
+		} else {
+			replacements.order_id = null;
+		}
+
+		replacements.rowsPerPage = searchParams.rowsPerPage;
+		replacements.offset = searchParams.page * searchParams.rowsPerPage;
+
+		return await sequelizeConnection.query(query, {
+			replacements,
+			type: QueryTypes.SELECT,
+		});
+	};
+
 	public findOneCustomerMeasurement = async (searchParams: findCustomerMeasurementDTO) => {
 		const customer_data = await Customer.findOne({
 			where: {
@@ -151,21 +168,6 @@ export default class OrderService {
 			include: [{ model: CustomerMeasurement }],
 			attributes: ["customer_id", "customer_name", "customer_mobile", "customer_address"],
 		});
-
-		// const response = {
-		//     customer_data:{},
-		//     measurements:[]
-		// }
-
-		// if (customer_data) {
-		//     response.customer_data = {...customer_data}
-		//     const measurement_data = await CustomerMeasurement.findAll({
-		//         where:{
-		//             customer_id:customer_data.customer_id
-		//         },
-		//         include:[{}]
-		//     })
-		// }
 		return customer_data;
 	};
 

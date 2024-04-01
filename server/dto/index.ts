@@ -5,7 +5,14 @@ import { SearchWorkerDTO, CreateWorkerDTO, EditWorkerDTO } from "./worker.dto";
 import { CreateChestDetailsDTO, EditChestDetailsDTO } from "./chestDetails.dto";
 import { SearchWorkerPaymentDTO, CreateWorkerPaymentDTO, EditWorkerPaymentDTO } from "./workerPayment.controller";
 import { SearchCustomerDTO, CreateCustomerDTO, EditCustomerDTO } from "./customer.dto";
-import { SearchOrderDTO, CreateOrderDTO, SearchDeliveryOrderRemainDTO, getCustomerPaymentDataDTO, OrderPaymentDTO } from "./order.dto";
+import {
+	SearchOrderDTO,
+	CreateOrderDTO,
+	SearchDeliveryOrderRemainDTO,
+	getCustomerPaymentDataDTO,
+	OrderPaymentDTO,
+	SearchOrderBillDTO,
+} from "./order.dto";
 import { CreateOrderImageDTO, EditOrderImageDTO } from "./orderImage.dto";
 import { SearchOrderProductDTO, createOrderProductDTO } from "./orderProduct.dto";
 import { SearchPurchaseDTO, createPurchaseDTO, EditPurchaseDTO } from "./purchase.dto";
@@ -41,4 +48,5 @@ export {
 	PurchasePaymentDTO,
 	getCustomerPaymentDataDTO,
 	OrderPaymentDTO,
+	SearchOrderBillDTO,
 };

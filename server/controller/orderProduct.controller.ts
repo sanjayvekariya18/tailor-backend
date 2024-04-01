@@ -79,7 +79,7 @@ export default class OrderController {
 	public changeStatus = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			let orderProductId: string = req.params["order_product_id"] as string;
-			let checkOrderProductData = await this.orderProductService.findOne({ where: { order_product_id: orderProductId } });
+			let checkOrderProductData = await this.orderProductService.findOne({ order_product_id: orderProductId });
 			if (checkOrderProductData == null) {
 				throw new BadResponseHandler("Order Product Not Found");
 			}

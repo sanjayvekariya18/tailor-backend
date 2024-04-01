@@ -16,6 +16,20 @@ export class SearchOrderDTO {
 	}
 }
 
+export class SearchOrderBillDTO {
+	customer_id?: string;
+	order_id?: string;
+	page: number;
+	rowsPerPage: number;
+
+	constructor(data: any) {
+		data.customer_id != undefined && data.customer_id != "" ? (this.customer_id = data.customer_id) : delete this.customer_id;
+		data.order_id != undefined && data.order_id != "" ? (this.order_id = data.order_id) : delete this.order_id;
+		this.page = data.page != undefined && data.page != "" ? Number(data.page) : 0;
+		this.rowsPerPage = data.rowsPerPage != undefined && data.rowsPerPage != "" ? Number(data.rowsPerPage) : 10;
+	}
+}
+
 export class findCustomerMeasurementDTO {
 	customer_id?: string;
 	mobile_no?: string;
