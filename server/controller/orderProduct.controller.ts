@@ -64,9 +64,14 @@ export default class OrderController {
 				status: WORKER_ASSIGN_TASK.assign,
 			};
 			let availableQty = assignTask?.qty - orderData.qty;
-			console.log(availableQty);
 
-			let data = await this.orderProductService.assignTask(newOrderData, assignTask.order_product_id, availableQty);
+			let workerPayment = {
+				worker_id: orderData.worker_id,
+				amount: getWorkerPrice.price * orderData.qty,
+				type: 0,
+				payment_date: orderData.assign_date,
+			};
+			let data = await this.orderProductService.assignTask(newOrderData, assignTask.order_product_id, availableQty, workerPayment);
 			return res.api.create(data);
 		},
 	};

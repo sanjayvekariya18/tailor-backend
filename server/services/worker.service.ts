@@ -1,8 +1,7 @@
 import { Op, Transaction } from "sequelize";
 import { Category, Worker, WorkerPrice } from "../models";
 import { CreateWorkerDTO, EditWorkerDTO } from "../dto";
-import { executeTransaction, sequelizeConnection } from "../config/database";
-import { includes } from "lodash";
+import { executeTransaction } from "../config/database";
 
 export default class WorkerService {
 	public getAll = async (searchParams: any) => {

@@ -1,4 +1,4 @@
-import { Category, Customer, Order, OrderProduct, WorkerPrice } from "../models";
+import { Category, Customer, Order, OrderProduct, WorkerPayment, WorkerPrice } from "../models";
 import { SearchOrderProductDTO, createOrderProductDTO } from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 import { Transaction } from "sequelize";
@@ -62,11 +62,12 @@ export default class OrderProductService {
 		});
 	};
 
-	public assignTask = async (orderProductData: createOrderProductDTO, order_product_id: string, qty: number) => {
+	public assignTask = async (orderProductData: createOrderProductDTO, order_product_id: string, qty: number, workerPayment: any) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			await OrderProduct.create(orderProductData, { transaction });
 			await OrderProduct.update({ qty: qty }, { where: { order_product_id: order_product_id }, transaction });
 			await OrderProduct.destroy({ where: { qty: 0 }, transaction });
+			await WorkerPayment.create(workerPayment, { transaction });
 			return "OrderProduct Assign Successfully";
 		});
 	};
