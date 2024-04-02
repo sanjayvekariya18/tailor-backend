@@ -1,3 +1,5 @@
+import { BILL_STATUS } from "../constants";
+
 export class SearchOrderDTO {
 	start_date?: Date;
 	end_date?: Date;
@@ -76,6 +78,7 @@ export class getCustomerPaymentDataDTO {
 	mobile_no?: string;
 	start_date?: Date;
 	end_date?: Date;
+	bill_status?: BILL_STATUS;
 	page: number;
 	rowsPerPage: number;
 	constructor(data: any) {
@@ -83,6 +86,7 @@ export class getCustomerPaymentDataDTO {
 		data.mobile_no != undefined && data.mobile_no != "" ? (this.mobile_no = data.mobile_no) : delete this.mobile_no;
 		data.start_date != undefined ? (this.start_date = data.start_date) : delete this.start_date;
 		data.end_date != undefined ? (this.end_date = new Date(data.end_date + " 23:59:59.0")) : delete this.end_date;
+		data.bill_status != undefined ? (this.bill_status = data.bill_status) : delete this.bill_status;
 		this.page = data.page != undefined ? Number(data.page) : 0;
 		this.rowsPerPage = data.rowsPerPage != undefined ? Number(data.rowsPerPage) : 10;
 	}

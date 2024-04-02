@@ -12,7 +12,7 @@ import {
 import { executeTransaction, sequelizeConnection } from "../config/database";
 import { CustomerMeasurementAttributes } from "../models/customerMeasurement.model";
 import { OrderProductAttributes } from "../models/orderProduct.model";
-import { WORKER_ASSIGN_TASK } from "../constants";
+import { BILL_STATUS, WORKER_ASSIGN_TASK } from "../constants";
 import { NotFoundHandler } from "../errorHandler";
 
 export default class OrderService {
@@ -325,7 +325,16 @@ export default class OrderService {
 							[Op.between]: [searchParams.start_date, searchParams.end_date],
 						},
 					}),
+
+				...(searchParams.bill_status &&
+					searchParams.bill_status == BILL_STATUS.UNPAID && {
+						payment: 0,
+					}),
 			},
+			...(searchParams.bill_status &&
+				searchParams.bill_status == BILL_STATUS.PAID && {
+					where: this.Sequelize.where(this.Sequelize.col("order.payment"), "=", this.Sequelize.col("order.total")),
+				}),
 			attributes: [
 				"order_id",
 				"customer_id",

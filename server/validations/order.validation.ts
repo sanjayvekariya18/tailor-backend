@@ -1,3 +1,5 @@
+import { BILL_STATUS } from "../constants";
+
 export default class OrderValidation {
 	public getAll = {
 		customer_id: "string",
@@ -34,6 +36,7 @@ export default class OrderValidation {
 		start_date: "date",
 		end_date: "date|after_or_equal:start_date",
 		customer_id: "string",
+		bill_status: "in:" + Object.values(BILL_STATUS),
 		page: "numeric|min:0",
 		rowsPerPage: "numeric|min:1",
 	};

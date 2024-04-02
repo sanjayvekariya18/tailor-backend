@@ -21,3 +21,8 @@ export enum WORKER_ASSIGN_TASK {
 	assign = "assign",
 	complete = "complete",
 }
+
+export enum BILL_STATUS {
+	UNPAID = "unpaid",
+	PAID = "paid",
+}
