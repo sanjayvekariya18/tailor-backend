@@ -40,4 +40,20 @@ export default class PurchaseController {
 			return res.api.create(data);
 		},
 	};
+
+	public delete = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const purchasePaymentId: string = req.params["purchase_payment_id"] as string;
+			const checkPurchasePaymentData = await this.purchasePaymentService.findOne({ purchase_payment_id: purchasePaymentId });
+			if (checkPurchasePaymentData == null) {
+				return res.api.badResponse({ message: "Payment Data Not Found" });
+			}
+			const checkPurchaseID = await this.purchaseService.findOne({ purchase_id: checkPurchasePaymentData.purchase_id });
+			if (checkPurchaseID == null) {
+				throw new BadResponseHandler("Purchase ID Not Found");
+			}
+			let data = await this.purchasePaymentService.delete(purchasePaymentId, checkPurchaseID);
+			return res.api.create(data);
+		},
+	};
 }
