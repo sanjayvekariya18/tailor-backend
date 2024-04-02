@@ -19,6 +19,10 @@ export default class OrderValidation {
 		customer_mobile: "string",
 	};
 
+	public getCustomerBill = {
+		bill_no: "required|numeric",
+	};
+
 	public deliveryDateRemain = {
 		start_date: "date",
 		end_date: "date|after_or_equal:start_date",

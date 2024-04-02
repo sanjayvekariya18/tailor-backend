@@ -40,6 +40,14 @@ export class findCustomerMeasurementDTO {
 	}
 }
 
+export class getCustomerBillDTO {
+	bill_no?: number;
+
+	constructor(data: any) {
+		data.bill_no != undefined && data.bill_no != "" ? (this.bill_no = data.bill_no) : delete this.bill_no;
+	}
+}
+
 export class OrderPaymentDTO {
 	payment: number;
 	payment_date: Date;

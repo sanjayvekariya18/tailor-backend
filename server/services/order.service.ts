@@ -6,7 +6,7 @@ import { CustomerMeasurementAttributes } from "../models/customerMeasurement.mod
 import { OrderProductAttributes } from "../models/orderProduct.model";
 import { WORKER_ASSIGN_TASK } from "../constants";
 import { NotFoundHandler } from "../errorHandler";
-import { OrderPaymentDTO, SearchOrderBillDTO, findCustomerMeasurementDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
+import { OrderPaymentDTO, SearchOrderBillDTO, findCustomerMeasurementDTO, getCustomerBillDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
 
 export default class OrderService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -89,76 +89,6 @@ export default class OrderService {
 		});
 	};
 
-	public orderBill = async (searchParams: SearchOrderBillDTO) => {
-		const query = `
-        SELECT 
-            o.order_id,
-            o.customer_id,
-            o.total,
-            o.payment,
-            o.order_date,
-            o.delivery_date,
-            o.shirt_pocket,
-            o.pant_pocket,
-            o.pant_pinch,
-            o.type,
-            JSON_ARRAYAGG(JSON_OBJECT('category_id', op.category_id, 'category_name', c.category_name,'category_image', c.category_image, 'qty', op.qty ,'price', op.price,'status', op.status)) AS category,
-            cust.customer_name,
-            cust.customer_mobile,
-            cust.customer_address
-        FROM 
-            parthdb.order o
-        JOIN 
-            parthdb.customer cust ON o.customer_id = cust.customer_id
-        LEFT JOIN 
-            parthdb.order_product op ON o.order_id = op.order_id
-        LEFT JOIN 
-            parthdb.category c ON op.category_id = c.category_id
-        WHERE 
-             (:customer_id IS NULL OR o.customer_id = :customer_id)
-            AND (:order_id IS NULL OR o.order_id = :order_id)
-        GROUP BY 
-            o.order_id,
-            o.customer_id,
-            o.total,
-            o.payment,
-            o.order_date,
-            o.delivery_date,
-            o.shirt_pocket,
-            o.pant_pocket,
-            o.pant_pinch,
-            o.type,
-            cust.customer_name,
-            cust.customer_mobile,
-            cust.customer_address 
-        LIMIT 
-            :rowsPerPage
-        OFFSET 
-            :offset`;
-
-		const replacements: { [key: string]: any } = {};
-
-		if (searchParams.customer_id != undefined) {
-			replacements.customer_id = searchParams.customer_id;
-		} else {
-			replacements.customer_id = null;
-		}
-
-		if (searchParams.order_id !== undefined) {
-			replacements.order_id = searchParams.order_id;
-		} else {
-			replacements.order_id = null;
-		}
-
-		replacements.rowsPerPage = searchParams.rowsPerPage;
-		replacements.offset = searchParams.page * searchParams.rowsPerPage;
-
-		return await sequelizeConnection.query(query, {
-			replacements,
-			type: QueryTypes.SELECT,
-		});
-	};
-
 	public findOneCustomerMeasurement = async (searchParams: findCustomerMeasurementDTO) => {
 		const customer_data = await Customer.findOne({
 			where: {
@@ -176,7 +106,6 @@ export default class OrderService {
 			include: [{ model: Customer }, { model: OrderProduct }, { model: OrderImages }],
 			attributes: ["order_id", "customer_id", "total", "payment", "order_date", "delivery_date", "shirt_pocket", "pant_pocket", "pant_pinch", "type"],
 		});
-
 		if (order_data) {
 			const response_data: any = order_data.get({ plain: true });
 			const category_ids = response_data.OrderProducts.map((row: any) => row.category_id);
@@ -249,6 +178,7 @@ export default class OrderService {
 			} else {
 				customerId = orderData.customer_id;
 			}
+			let bill_no: number = await Order.max("bill_no");
 
 			let customerMeasurementBulkData: Array<CustomerMeasurementAttributes> = [];
 			orderData.customer_measurement.map((Workerdata) => {
@@ -269,6 +199,7 @@ export default class OrderService {
 				pant_pocket: orderData.pant_pocket,
 				pant_pinch: orderData.pant_pinch,
 				type: orderData.type,
+				bill_no: bill_no + 1,
 			};
 
 			await CustomerMeasurement.bulkCreate(customerMeasurementBulkData, { transaction });
@@ -380,6 +311,40 @@ export default class OrderService {
 			order: [["delivery_date", "ASC"]],
 			raw: true,
 		});
+	};
+
+	public getCustomerBill = async (searchParams: getCustomerBillDTO) => {
+		const order_data = await Order.findOne({
+			where: { bill_no: searchParams.bill_no },
+			include: [{ model: Customer }, { model: OrderProduct }, { model: OrderImages }],
+			attributes: [
+				"order_id",
+				"customer_id",
+				"total",
+				"payment",
+				"order_date",
+				"delivery_date",
+				"shirt_pocket",
+				"pant_pocket",
+				"pant_pinch",
+				"type",
+				"bill_no",
+			],
+		});
+		if (order_data) {
+			const response_data: any = order_data.get({ plain: true });
+			const category_ids = response_data.OrderProducts.map((row: any) => row.category_id);
+			const customer_measurement_data = await CustomerMeasurement.findAll({
+				where: { customer_id: order_data.customer_id, category_id: { [Op.in]: category_ids } },
+			});
+			response_data.OrderProducts.forEach((row: any) => {
+				const customer_measurement = customer_measurement_data.filter((data) => data.category_id == row.category_id);
+				row.customer_measurement = customer_measurement;
+			});
+			return response_data;
+		} else {
+			throw new NotFoundHandler("Bill not found");
+		}
 	};
 
 	public income = async (searchParams: getCustomerPaymentDataDTO) => {

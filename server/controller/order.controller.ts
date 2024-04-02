@@ -5,7 +5,7 @@ import { CategoryService, MeasurementService, OrderService } from "../services";
 import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
 import { image } from "../constants";
 import { BadResponseHandler } from "../errorHandler";
-import { OrderPaymentDTO, SearchOrderBillDTO, findCustomerMeasurementDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
+import { OrderPaymentDTO, SearchOrderBillDTO, findCustomerMeasurementDTO, getCustomerBillDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
 import moment from "moment";
 
 export default class OrderController {
@@ -22,14 +22,6 @@ export default class OrderController {
 		},
 	};
 
-	public getBill = {
-		validation: this.orderValidation.getBill,
-		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const data = await this.orderService.orderBill(new SearchOrderBillDTO(req.query));
-			return res.api.create(data);
-		},
-	};
-
 	public findOneCustomerMeasurement = {
 		validation: this.orderValidation.findOneMeasurement,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -42,6 +34,14 @@ export default class OrderController {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			let orderId: string = req.params["id"] as string;
 			const data = await this.orderService.getOrderDetails(orderId);
+			return res.api.create(data);
+		},
+	};
+
+	public getCustomerBill = {
+		validation: this.orderValidation.getCustomerBill,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.orderService.getCustomerBill(new getCustomerBillDTO(req.query));
 			return res.api.create(data);
 		},
 	};
