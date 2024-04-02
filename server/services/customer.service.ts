@@ -49,4 +49,10 @@ export default class CustomerService {
 			return "Customer Edited successfully";
 		});
 	};
+
+	public delete = async (customer_id: string) => {
+		return await Customer.destroy({ where: { customer_id: customer_id } }).then(() => {
+			return "Customer deleted successfully";
+		});
+	};
 }

@@ -336,8 +336,17 @@ export default class OrderService {
 
 	public payment = async (orderData: OrderPaymentDTO, order_id: string) => {
 		return await executeTransaction(async (transaction: Transaction) => {
-			await Order.update({ payment: orderData.payment }, { where: { order_id: order_id }, transaction });
-			await OrderPayment.create({ order_id: order_id, amount: orderData.payment, payment_date: orderData.payment_date }, { transaction });
+			await OrderPayment.create({ order_id: order_id, amount: orderData.payment, payment_date: orderData.payment_date }, { transaction }).then(
+				async () => {
+					let payment = 0;
+					await OrderPayment.findAll({ where: { order_id: order_id }, raw: true, transaction }).then((data) => {
+						data.map((item) => {
+							payment += item.amount;
+						});
+					});
+					await Order.update({ payment: payment }, { where: { order_id: order_id }, transaction });
+				}
+			);
 		});
 	};
 

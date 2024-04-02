@@ -16,7 +16,7 @@ export default class OrderValidation {
 
 	public findOneMeasurement = {
 		customer_id: "required|string",
-		customer_mobile: "string|length:10",
+		customer_mobile: "string",
 	};
 
 	public deliveryDateRemain = {
@@ -30,7 +30,6 @@ export default class OrderValidation {
 		start_date: "date",
 		end_date: "date|after_or_equal:start_date",
 		customer_id: "string",
-		customer_mobile: "string|length:10",
 		page: "numeric|min:0",
 		rowsPerPage: "numeric|min:1",
 	};

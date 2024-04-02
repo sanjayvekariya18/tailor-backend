@@ -9,5 +9,6 @@ const customerController = new CustomerController();
 router.get("/", requestValidate(customerController.getAll.validation), use(customerController.getAll.controller));
 router.post("/", requestValidate(customerController.create.validation), use(customerController.create.controller));
 router.put("/:customer_id", requestValidate(customerController.edit.validation), use(customerController.edit.controller));
+router.put("/:customer_id", use(customerController.delete.controller));
 
 export default router;

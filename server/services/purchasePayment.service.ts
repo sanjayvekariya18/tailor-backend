@@ -59,7 +59,6 @@ export default class PurchasePaymentService {
 			return await PurchasePayment.destroy({ where: { Purchase_payment_id: purchase_payment_id }, transaction }).then(async () => {
 				let data = await this.PurchasePaymentData(purchaseData, transaction);
 				return await Purchase.update(data, { where: { purchase_id: purchaseData.purchase_id }, transaction }).then(() => {
-					console.log(1);
 					return "Purchase payment deleted successfully";
 				});
 			});

@@ -59,4 +59,16 @@ export default class CustomerController {
 			return res.api.create(data);
 		},
 	};
+
+	public delete = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const customerId: string = req.params["customer_id"] as string;
+			const checkCustomerData = await this.customerService.findOne({ customer_id: customerId });
+			if (isEmpty(checkCustomerData)) {
+				return res.api.badResponse({ message: "Customer data Not Found" });
+			}
+			const data = await this.customerService.delete(customerId);
+			return res.api.create(data);
+		},
+	};
 }

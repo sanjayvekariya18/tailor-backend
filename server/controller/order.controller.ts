@@ -6,6 +6,7 @@ import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "..
 import { image } from "../constants";
 import { BadResponseHandler } from "../errorHandler";
 import { OrderPaymentDTO, SearchOrderBillDTO, findCustomerMeasurementDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
+import moment from "moment";
 
 export default class OrderController {
 	private orderService = new OrderService();
@@ -153,6 +154,15 @@ export default class OrderController {
 			const checkOrderData = await this.orderService.findOne({ order_id: orderId });
 			if (checkOrderData == null) {
 				throw new BadResponseHandler("Order Data Not Found");
+			}
+			let todayDate = moment().format("YYYY-MM-DD");
+			let payment_date = moment(orderData.payment_date).format("YYYY-MM-DD");
+			let order_date = moment(checkOrderData.order_date).format("YYYY-MM-DD");
+			if (todayDate < payment_date) {
+				throw new BadResponseHandler("Payment date greater then today date");
+			}
+			if (order_date > payment_date) {
+				throw new BadResponseHandler("Payment date less then order date");
 			}
 			let data = await this.orderService.payment(orderData, orderId);
 			return res.api.create(data);
