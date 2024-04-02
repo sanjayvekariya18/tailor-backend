@@ -35,7 +35,12 @@ export default class MeasurementService {
 			where: {
 				...searchObject,
 			},
-			attributes: ["measurement_id", "measurement_name", [sequelizeConnection.Sequelize.col("Category.category_name"), "category_name"]],
+			attributes: [
+				"measurement_id",
+				"measurement_name",
+				[sequelizeConnection.Sequelize.col("Category.category_id"), "category_id"],
+				[sequelizeConnection.Sequelize.col("Category.category_name"), "category_name"],
+			],
 			include: [
 				{
 					model: Category,

@@ -1,12 +1,19 @@
 import { Op, QueryTypes, Transaction } from "sequelize";
 import { Customer, CustomerMeasurement, Order, OrderImages, OrderPayment, OrderProduct } from "../models";
-import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
+import {
+	CreateOrderDTO,
+	SearchDeliveryOrderRemainDTO,
+	SearchOrderDTO,
+	OrderPaymentDTO,
+	findCustomerMeasurementDTO,
+	getCustomerBillDTO,
+	getCustomerPaymentDataDTO,
+} from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 import { CustomerMeasurementAttributes } from "../models/customerMeasurement.model";
 import { OrderProductAttributes } from "../models/orderProduct.model";
 import { WORKER_ASSIGN_TASK } from "../constants";
 import { NotFoundHandler } from "../errorHandler";
-import { OrderPaymentDTO, SearchOrderBillDTO, findCustomerMeasurementDTO, getCustomerBillDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
 
 export default class OrderService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -23,6 +30,7 @@ export default class OrderService {
             o.pant_pocket,
             o.pant_pinch,
             o.type,
+            o.bill_no,
             JSON_ARRAYAGG(JSON_OBJECT('category_id', op.category_id, 'category_name', c.category_name,'category_image', c.category_image, 'qty', op.qty)) AS category,
             cust.customer_name,
             cust.customer_mobile,
@@ -50,6 +58,7 @@ export default class OrderService {
             o.pant_pocket,
             o.pant_pinch,
             o.type,
+            o.bill_no,
             cust.customer_name,
             cust.customer_mobile,
             cust.customer_address 
@@ -104,7 +113,19 @@ export default class OrderService {
 	public getOrderDetails = async (order_id: string) => {
 		const order_data = await Order.findByPk(order_id, {
 			include: [{ model: Customer }, { model: OrderProduct }, { model: OrderImages }],
-			attributes: ["order_id", "customer_id", "total", "payment", "order_date", "delivery_date", "shirt_pocket", "pant_pocket", "pant_pinch", "type"],
+			attributes: [
+				"order_id",
+				"customer_id",
+				"total",
+				"payment",
+				"order_date",
+				"delivery_date",
+				"shirt_pocket",
+				"pant_pocket",
+				"pant_pinch",
+				"type",
+				"bill_no",
+			],
 		});
 		if (order_data) {
 			const response_data: any = order_data.get({ plain: true });
@@ -146,6 +167,7 @@ export default class OrderService {
 				"pant_pocket",
 				"pant_pinch",
 				"type",
+				"bill_no",
 			],
 			include: [{ model: Customer, attributes: [] }],
 			order: [["delivery_date", "ASC"]],
@@ -159,7 +181,19 @@ export default class OrderService {
 			where: {
 				...searchObject,
 			},
-			attributes: ["order_id", "customer_id", "total", "payment", "order_date", "delivery_date", "shirt_pocket", "pant_pocket", "pant_pinch", "type"],
+			attributes: [
+				"order_id",
+				"customer_id",
+				"total",
+				"payment",
+				"order_date",
+				"delivery_date",
+				"shirt_pocket",
+				"pant_pocket",
+				"pant_pinch",
+				"type",
+				"bill_no",
+			],
 			order: [["delivery_date", "ASC"]],
 			raw: true,
 		});
@@ -306,6 +340,7 @@ export default class OrderService {
 				"pant_pocket",
 				"pant_pinch",
 				"type",
+				"bill_no",
 			],
 			include: [{ model: Customer, attributes: [] }],
 			order: [["delivery_date", "ASC"]],
@@ -316,7 +351,7 @@ export default class OrderService {
 	public getCustomerBill = async (searchParams: getCustomerBillDTO) => {
 		const order_data = await Order.findOne({
 			where: { bill_no: searchParams.bill_no },
-			include: [{ model: Customer }, { model: OrderProduct }, { model: OrderImages }],
+			include: [{ model: Customer }, { model: OrderProduct }],
 			attributes: [
 				"order_id",
 				"customer_id",

@@ -1,4 +1,4 @@
-import { Category, Customer, Order, OrderProduct, WorkerPayment, WorkerPrice } from "../models";
+import { Category, Customer, Order, OrderProduct, Worker, WorkerPayment } from "../models";
 import { SearchOrderProductDTO, createOrderProductDTO } from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 import { Transaction } from "sequelize";
@@ -15,6 +15,7 @@ export default class OrderProductService {
 			include: [
 				{ model: Category, attributes: [] },
 				{ model: Order, attributes: [], include: [{ model: Customer, attributes: ["customer_id", "customer_name", "customer_mobile"] }] },
+				{ model: Worker, attributes: [] },
 			],
 			attributes: [
 				"order_product_id",
@@ -26,6 +27,8 @@ export default class OrderProductService {
 				[this.Sequelize.col("Order.Customer.customer_name"), "customer_name"],
 				[this.Sequelize.col("Order.Customer.customer_mobile"), "customer_mobile"],
 				"worker_id",
+				[this.Sequelize.col("Worker.worker_name"), "worker_name"],
+				[this.Sequelize.col("Worker.worker_mobile"), "worker_mobile"],
 				"parent",
 				"qty",
 				"price",

@@ -1,12 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { fileType, isEmpty, saveFile } from "../utils/helper";
-import { OrderProductValidation, OrderValidation } from "../validations";
-import { CategoryService, CustomerService, MeasurementService, OrderProductService, OrderService } from "../services";
-import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO, SearchOrderProductDTO, createOrderProductDTO } from "../dto";
-import { WORKER_ASSIGN_TASK, image } from "../constants";
+import { OrderProductValidation } from "../validations";
+import { CategoryService, OrderProductService, OrderService } from "../services";
+import { SearchOrderProductDTO, createOrderProductDTO } from "../dto";
+import { WORKER_ASSIGN_TASK } from "../constants";
 import { BadResponseHandler } from "../errorHandler";
 import { OrderProduct, WorkerPrice } from "../models";
-import { where } from "sequelize";
 
 export default class OrderController {
 	public orderProductValidation = new OrderProductValidation();

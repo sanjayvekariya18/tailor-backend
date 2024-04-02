@@ -7,7 +7,6 @@ export default class OrderProductValidation {
 		rowsPerPage: "numeric|min:1",
 	};
 	public create = {
-		// order_product_id: "required|string",
 		order_id: "required|string",
 		category_id: "required|string",
 		worker_id: "required|string",

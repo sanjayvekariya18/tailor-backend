@@ -4,7 +4,6 @@ import { Customer } from "../models";
 import { CreateCustomerDTO, EditCustomerDTO } from "../dto";
 
 export default class CustomerService {
-	private Sequelize = sequelizeConnection.Sequelize;
 	public getAll = async (searchParams: any) => {
 		return await Customer.findAndCountAll({
 			where: {

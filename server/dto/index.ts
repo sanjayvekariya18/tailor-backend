@@ -13,6 +13,7 @@ import {
 	OrderPaymentDTO,
 	SearchOrderBillDTO,
 	getCustomerBillDTO,
+	findCustomerMeasurementDTO,
 } from "./order.dto";
 import { CreateOrderImageDTO, EditOrderImageDTO } from "./orderImage.dto";
 import { SearchOrderProductDTO, createOrderProductDTO } from "./orderProduct.dto";
@@ -51,4 +52,5 @@ export {
 	OrderPaymentDTO,
 	SearchOrderBillDTO,
 	getCustomerBillDTO,
+	findCustomerMeasurementDTO,
 };

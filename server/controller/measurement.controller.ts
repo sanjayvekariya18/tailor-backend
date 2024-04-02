@@ -3,7 +3,6 @@ import { isEmpty } from "../utils/helper";
 import { CategoryService, MeasurementService } from "../services";
 import { MeasurementValidation } from "../validations";
 import { CreateMeasurementDTO, SearchMeasurementDTO } from "../dto";
-import { Op } from "sequelize";
 
 export default class MeasurementController {
 	private measurementService = new MeasurementService();
