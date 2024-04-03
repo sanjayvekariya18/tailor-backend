@@ -1,5 +1,5 @@
 import { Op, QueryTypes, Transaction } from "sequelize";
-import { Customer, CustomerMeasurement, Order, OrderImages, OrderPayment, OrderProduct } from "../models";
+import { Category, Customer, CustomerMeasurement, Measurement, Order, OrderImages, OrderPayment, OrderProduct } from "../models";
 import {
 	CreateOrderDTO,
 	SearchDeliveryOrderRemainDTO,
@@ -17,6 +17,7 @@ import { NotFoundHandler } from "../errorHandler";
 
 export default class OrderService {
 	private Sequelize = sequelizeConnection.Sequelize;
+
 	public getAll = async (searchParams: SearchOrderDTO) => {
 		const query = `
         SELECT 
@@ -96,6 +97,30 @@ export default class OrderService {
 			replacements,
 			type: QueryTypes.SELECT,
 		});
+	};
+
+	public getCustomerMeasurement = async (order_id: string, customer_id: string) => {
+		let orderData = await Order.findOne({
+			where: {
+				order_id: order_id,
+			},
+			attributes: [
+				"order_id",
+				"customer_id",
+				"total",
+				"payment",
+				"order_date",
+				"delivery_date",
+				"shirt_pocket",
+				"pant_pocket",
+				"pant_pinch",
+				"type",
+				"bill_no",
+			],
+			include: [{ model: Customer, include: [{ model: CustomerMeasurement, include: [{ model: Category }, { model: Measurement }] }] }],
+			order: [["delivery_date", "ASC"]],
+		});
+		return orderData;
 	};
 
 	public findOneCustomerMeasurement = async (searchParams: findCustomerMeasurementDTO) => {
@@ -412,7 +437,8 @@ export default class OrderService {
 				{
 					model: Order,
 					attributes: [],
-					include: [{ model: Customer, attributes: [], where: { ...(searchParams.customer_id && { customer_id: searchParams.customer_id }) } }],
+					where: { ...(searchParams.customer_id && { customer_id: searchParams.customer_id }) },
+					include: [{ model: Customer, attributes: [] }],
 				},
 			],
 			order: [["payment_date", "ASC"]],

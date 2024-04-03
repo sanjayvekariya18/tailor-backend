@@ -7,6 +7,7 @@ import { image } from "../constants";
 import { BadResponseHandler } from "../errorHandler";
 import { OrderPaymentDTO, findCustomerMeasurementDTO, getCustomerBillDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
 import moment from "moment";
+import { ChestDetails } from "../models";
 
 export default class OrderController {
 	private orderService = new OrderService();
@@ -19,6 +20,29 @@ export default class OrderController {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const data = await this.orderService.getAll(new SearchOrderDTO(req.query));
 			return res.api.create(data);
+		},
+	};
+
+	public getCustomerMeasurement = {
+		validation: this.orderValidation.getAll,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			let orderId: string = req.params["order_id"] as string;
+			const checkOrderData = await this.orderService.findOne({ order_id: orderId });
+			if (checkOrderData == null) {
+				throw new BadResponseHandler("Order Data Not Found");
+			}
+			const data: any = await this.orderService.getCustomerMeasurement(orderId, checkOrderData.customer_id);
+			const customerMeasurementData = data?.get({ plain: true }).Customer.CustomerMeasurements;
+			let CustomerChestDetails = [];
+
+			const measurementCH = customerMeasurementData.find((item: any) => item.Measurement.measurement_name === "CH");
+			if (measurementCH.measurement !== null) {
+				let measurementData = await ChestDetails.findOne({ where: { chest: measurementCH.measurement }, raw: true });
+				if (measurementData !== null) {
+					CustomerChestDetails.push(measurementData);
+				}
+			}
+			return res.api.create({ ...data.get({ plain: true }), CustomerChestDetails });
 		},
 	};
 

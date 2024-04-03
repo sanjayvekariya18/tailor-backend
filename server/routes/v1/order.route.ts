@@ -7,6 +7,7 @@ const router = Router();
 const orderController = new OrderController();
 
 router.get("/", requestValidate(orderController.getAll.validation), use(orderController.getAll.controller));
+router.get("/customer_measurement/:order_id", use(orderController.getCustomerMeasurement.controller));
 router.get("/bill", requestValidate(orderController.getCustomerBill.validation), use(orderController.getCustomerBill.controller));
 router.get(
 	"/get_measurement",

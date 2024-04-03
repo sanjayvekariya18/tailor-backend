@@ -2,6 +2,8 @@ import { Category, Customer, Order, OrderProduct, Worker, WorkerPayment } from "
 import { SearchOrderProductDTO, createOrderProductDTO } from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 import { Transaction } from "sequelize";
+import moment from "moment";
+import { Op } from "sequelize";
 export default class OrderProductService {
 	private Sequelize = sequelizeConnection.Sequelize;
 
@@ -9,7 +11,13 @@ export default class OrderProductService {
 		return await OrderProduct.findAndCountAll({
 			where: {
 				...(searchParams.worker_id && { worker_id: searchParams.worker_id }),
-				...(searchParams.assign_date && { assign_date: searchParams.assign_date }),
+				...(searchParams.assign_date && {
+					assign_date: {
+						[Op.and]: [
+							this.Sequelize.literal(`DATE_FORMAT(assign_date, '%Y-%m-%d') BETWEEN '${searchParams.assign_date}' AND '${searchParams.assign_date}'`),
+						],
+					},
+				}),
 				...(searchParams.order_id && { order_id: searchParams.order_id }),
 			},
 			include: [

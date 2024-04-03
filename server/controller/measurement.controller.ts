@@ -3,6 +3,7 @@ import { isEmpty } from "../utils/helper";
 import { CategoryService, MeasurementService } from "../services";
 import { MeasurementValidation } from "../validations";
 import { CreateMeasurementDTO, SearchMeasurementDTO } from "../dto";
+import { Op } from "sequelize";
 
 export default class MeasurementController {
 	private measurementService = new MeasurementService();
@@ -66,7 +67,7 @@ export default class MeasurementController {
 
 			const checkMeasurementName = await this.measurementService.findOne({
 				measurement_name: reqMeasurementData.measurement_name,
-				category_id: reqMeasurementData.category_id,
+				category_id: { [Op.in]: reqMeasurementData.category_id },
 			});
 
 			if (checkMeasurementName !== null) {
