@@ -35,11 +35,13 @@ export class EditPurchaseDTO {
 	details?: string;
 	challan?: string;
 	purchase_date?: Date;
+	outstand?: number;
 	constructor(data: any) {
 		data.party_name != undefined ? (this.party_name = data.party_name) : delete this.party_name;
 		data.amount != undefined ? (this.amount = data.amount) : delete this.amount;
 		data.details != undefined ? (this.details = data.details) : delete this.details;
 		data.challan != undefined ? (this.challan = data.challan) : delete this.challan;
 		data.purchase_date != undefined ? (this.purchase_date = data.purchase_date) : delete this.purchase_date;
+		data.outstand != undefined ? (this.outstand = data.outstand) : delete this.outstand;
 	}
 }

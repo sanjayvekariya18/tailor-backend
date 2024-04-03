@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { isEmpty } from "../utils/helper";
-import { PurchaseService } from "../services";
+import { PurchasePaymentService, PurchaseService } from "../services";
 import { PurchaseValidation } from "../validations";
 import { EditPurchaseDTO, SearchPurchaseDTO, createPurchaseDTO } from "../dto";
+import { BadResponseHandler } from "../errorHandler";
 
 export default class PurchaseController {
 	private purchaseService = new PurchaseService();
@@ -34,7 +35,22 @@ export default class PurchaseController {
 			if (isEmpty(checkPurchaseData)) {
 				return res.api.badResponse({ message: "Purchase Data Not Found" });
 			}
-			const data = await this.purchaseService.edit(reqPurchaseData, purchase_id);
+			let outstand = checkPurchaseData?.outstand;
+			if (reqPurchaseData.amount == undefined) {
+				if (checkPurchaseData?.amount != undefined && checkPurchaseData?.amount != null) {
+					outstand = checkPurchaseData?.amount - checkPurchaseData?.payment;
+				}
+			} else {
+				if (checkPurchaseData?.payment != undefined) {
+					outstand = reqPurchaseData.amount - checkPurchaseData?.payment;
+				}
+			}
+			if (outstand != undefined) {
+				if (outstand < 0) {
+					throw new BadResponseHandler("your amount less then payment");
+				}
+			}
+			const data = await this.purchaseService.edit({ ...reqPurchaseData, outstand: outstand }, purchase_id);
 			return res.api.create(data);
 		},
 	};

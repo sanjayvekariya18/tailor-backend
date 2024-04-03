@@ -65,7 +65,7 @@ export default class PurchasePaymentService {
 		});
 	};
 
-	private PurchasePaymentData = async (purchaseData: any, transaction: Transaction) => {
+	public PurchasePaymentData = async (purchaseData: any, transaction: Transaction) => {
 		let amount = 0;
 		await PurchasePayment.findAll({ where: { purchase_id: purchaseData.purchase_id }, raw: true, transaction }).then((data) => {
 			return data.map((item: any) => {
