@@ -8,6 +8,7 @@ const workerController = new WorkerController();
 const customerController = new CustomerController();
 
 router.get("/category_list", use(categoryController.getCategoryList.controller));
+router.get("/order_category_list", use(categoryController.getCategory_list.controller));
 router.get("/worker_list", use(workerController.getWorkerList.controller));
 router.get("/customer_list", use(customerController.getCustomerList.controller));
 export default router;

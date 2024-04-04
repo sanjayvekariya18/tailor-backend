@@ -3,14 +3,12 @@ import { CATEGORY_TYPE } from "../models/category.model";
 export class SearchCategoryDTO {
 	searchTxt?: string;
 	category_type?: CATEGORY_TYPE;
-	is_active?: boolean;
 	page: number;
 	rowsPerPage: number;
 
 	constructor(data: any) {
 		data.searchTxt != undefined && data.searchTxt != "" ? (this.searchTxt = data.searchTxt) : delete this.searchTxt;
 		data.category_type != undefined && data.category_type != "" ? (this.category_type = data.category_type) : delete this.category_type;
-		data.is_active != undefined && data.is_active != "" ? (this.is_active = data.is_active == "true") : delete this.is_active;
 		this.page = data.page != undefined ? Number(data.page) : 0;
 		this.rowsPerPage = data.rowsPerPage != undefined ? Number(data.rowsPerPage) : 10;
 	}

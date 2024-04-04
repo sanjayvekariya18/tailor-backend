@@ -167,6 +167,8 @@ OFFSET
 		if (order_data) {
 			const response_data: any = order_data.get({ plain: true });
 			const category_ids = response_data.OrderProducts.map((row: any) => row.category_id);
+			console.log(category_ids);
+
 			const customer_measurement_data = await CustomerMeasurement.findAll({
 				where: { customer_id: order_data.customer_id, category_id: { [Op.in]: category_ids } },
 			});
