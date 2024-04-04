@@ -64,16 +64,14 @@ export default class MeasurementController {
 			if (isEmpty(checkCategoryData)) {
 				return res.api.badResponse({ message: "Category Not Found" });
 			}
-
 			const checkMeasurementName = await this.measurementService.findOne({
+				measurement_id: { [Op.not]: measurementID },
 				measurement_name: reqMeasurementData.measurement_name,
-				category_id: { [Op.in]: reqMeasurementData.category_id },
+				category_id: reqMeasurementData.category_id,
 			});
-
 			if (checkMeasurementName !== null) {
 				return res.api.badResponse({ message: "Measurement Name Already Exits" });
 			}
-
 			const data = await this.measurementService.edit(reqMeasurementData, measurementID);
 			return res.api.create(data);
 		},
