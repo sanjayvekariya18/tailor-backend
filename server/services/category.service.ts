@@ -6,6 +6,9 @@ export default class CategoryService {
 	public getAll = async (searchParams: SearchCategoryDTO) => {
 		return await Category.findAndCountAll({
 			where: {
+				...(searchParams.is_active && {
+					is_active: searchParams.is_active,
+				}),
 				...(searchParams.searchTxt && {
 					category_name: { [Op.like]: "%" + searchParams.searchTxt + "%" },
 				}),
@@ -13,7 +16,7 @@ export default class CategoryService {
 					category_type: searchParams.category_type,
 				}),
 			},
-			attributes: ["category_id", "category_name", "category_type", "category_image"],
+			attributes: ["category_id", "category_name", "category_type", "category_image", "is_active"],
 			order: [["category_name", "ASC"]],
 			offset: searchParams.rowsPerPage * searchParams.page,
 			limit: searchParams.rowsPerPage,
@@ -22,14 +25,14 @@ export default class CategoryService {
 
 	public findAll = async () => {
 		return await Category.findAll({
-			attributes: ["category_id", "category_name", "category_type", "category_image"],
+			attributes: ["category_id", "category_name", "category_type", "category_image", "is_active"],
 			raw: true,
 		});
 	};
 
 	public getList = async (sorted: boolean = false) => {
 		const data = await Category.findAll({
-			attributes: ["category_id", "category_name", "category_type", "category_image"],
+			attributes: ["category_id", "category_name", "category_type", "category_image", "is_active"],
 			raw: true,
 		});
 
@@ -54,7 +57,7 @@ export default class CategoryService {
 			where: {
 				...searchObject,
 			},
-			attributes: ["category_id", "category_name", "category_type", "category_image"],
+			attributes: ["category_id", "category_name", "category_type", "category_image", "is_active"],
 			raw: true,
 		});
 	};

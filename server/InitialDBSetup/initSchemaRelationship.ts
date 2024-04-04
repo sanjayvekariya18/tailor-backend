@@ -46,6 +46,11 @@ const initSchemaRelationship = () => {
 	//Purchase Payment
 	PurchasePayment.hasOne(Purchase, { foreignKey: "purchase_id", sourceKey: "purchase_id" });
 
+	// orderProduct
+	OrderProduct.hasOne(Order, { foreignKey: "order_id", sourceKey: "order_id" });
+	OrderProduct.hasOne(Category, { foreignKey: "category_id", sourceKey: "category_id" });
+	OrderProduct.hasOne(Worker, { foreignKey: "worker_id", sourceKey: "worker_id" });
+
 	//Worker
 	Worker.hasMany(WorkerPrice, { foreignKey: "worker_id", sourceKey: "worker_id" });
 	Worker.hasOne(WorkerPayment, { foreignKey: "worker_id", sourceKey: "worker_id" });
@@ -57,11 +62,6 @@ const initSchemaRelationship = () => {
 
 	//worker payment
 	WorkerPayment.hasOne(Worker, { foreignKey: "worker_id", sourceKey: "worker_id" });
-
-	// orderProduct
-	OrderProduct.hasOne(Order, { foreignKey: "order_id", sourceKey: "order_id" });
-	OrderProduct.hasOne(Category, { foreignKey: "category_id", sourceKey: "category_id" });
-	OrderProduct.hasOne(Worker, { foreignKey: "worker_id", sourceKey: "worker_id" });
 };
 
 export default initSchemaRelationship;

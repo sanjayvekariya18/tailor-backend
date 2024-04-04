@@ -11,9 +11,10 @@ export interface CategoryAttributes {
 	category_name: string;
 	category_type: CATEGORY_TYPE;
 	category_image: string;
+	is_active?: boolean;
 }
 
-export interface CategoryInput extends Optional<CategoryAttributes, "category_id"> {}
+export interface CategoryInput extends Optional<CategoryAttributes, "category_id" | "is_active"> {}
 export interface CategoryOutput extends Required<CategoryAttributes> {}
 
 class Category extends Model<CategoryAttributes, CategoryInput> implements CategoryAttributes {
@@ -21,6 +22,7 @@ class Category extends Model<CategoryAttributes, CategoryInput> implements Categ
 	public category_name!: string;
 	public category_type!: CATEGORY_TYPE;
 	public category_image!: string;
+	public is_active!: boolean;
 }
 
 Category.init(
@@ -42,6 +44,10 @@ Category.init(
 		category_image: {
 			type: DataTypes.TEXT,
 			allowNull: false,
+		},
+		is_active: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
 		},
 	},
 	{
