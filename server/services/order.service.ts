@@ -33,6 +33,14 @@ export default class OrderService {
             o.type,
             o.bill_no,
             JSON_ARRAYAGG(JSON_OBJECT('category_id', op.category_id, 'category_name', c.category_name,'category_image', c.category_image, 'qty', op.qty)) AS category,
+ JSON_ARRAYAGG(
+        JSON_OBJECT(
+            'order_product_id', op.order_product_id,
+            'category_name', c.category_name,
+            'qty', op.qty,
+            'status', op.status
+        )
+    ) AS order_products,
             cust.customer_name,
             cust.customer_mobile,
             cust.customer_address
@@ -99,7 +107,7 @@ export default class OrderService {
 		});
 	};
 
-	public getCustomerMeasurement = async (order_id: string, customer_id: string) => {
+	public getCustomerMeasurement = async (order_id: string) => {
 		let orderData = await Order.findOne({
 			where: {
 				order_id: order_id,
@@ -385,7 +393,7 @@ export default class OrderService {
 	public getCustomerBill = async (searchParams: getCustomerBillDTO) => {
 		const order_data = await Order.findOne({
 			where: { bill_no: searchParams.bill_no },
-			include: [{ model: Customer }, { model: OrderProduct }],
+			include: [{ model: Customer }, { model: OrderProduct, include: [{ model: Category }] }],
 			attributes: [
 				"order_id",
 				"customer_id",

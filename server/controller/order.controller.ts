@@ -31,15 +31,17 @@ export default class OrderController {
 			if (checkOrderData == null) {
 				throw new BadResponseHandler("Order Data Not Found");
 			}
-			const data: any = await this.orderService.getCustomerMeasurement(orderId, checkOrderData.customer_id);
+			const data: any = await this.orderService.getCustomerMeasurement(orderId);
 			const customerMeasurementData = data?.get({ plain: true }).Customer.CustomerMeasurements;
 			let CustomerChestDetails = [];
 
 			const measurementCH = customerMeasurementData.find((item: any) => item.Measurement.measurement_name === "CH");
-			if (measurementCH.measurement !== null) {
-				let measurementData = await ChestDetails.findOne({ where: { chest: measurementCH.measurement }, raw: true });
-				if (measurementData !== null) {
-					CustomerChestDetails.push(measurementData);
+			if (measurementCH != undefined) {
+				if (measurementCH.measurement !== null) {
+					let measurementData = await ChestDetails.findOne({ where: { chest: measurementCH.measurement }, raw: true });
+					if (measurementData !== null) {
+						CustomerChestDetails.push(measurementData);
+					}
 				}
 			}
 			return res.api.create({ ...data.get({ plain: true }), CustomerChestDetails });
