@@ -16,6 +16,8 @@ import http from "http";
 import https from "https";
 import fs from "fs";
 import { NODE_MODE } from "./server/constants";
+import nodeCron from "node-cron";
+import DatabaseBackupService from "./server/services/databaseBackup.service";
 
 const app: Application = express();
 const port = config.port;
@@ -114,6 +116,12 @@ app.use((req: Request, res: Response) => {
 		message: "Page Not Found",
 	});
 });
+
+// daily backup in tailor project
+const cronJob = nodeCron.schedule("0 0 * * *", async () => {
+	await DatabaseBackupService.dbBackup();
+});
+cronJob.start();
 
 try {
 	if (config.env == "production") {

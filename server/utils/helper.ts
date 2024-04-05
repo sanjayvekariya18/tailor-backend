@@ -7,6 +7,7 @@ import Validator from "validatorjs";
 import { FormErrorsHandler } from "../errorHandler";
 import { NextFunction, Response, Request } from "express";
 import logger from "../config/logger";
+import AdmZip from "adm-zip";
 
 export const isEmpty = (value: any) => {
 	if (value == null || value == "null") {
@@ -175,3 +176,25 @@ export async function logInfo(payload: { data: any; type: string }) {
 		}
 	});
 }
+
+export const sqlFileToZip = (dumpFilePath: string, backupDirectory: string, date: string) => {
+	const zip = new AdmZip();
+	try {
+		const sqlFileData: any = fs.readFileSync(dumpFilePath, "utf8");
+		zip.addFile(date, sqlFileData);
+		const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+		const zipFilename = `${backupDirectory}${timestamp}.gz`;
+		const zipBuffer = zip.toBuffer();
+		fs.writeFileSync(zipFilename, zipBuffer);
+		console.log(`SQL file successfully zipped to: ${zipFilename}`);
+		fs.unlink(dumpFilePath, (err: any) => {
+			if (err) {
+				console.error("Error deleting file:", err);
+			} else {
+				console.log("File deleted successfully!");
+			}
+		});
+	} catch (error) {
+		console.error("Error converting SQL file to ZIP:", error);
+	}
+};

@@ -53,6 +53,10 @@ export = {
 		dialect: envVars.DB_DIALECT,
 		port: envVars.DB_PORT,
 	},
+	sys_email_details: {
+		email: envVars.SYS_EMAIL,
+		password: envVars.SYS_EMAIL_PASSWORD,
+	},
 	file_path: envVars.FILEPATH,
 	frontend_url: envVars.FRONTEND_URL,
 	backend_url: envVars.BACKEND_URL,
