@@ -112,10 +112,10 @@ export default class OrderController {
 			});
 			orderData.customer_measurement.map((data) => {
 				if (!categoryID.includes(data.category_id)) {
-					throw new BadResponseHandler("CateGory Not Found");
+					throw new BadResponseHandler("Category not found");
 				}
 				if (!measurementID.includes(data.measurement_id)) {
-					throw new BadResponseHandler("Measurement Not Found");
+					throw new BadResponseHandler("Measurement not found");
 				}
 			});
 			let data = await this.orderService.create(orderData);
@@ -131,7 +131,7 @@ export default class OrderController {
 			const orderData = new CreateOrderDTO(req.body);
 			const checkOrderData = await this.orderService.findOne({ order_id: orderId });
 			if (checkOrderData == null) {
-				throw new BadResponseHandler("Order Data Not Found");
+				throw new BadResponseHandler("Order data not found");
 			}
 			const file: any = req.files;
 			if (file) {

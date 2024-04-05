@@ -19,6 +19,7 @@ import { CreateOrderImageDTO, EditOrderImageDTO } from "./orderImage.dto";
 import { SearchOrderProductDTO, createOrderProductDTO } from "./orderProduct.dto";
 import { SearchPurchaseDTO, createPurchaseDTO, EditPurchaseDTO } from "./purchase.dto";
 import { PurchasePaymentDTO } from "./purchasePayment.dto";
+import { CreateDeliveryDTO, EditDeliveryDTO, SearchDeliveryDTO } from "./delivery.dto";
 export {
 	LoginDTO,
 	CreateCategoryDTO,
@@ -54,4 +55,7 @@ export {
 	getCustomerBillDTO,
 	findCustomerMeasurementDTO,
 	ChangeCustomerPasswordDTO,
+	CreateDeliveryDTO,
+	EditDeliveryDTO,
+	SearchDeliveryDTO,
 };

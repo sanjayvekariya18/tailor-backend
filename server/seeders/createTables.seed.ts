@@ -4,6 +4,8 @@ import {
 	ChestDetails,
 	Customer,
 	CustomerMeasurement,
+	Delivery,
+	DeliveryDetails,
 	Login,
 	Measurement,
 	Order,
@@ -136,6 +138,22 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`WorkerPrice Table Error : ${error}`);
+		});
+
+	await Delivery.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`Delivery Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`Delivery Table Error : ${error}`);
+		});
+
+	await DeliveryDetails.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`DeliveryDetails Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`DeliveryDetails Table Error : ${error}`);
 		});
 
 	const totalTable = successFullTable.length + errorTable.length;

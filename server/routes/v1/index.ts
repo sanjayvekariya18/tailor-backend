@@ -13,6 +13,7 @@ import ListRoute from "./list.route";
 import OrderProductRoute from "./orderProduct.route";
 import PurchaseRoute from "./purchase.route";
 import PurchasePaymentRoute from "./purchasePayment.route";
+import DeliveryRoute from "./delivery.route";
 import { TokenVerifyMiddleware } from "../../middlewares";
 
 const router = Router();
@@ -30,5 +31,6 @@ router.use("/list", TokenVerifyMiddleware, ListRoute);
 router.use("/order_product", TokenVerifyMiddleware, OrderProductRoute);
 router.use("/purchase", TokenVerifyMiddleware, PurchaseRoute);
 router.use("/purchase_payment", TokenVerifyMiddleware, PurchasePaymentRoute);
+router.use("/delivery", TokenVerifyMiddleware, DeliveryRoute);
 
 export default router;

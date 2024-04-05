@@ -2,6 +2,8 @@ import {
 	Category,
 	Customer,
 	CustomerMeasurement,
+	Delivery,
+	DeliveryDetails,
 	Measurement,
 	Order,
 	OrderImages,
@@ -62,6 +64,12 @@ const initSchemaRelationship = () => {
 
 	//worker payment
 	WorkerPayment.hasOne(Worker, { foreignKey: "worker_id", sourceKey: "worker_id" });
+
+	//Delivery
+	Delivery.hasMany(DeliveryDetails, { foreignKey: "delivery_id", sourceKey: "delivery_id" });
+	Category.hasMany(DeliveryDetails, { foreignKey: "category_id", sourceKey: "category_id" });
+	DeliveryDetails.hasOne(Delivery, { foreignKey: "delivery_id", sourceKey: "delivery_id" });
+	DeliveryDetails.hasOne(Category, { foreignKey: "category_id", sourceKey: "category_id" });
 };
 
 export default initSchemaRelationship;
