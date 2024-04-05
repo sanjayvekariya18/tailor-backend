@@ -62,6 +62,7 @@ export default class DeliveryController {
 				throw new BadResponseHandler("Order Data Not Found");
 			}
 			const data = await this.deliveryService.findAllCompletedTask(orderId);
+			console.log(data);
 			return res.api.create(data);
 		},
 	};

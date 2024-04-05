@@ -2,10 +2,11 @@ import { Transaction } from "sequelize";
 import { CreateDeliveryDTO, EditDeliveryDTO } from "../dto";
 import { Category, Delivery, DeliveryDetails, OrderProduct } from "../models";
 import { DeliveryDetailsAttributes } from "../models/deliveryDetails.model";
-import { executeTransaction } from "../config/database";
+import { executeTransaction, sequelizeConnection } from "../config/database";
 import { WORKER_ASSIGN_TASK } from "../constants";
 
 export default class DeliveryService {
+	private Sequelize = sequelizeConnection.Sequelize;
 	public getAll = async (searchParams: any) => {
 		return await Delivery.findAndCountAll({
 			where: {
@@ -62,22 +63,37 @@ export default class DeliveryService {
 		});
 	};
 	public findAllCompletedTask = async (order_id: string) => {
-		return await OrderProduct.findAll({
+		let data = await OrderProduct.findAll({
 			where: { status: WORKER_ASSIGN_TASK.complete, order_id: order_id },
 			attributes: [
-				" order_product_id",
+				"order_product_id",
 				"order_id",
 				"category_id",
-				"worker_id",
-				"parent",
+				[this.Sequelize.col("Category.category_name"), "category_name"],
 				"qty",
 				"price",
 				"status",
-				"work_price",
-				"work_total",
-				"assign_date",
 			],
-			include: [{ model: Category }],
+			include: [{ model: Category, attributes: [] }],
+			raw: true,
 		});
+		const categoryWiseData: any = {};
+		data.forEach((item) => {
+			const key = `${item.order_id}_${item.category_id}`;
+			if (categoryWiseData[key]) {
+				categoryWiseData[key].qty += item.qty;
+			} else {
+				categoryWiseData[key] = { ...item };
+			}
+		});
+		return Object.values(categoryWiseData).map((item: any) => ({
+			order_product_id: item.order_product_id,
+			order_id: item.order_id,
+			category_id: item.category_id,
+			category_name: item.category_name,
+			qty: item.qty,
+			price: item.price,
+			status: item.status,
+		}));
 	};
 }
