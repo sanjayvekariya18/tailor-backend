@@ -31,3 +31,13 @@ export class EditCustomerDTO {
 		data.customer_address != undefined ? (this.customer_address = data.customer_address) : delete this.customer_address;
 	}
 }
+export class ChangeCustomerPasswordDTO {
+	old_password: string;
+	new_password: string;
+	confirm_password: string;
+	constructor(data: any) {
+		this.old_password = data.old_password;
+		this.new_password = data.new_password;
+		this.confirm_password = data.confirm_password;
+	}
+}

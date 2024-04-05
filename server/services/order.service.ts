@@ -167,8 +167,6 @@ OFFSET
 		if (order_data) {
 			const response_data: any = order_data.get({ plain: true });
 			const category_ids = response_data.OrderProducts.map((row: any) => row.category_id);
-			console.log(category_ids);
-
 			const customer_measurement_data = await CustomerMeasurement.findAll({
 				where: { customer_id: order_data.customer_id, category_id: { [Op.in]: category_ids } },
 			});
@@ -176,6 +174,18 @@ OFFSET
 				const customer_measurement = customer_measurement_data.filter((data) => data.category_id == row.category_id);
 				row.customer_measurement = customer_measurement;
 			});
+
+			const aggregatedProducts: any = {};
+
+			response_data.OrderProducts.forEach((product: any) => {
+				const key = `${product.order_id}_${product.category_id}`;
+				if (!aggregatedProducts[key]) {
+					aggregatedProducts[key] = { ...product };
+				} else {
+					aggregatedProducts[key].qty += product.qty;
+				}
+			});
+			response_data.OrderProducts = Object.values(aggregatedProducts);
 			return response_data;
 		} else {
 			throw new NotFoundHandler("Order Not found");

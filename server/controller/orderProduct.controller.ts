@@ -55,7 +55,7 @@ export default class OrderController {
 				category_id: orderData.category_id,
 				worker_id: orderData.worker_id,
 				qty: orderData.qty,
-				price: orderData.price,
+				price: assignTask.price,
 				work_price: getWorkerPrice.price,
 				work_total: getWorkerPrice.price * orderData.qty,
 				assign_date: orderData.assign_date,

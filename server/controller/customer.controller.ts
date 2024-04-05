@@ -2,8 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { isEmpty } from "../utils/helper";
 import { CustomerService } from "../services";
 import { CustomerValidation } from "../validations";
-import { CreateCustomerDTO, EditCustomerDTO, SearchCustomerDTO } from "../dto";
+import { ChangeCustomerPasswordDTO, CreateCustomerDTO, EditCustomerDTO, SearchCustomerDTO } from "../dto";
 import { Op } from "sequelize";
+import { Login } from "../models";
+import { BadResponseHandler } from "../errorHandler";
 
 export default class CustomerController {
 	private customerService = new CustomerService();
@@ -69,6 +71,28 @@ export default class CustomerController {
 			}
 			const data = await this.customerService.delete(customerId);
 			return res.api.create(data);
+		},
+	};
+
+	public changePassword = {
+		validation: this.customerValidation.changePassword,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const userId: string = req.params["login_id"] as string;
+			const userData = new ChangeCustomerPasswordDTO(req.body);
+			const checkLoginData = await Login.findOne({ where: { login_id: userId } });
+			if (isEmpty(checkLoginData)) {
+				return res.api.badResponse({ message: "User data not found" });
+			}
+			if (userData.old_password == checkLoginData?.password) {
+				if (userData.new_password == userData.confirm_password) {
+					let data = await this.customerService.changePassword(userData, userId);
+					return res.api.create(data);
+				} else {
+					throw new BadResponseHandler("new password not match conform password");
+				}
+			} else {
+				throw new BadResponseHandler("old password not match");
+			}
 		},
 	};
 }

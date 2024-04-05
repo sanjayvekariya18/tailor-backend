@@ -16,4 +16,10 @@ export default class CustomerValidation {
 		customer_mobile: "string",
 		customer_address: "string",
 	};
+
+	public changePassword = {
+		old_password: "required|string",
+		new_password: "required|string",
+		confirm_password: "required|string",
+	};
 }

@@ -1,7 +1,7 @@
 import { Op, QueryTypes } from "sequelize";
 import { sequelizeConnection } from "../config/database";
-import { Customer } from "../models";
-import { CreateCustomerDTO, EditCustomerDTO } from "../dto";
+import { Customer, Login } from "../models";
+import { ChangeCustomerPasswordDTO, CreateCustomerDTO, EditCustomerDTO } from "../dto";
 
 export default class CustomerService {
 	public getAll = async (searchParams: any) => {
@@ -52,6 +52,11 @@ export default class CustomerService {
 	public delete = async (customer_id: string) => {
 		return await Customer.destroy({ where: { customer_id: customer_id } }).then(() => {
 			return "Customer deleted successfully";
+		});
+	};
+	public changePassword = async (userData: ChangeCustomerPasswordDTO, login_id: string) => {
+		return await Login.update({ password: userData.new_password }, { where: { login_id: login_id } }).then(() => {
+			return "User password change successfully";
 		});
 	};
 }
