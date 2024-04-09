@@ -8,6 +8,7 @@ import { BadResponseHandler } from "../errorHandler";
 import { OrderPaymentDTO, findCustomerMeasurementDTO, getCustomerBillDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
 import moment from "moment";
 import { ChestDetails } from "../models";
+import { promises } from "fs";
 
 export default class OrderController {
 	private orderService = new OrderService();
@@ -84,7 +85,6 @@ export default class OrderController {
 		validation: this.orderValidation.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const orderData = new CreateOrderDTO(req.body);
-
 			const file: any = req.files;
 			if (file) {
 				if (file.image_name) {

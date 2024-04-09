@@ -56,6 +56,7 @@ export default class CategoryController {
 			return res.api.create(data);
 		},
 	};
+
 	public edit = {
 		validation: this.categoryValidation.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -65,7 +66,6 @@ export default class CategoryController {
 			if (checkCategoryDataId == null) {
 				return res.api.badResponse({ message: "Category Data Not Found" });
 			}
-
 			const checkCategoryData = await this.categoryService.findOne({
 				category_id: { [Op.not]: categoryId },
 				category_name: reqCategoryData.category_name,
@@ -73,7 +73,6 @@ export default class CategoryController {
 			if (!isEmpty(checkCategoryData)) {
 				return res.api.badResponse({ message: "Category Name Already Exit" });
 			}
-
 			const file: any = req.files;
 			if (file) {
 				if (file.category_image) {

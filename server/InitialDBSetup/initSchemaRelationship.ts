@@ -66,8 +66,9 @@ const initSchemaRelationship = () => {
 	WorkerPayment.hasOne(Worker, { foreignKey: "worker_id", sourceKey: "worker_id" });
 
 	//Delivery
+	Delivery.hasOne(Order, { foreignKey: "order_id", sourceKey: "order_id" });
 	Delivery.hasMany(DeliveryDetails, { foreignKey: "delivery_id", sourceKey: "delivery_id" });
-	Category.hasMany(DeliveryDetails, { foreignKey: "category_id", sourceKey: "category_id" });
+
 	DeliveryDetails.hasOne(Delivery, { foreignKey: "delivery_id", sourceKey: "delivery_id" });
 	DeliveryDetails.hasOne(Category, { foreignKey: "category_id", sourceKey: "category_id" });
 };

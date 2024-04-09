@@ -26,3 +26,8 @@ export enum BILL_STATUS {
 	UNPAID = "unpaid",
 	PAID = "paid",
 }
+
+export enum NOTIFICATION_TEMPLATE {
+	CREATE = "create",
+	COMPLETE = "complete",
+}

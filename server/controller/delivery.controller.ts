@@ -19,6 +19,14 @@ export default class DeliveryController {
 		},
 	};
 
+	public findOne = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const deliveryId: string = req.params["delivery_id"] as string;
+			const data = await this.deliveryService.findOne({ delivery_id: deliveryId });
+			return res.api.create(data);
+		},
+	};
+
 	public create = {
 		validation: this.deliveryValidation.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -62,7 +70,6 @@ export default class DeliveryController {
 				throw new BadResponseHandler("Order Data Not Found");
 			}
 			const data = await this.deliveryService.findAllCompletedTask(orderId);
-			console.log(data);
 			return res.api.create(data);
 		},
 	};
