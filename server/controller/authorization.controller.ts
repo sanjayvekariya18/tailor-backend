@@ -21,6 +21,9 @@ export default class AuthorizationController {
 							const tokenPayload = {
 								id: userData.login_id,
 								userName: userData.user_name,
+								address: userData.address,
+								mobile_no: userData.mobile_no,
+								logo: userData.logo,
 							};
 							await this.tokenServices
 								.generateUserAccessToken(tokenPayload)

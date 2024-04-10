@@ -2,6 +2,9 @@
 	{
 		"user_name": "parth",
 		"password": "parth123",
+		"address": "abc",
+		"mobile_no": "9714936221",
+		"logo": "../../../public/images/CategoryImage/1710569852.png",
 		"whatsapp_id": "658E5FE2B7A1E",
 		"whatsapp_token": "652932ef0e526"
 	}

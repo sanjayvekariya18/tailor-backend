@@ -15,6 +15,9 @@ const userDetailsSeed = async (transaction: Transaction) => {
 		newUserData.push({
 			user_name: data.user_name,
 			password: data.password,
+			address: data.address,
+			mobile_no: data.mobile_no,
+			logo: data.logo,
 			whatsapp_id: data.whatsapp_id,
 			whatsapp_token: data.whatsapp_token,
 		} as LoginAttributes);

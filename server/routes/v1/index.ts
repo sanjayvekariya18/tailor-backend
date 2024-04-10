@@ -15,11 +15,14 @@ import PurchaseRoute from "./purchase.route";
 import PurchasePaymentRoute from "./purchasePayment.route";
 import DeliveryRoute from "./delivery.route";
 import { TokenVerifyMiddleware } from "../../middlewares";
+import { UserController } from "../../controller";
 
 const router = Router();
 const authorizationController = new AuthorizationController();
+const userController = new UserController();
 
 router.post("/login", requestValidate(authorizationController.login.validation), use(authorizationController.login.controller));
+router.put("/:user_id", TokenVerifyMiddleware, requestValidate(userController.edit.validation), use(userController.edit.controller));
 router.use("/category", TokenVerifyMiddleware, categoryRoute);
 router.use("/measurement", TokenVerifyMiddleware, measurementRoute);
 router.use("/worker", TokenVerifyMiddleware, workerRoute);

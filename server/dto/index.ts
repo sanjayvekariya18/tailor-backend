@@ -1,4 +1,4 @@
-import { LoginDTO } from "./login.dto";
+import { LoginDTO, EditUserDTO } from "./login.dto";
 import { CreateCategoryDTO, SearchCategoryDTO, EditCategoryDTO } from "./category.dto";
 import { SearchMeasurementDTO, CreateMeasurementDTO } from "./measurement.dto";
 import { SearchWorkerDTO, CreateWorkerDTO, EditWorkerDTO } from "./worker.dto";
@@ -58,4 +58,5 @@ export {
 	CreateDeliveryDTO,
 	EditDeliveryDTO,
 	SearchDeliveryDTO,
+	EditUserDTO,
 };

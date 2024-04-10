@@ -9,3 +9,4 @@ export { default as OrderProductController } from "./orderProduct.controller";
 export { default as PurchaseController } from "./purchase.controller";
 export { default as PurchasePaymentController } from "./purchasePayment.controller";
 export { default as DeliveryController } from "./delivery.controller";
+export { default as UserController } from "./user.controller";
