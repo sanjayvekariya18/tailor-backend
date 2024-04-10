@@ -1,17 +1,19 @@
 import { NextFunction, Request, Response } from "express";
-import { fileType, isEmpty, saveFile } from "../utils/helper";
+import { fileType, saveFile } from "../utils/helper";
 import { OrderValidation } from "../validations";
-import { CategoryService, CustomerService, MeasurementService, OrderService } from "../services";
-import { CreateOrderDTO, SearchOrderDTO } from "../dto";
+import { CategoryService, MeasurementService, OrderService } from "../services";
+import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
 import { image } from "../constants";
 import { BadResponseHandler } from "../errorHandler";
-import { string } from "joi";
+import { OrderPaymentDTO, findCustomerMeasurementDTO, getCustomerBillDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
+import moment from "moment";
+import { ChestDetails } from "../models";
+import { promises } from "fs";
 
 export default class OrderController {
 	private orderService = new OrderService();
 	private categoryService = new CategoryService();
 	private measurementService = new MeasurementService();
-	private customerService = new CustomerService();
 	private orderValidation = new OrderValidation();
 
 	public getAll = {
@@ -22,11 +24,67 @@ export default class OrderController {
 		},
 	};
 
+	public getCustomerMeasurement = {
+		validation: this.orderValidation.getAll,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			let orderId: string = req.params["order_id"] as string;
+			const checkOrderData = await this.orderService.findOne({ order_id: orderId });
+			if (checkOrderData == null) {
+				throw new BadResponseHandler("Order Data Not Found");
+			}
+			const data: any = await this.orderService.getCustomerMeasurement(orderId);
+			const customerMeasurementData = data?.get({ plain: true }).Customer.CustomerMeasurements;
+			let CustomerChestDetails = [];
+
+			const measurementCH = customerMeasurementData.find((item: any) => item.Measurement.measurement_name === "CH");
+			if (measurementCH != undefined) {
+				if (measurementCH.measurement !== null) {
+					let measurementData = await ChestDetails.findOne({ where: { chest: measurementCH.measurement }, raw: true });
+					if (measurementData !== null) {
+						CustomerChestDetails.push(measurementData);
+					}
+				}
+			}
+			return res.api.create({ ...data.get({ plain: true }), CustomerChestDetails });
+		},
+	};
+
+	public findOneCustomerMeasurement = {
+		validation: this.orderValidation.findOneMeasurement,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.orderService.findOneCustomerMeasurement(new findCustomerMeasurementDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
+	public getOrderDetails = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			let orderId: string = req.params["id"] as string;
+			const data = await this.orderService.getOrderDetails(orderId);
+			return res.api.create(data);
+		},
+	};
+
+	public getCustomerBill = {
+		validation: this.orderValidation.getCustomerBill,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.orderService.getCustomerBill(new getCustomerBillDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
+	public deliveryOrderRemain = {
+		validation: this.orderValidation.deliveryDateRemain,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.orderService.deliveryOrderRemain(new SearchDeliveryOrderRemainDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
 	public create = {
 		validation: this.orderValidation.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const orderData = new CreateOrderDTO(req.body);
-
 			const file: any = req.files;
 			if (file) {
 				if (file.image_name) {
@@ -54,10 +112,10 @@ export default class OrderController {
 			});
 			orderData.customer_measurement.map((data) => {
 				if (!categoryID.includes(data.category_id)) {
-					throw new BadResponseHandler("CateGory Not Found");
+					throw new BadResponseHandler("Category not found");
 				}
 				if (!measurementID.includes(data.measurement_id)) {
-					throw new BadResponseHandler("Measurement Not Found");
+					throw new BadResponseHandler("Measurement not found");
 				}
 			});
 			let data = await this.orderService.create(orderData);
@@ -73,7 +131,7 @@ export default class OrderController {
 			const orderData = new CreateOrderDTO(req.body);
 			const checkOrderData = await this.orderService.findOne({ order_id: orderId });
 			if (checkOrderData == null) {
-				throw new BadResponseHandler("Order Data Not Found");
+				throw new BadResponseHandler("Order data not found");
 			}
 			const file: any = req.files;
 			if (file) {
@@ -108,7 +166,59 @@ export default class OrderController {
 					throw new BadResponseHandler("Measurement Not Found");
 				}
 			});
+
 			let data = await this.orderService.edit(orderData, orderId, checkOrderData.customer_id);
+			return res.api.create(data);
+		},
+	};
+
+	public payment = {
+		validation: this.orderValidation.OrderPayment,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			let orderId: string = req.params["order_id"] as string;
+			const orderData = new OrderPaymentDTO(req.body);
+			const checkOrderData = await this.orderService.findOne({ order_id: orderId });
+			if (checkOrderData == null) {
+				throw new BadResponseHandler("Order Data Not Found");
+			}
+			let todayDate = moment().format("YYYY-MM-DD");
+			let payment_date = moment(orderData.payment_date).format("YYYY-MM-DD");
+			let order_date = moment(checkOrderData.order_date).format("YYYY-MM-DD");
+			if (todayDate < payment_date) {
+				throw new BadResponseHandler("Payment date greater then today date");
+			}
+			if (order_date > payment_date) {
+				throw new BadResponseHandler("Payment date less then order date");
+			}
+			let data = await this.orderService.payment(orderData, orderId);
+			return res.api.create(data);
+		},
+	};
+
+	public getCustomerPaymentData = {
+		validation: this.orderValidation.getCustomerPaymentData,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.orderService.getCustomerPaymentData(new getCustomerPaymentDataDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
+	public income = {
+		validation: this.orderValidation.getCustomerPaymentData,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.orderService.income(new getCustomerPaymentDataDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
+	public delete = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const orderId: string = req.params["order_id"] as string;
+			const checkOrderDataId = await this.orderService.findOne({ order_id: orderId });
+			if (checkOrderDataId == null) {
+				return res.api.badResponse({ message: "Order Not Found" });
+			}
+			let data = await this.orderService.delete(orderId);
 			return res.api.create(data);
 		},
 	};

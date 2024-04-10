@@ -1,32 +1,37 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
+import { WORKER_ASSIGN_TASK } from "../constants";
 
 export interface OrderProductAttributes {
 	order_product_id?: string;
 	order_id: string;
-	worker_id: string;
 	category_id: string;
+	worker_id?: string;
 	parent?: number;
 	qty: number;
-	price: number;
-	status?: boolean;
-	work_price: number;
-	work_total: number;
-	assign_date: Date;
+	price?: number;
+	status: WORKER_ASSIGN_TASK;
+	work_price?: number;
+	work_total?: number;
+	assign_date?: Date;
 }
 
-export interface OrderProductInput extends Optional<OrderProductAttributes, "order_product_id" | "parent" | "status"> {}
+export interface OrderProductInput
+	extends Optional<
+		OrderProductAttributes,
+		"order_product_id" | "worker_id" | "parent" | "status" | "work_price" | "work_total" | "price" | "assign_date"
+	> {}
 export interface OrderProductOutput extends Required<OrderProductAttributes> {}
 
 class OrderProduct extends Model<OrderProductAttributes, OrderProductInput> implements OrderProductAttributes {
 	public order_product_id!: string;
 	public order_id!: string;
-	public worker_id!: string;
 	public category_id!: string;
+	public worker_id!: string;
 	public parent!: number;
 	public qty!: number;
 	public price!: number;
-	public status!: boolean;
+	public status!: WORKER_ASSIGN_TASK;
 	public work_price!: number;
 	public work_total!: number;
 	public assign_date!: Date;
@@ -66,7 +71,7 @@ OrderProduct.init(
 		},
 		worker_id: {
 			type: DataTypes.UUID,
-			allowNull: false,
+			allowNull: true,
 			references: {
 				model: {
 					tableName: "worker",
@@ -76,7 +81,6 @@ OrderProduct.init(
 			onUpdate: "RESTRICT",
 			onDelete: "CASCADE",
 		},
-
 		parent: {
 			defaultValue: 0,
 			type: DataTypes.INTEGER,
@@ -88,24 +92,26 @@ OrderProduct.init(
 		},
 		price: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
+			defaultValue: 0,
+			allowNull: true,
 		},
 		status: {
-			defaultValue: false,
-			type: DataTypes.STRING,
-			allowNull: true,
+			type: DataTypes.ENUM(...Object.keys(WORKER_ASSIGN_TASK)),
+			defaultValue: WORKER_ASSIGN_TASK.pending,
+			allowNull: false,
 		},
 		work_price: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
+			allowNull: true,
 		},
 		work_total: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
+			allowNull: true,
 		},
 		assign_date: {
 			type: DataTypes.DATE,
-			allowNull: false,
+			defaultValue: null,
+			allowNull: true,
 		},
 	},
 	{

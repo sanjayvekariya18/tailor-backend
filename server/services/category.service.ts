@@ -1,27 +1,60 @@
 import { Op } from "sequelize";
-import { CreateCategoryDTO, EditCategoryDTO } from "../dto";
+import { CreateCategoryDTO, EditCategoryDTO, SearchCategoryDTO } from "../dto";
 import { Category } from "../models";
 
 export default class CategoryService {
-	public getAll = async (searchParams: any) => {
+	public getAll = async (searchParams: SearchCategoryDTO) => {
 		return await Category.findAndCountAll({
 			where: {
 				...(searchParams.searchTxt && {
 					category_name: { [Op.like]: "%" + searchParams.searchTxt + "%" },
 				}),
+				...(searchParams.category_type && {
+					category_type: searchParams.category_type,
+				}),
 			},
-			attributes: ["category_id", "category_name", "category_image"],
+			attributes: ["category_id", "category_name", "category_type", "category_image", "is_active"],
 			order: [["category_name", "ASC"]],
 			offset: searchParams.rowsPerPage * searchParams.page,
 			limit: searchParams.rowsPerPage,
 		});
 	};
 
-	public findAll = async () => {
+	public category_list = async () => {
 		return await Category.findAll({
-			attributes: ["category_id", "category_name", "category_image"],
+			where: { is_active: true },
+			attributes: ["category_id", "category_name", "category_type", "category_image", "is_active"],
 			raw: true,
 		});
+	};
+
+	public findAll = async () => {
+		return await Category.findAll({
+			attributes: ["category_id", "category_name", "category_type", "category_image", "is_active"],
+			raw: true,
+		});
+	};
+
+	public getList = async (sorted: boolean = false) => {
+		const data = await Category.findAll({
+			attributes: ["category_id", "category_name", "category_type", "category_image", "is_active"],
+			raw: true,
+		});
+
+		if (sorted) {
+			const response_data: any = {};
+
+			for (const category of data) {
+				if (!response_data[`${category.category_type}`]) {
+					response_data[`${category.category_type}`] = [];
+				}
+				response_data[`${category.category_type}`].push(category);
+			}
+
+			return response_data;
+		} else {
+			return data;
+		}
 	};
 
 	public findOne = async (searchObject: any) => {
@@ -29,7 +62,7 @@ export default class CategoryService {
 			where: {
 				...searchObject,
 			},
-			attributes: ["category_id", "category_name", "category_image"],
+			attributes: ["category_id", "category_name", "category_type", "category_image", "is_active"],
 			raw: true,
 		});
 	};

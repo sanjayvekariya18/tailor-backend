@@ -46,17 +46,10 @@ export class EditWorkerDTO {
 	worker_proof?: string;
 	worker_price: Array<CreateWorkerPriceDTO> = [];
 	constructor(data: any) {
-		// let parseData = JSON.parse("[{category_id:1,price:20}]");
-		let parseData = [
-			{
-				category_id: "b2470be1-5801-43a7-8dbf-9aa64443e249",
-				price: 100,
-			},
-			{
-				category_id: "4744c903-9a99-4d2f-8747-f9be94c01832",
-				price: 200,
-			},
-		];
+		let parseData = [];
+		if (data.worker_price != undefined) {
+			parseData = JSON.parse(data.worker_price);
+		}
 		data.worker_name != undefined ? (this.worker_name = data.worker_name) : delete this.worker_name;
 		data.worker_mobile != undefined ? (this.worker_mobile = data.worker_mobile) : delete this.worker_mobile;
 		data.worker_address != undefined ? (this.worker_address = data.worker_address) : delete this.worker_address;

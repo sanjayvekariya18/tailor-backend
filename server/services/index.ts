@@ -8,6 +8,11 @@ import ChestDetailsService from "./chestDetails.service";
 import WorkerPaymentService from "./workerPayment.service";
 import CustomerService from "./customer.service";
 import OrderService from "./order.service";
+import OrderProductService from "./orderProduct.service";
+import PurchaseService from "./purchase.service";
+import PurchasePaymentService from "./purchasePayment.service";
+import DeliveryService from "./delivery.service";
+import NotificationService from "./notification.service";
 
 export {
 	TokenService,
@@ -20,4 +25,9 @@ export {
 	WorkerPaymentService,
 	CustomerService,
 	OrderService,
+	OrderProductService,
+	PurchaseService,
+	PurchasePaymentService,
+	DeliveryService,
+	NotificationService,
 };

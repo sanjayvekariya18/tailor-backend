@@ -12,7 +12,7 @@ export interface OrderPaymentInput extends Optional<OrderPaymentAttributes, "ord
 export interface OrderPaymentOutput extends Required<OrderPaymentAttributes> {}
 
 class OrderPayment extends Model<OrderPaymentAttributes, OrderPaymentInput> implements OrderPaymentAttributes {
-	public order_image_id!: string;
+	public order_payment_id!: string;
 	public order_id!: string;
 	public amount!: number;
 	public payment_date!: Date;

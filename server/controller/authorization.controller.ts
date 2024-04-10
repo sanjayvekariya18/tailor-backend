@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from "express";
 import { TokenService, UserService } from "../services";
 import { NewAccessToken } from "../services/token.service";
 import { UnauthorizedUserHandler } from "../errorHandler";
-import { comparePassword } from "../utils/bcrypt.helper";
 
 export default class AuthorizationController {
 	private userServices = new UserService();
@@ -22,6 +21,9 @@ export default class AuthorizationController {
 							const tokenPayload = {
 								id: userData.login_id,
 								userName: userData.user_name,
+								address: userData.address,
+								mobile_no: userData.mobile_no,
+								logo: userData.logo,
 							};
 							await this.tokenServices
 								.generateUserAccessToken(tokenPayload)

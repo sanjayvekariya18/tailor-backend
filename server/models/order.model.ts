@@ -5,16 +5,17 @@ export interface OrderAttributes {
 	order_id?: string;
 	customer_id: string;
 	total: number;
-	payment: number;
+	payment?: number;
 	order_date: Date;
 	delivery_date: Date;
 	shirt_pocket: number;
 	pant_pocket: number;
 	pant_pinch: number;
-	type: number;
+	type?: number;
+	bill_no?: number;
 }
 
-export interface OrderInput extends Optional<OrderAttributes, "order_id"> {}
+export interface OrderInput extends Optional<OrderAttributes, "order_id" | "payment" | "type" | "bill_no"> {}
 export interface OrderOutput extends Required<OrderAttributes> {}
 
 class Order extends Model<OrderAttributes, OrderInput> implements OrderAttributes {
@@ -28,6 +29,7 @@ class Order extends Model<OrderAttributes, OrderInput> implements OrderAttribute
 	public pant_pocket!: number;
 	public pant_pinch!: number;
 	public type!: number;
+	public bill_no!: number;
 }
 
 Order.init(
@@ -55,8 +57,9 @@ Order.init(
 			allowNull: false,
 		},
 		payment: {
+			defaultValue: 0,
 			type: DataTypes.INTEGER,
-			allowNull: false,
+			allowNull: true,
 		},
 		order_date: {
 			type: DataTypes.DATE,
@@ -80,7 +83,13 @@ Order.init(
 		},
 		type: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
+			defaultValue: 0,
+			allowNull: true,
+		},
+		bill_no: {
+			type: DataTypes.INTEGER,
+			defaultValue: 0,
+			allowNull: true,
 		},
 	},
 	{

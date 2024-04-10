@@ -20,6 +20,13 @@ export default class WorkerController {
 		},
 	};
 
+	public getWorkerList = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.workerService.findAll();
+			return res.api.create(data);
+		},
+	};
+
 	public create = {
 		validation: this.workerValidation.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -52,18 +59,18 @@ export default class WorkerController {
 					workerData.worker_proof = file_path.upload_path;
 				}
 			}
+
 			const allCategory: any = [];
-			const getAllCategory = await this.categoryService.findAll().then((data) => {
+			await this.categoryService.findAll().then((data) => {
 				data.map((categoryId) => {
 					allCategory.push(categoryId.category_id);
 				});
 			});
 			workerData.worker_price.map((data) => {
 				if (!allCategory.includes(data.category_id)) {
-					throw new BadResponseHandler("CateGory Not Found");
+					throw new BadResponseHandler("Category Not Found");
 				}
 			});
-
 			await this.workerService.create(workerData);
 			return res.api.create("worker Created Successfully");
 		},
@@ -80,7 +87,7 @@ export default class WorkerController {
 				return res.api.badResponse({ message: "Worker Data Not Found" });
 			}
 			if (!isEmpty(reqWorkerData.worker_mobile)) {
-				const checkWorkerMobile = await this.workerService.findOne({ worker_mobile: reqWorkerData.worker_mobile });
+				const checkWorkerMobile = await this.workerService.findOne({ worker_id: { [Op.not]: workerID }, worker_mobile: reqWorkerData.worker_mobile });
 				if (!isEmpty(checkWorkerMobile)) {
 					return res.api.badResponse({ message: "Worker MobileNo Already Exit" });
 				}
@@ -117,7 +124,7 @@ export default class WorkerController {
 				}
 			}
 			const allCategory: any = [];
-			const getAllCategory = await this.categoryService.findAll().then((data) => {
+			await this.categoryService.findAll().then((data) => {
 				data.map((categoryId) => {
 					allCategory.push(categoryId.category_id);
 				});
@@ -128,6 +135,18 @@ export default class WorkerController {
 				}
 			});
 			const data = await this.workerService.edit(reqWorkerData, workerID);
+			return res.api.create(data);
+		},
+	};
+
+	public delete = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const workerId: string = req.params["worker_id"] as string;
+			const checkWorkerDataId = await this.categoryService.findOne({ category_id: workerId });
+			if (checkWorkerDataId == null) {
+				return res.api.badResponse({ message: "Worker Data Not Found" });
+			}
+			let data = this.workerService.delete(workerId);
 			return res.api.create(data);
 		},
 	};

@@ -3,6 +3,7 @@ import { executeTransaction, sequelizeConnection } from "../../config/database";
 import logger from "../../config/logger";
 import initSchemaRelationship from "../../InitialDBSetup/initSchemaRelationship";
 import ChestDetailsSeed from "./chestDetails.seed";
+import UserDetailsSeed from "./userDetails.seed";
 
 class DataSeed {
 	static async run() {
@@ -19,6 +20,7 @@ class DataSeed {
 			initSchemaRelationship();
 			try {
 				await ChestDetailsSeed(transaction);
+				await UserDetailsSeed(transaction);
 			} catch (error) {
 				transaction.rollback();
 				logger.error(`Error occurred in seeder : ${error}`);

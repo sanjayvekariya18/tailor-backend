@@ -13,3 +13,5 @@ export { default as PurchasePayment } from "./purchasePayment.model";
 export { default as Worker } from "./worker.model";
 export { default as WorkerPrice } from "./workerPrice.model";
 export { default as WorkerPayment } from "./workerPayment.model";
+export { default as Delivery } from "./delivery.model";
+export { default as DeliveryDetails } from "./deliveryDetails.model";

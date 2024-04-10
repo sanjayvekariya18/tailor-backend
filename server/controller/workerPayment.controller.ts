@@ -45,7 +45,6 @@ export default class WorkerPaymentController {
 					return res.api.badResponse({ message: "Worker Not Founds!" });
 				}
 			}
-
 			const data = await this.workerPaymentService.edit(reqWorkerPaymentData, worker_payment_id);
 			return res.api.create(data);
 		},

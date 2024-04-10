@@ -5,7 +5,7 @@ import { sequelizeConnection } from "../config/database";
 
 export default class MeasurementService {
 	public getAll = async (searchParams: any) => {
-		return await Measurement.findAndCountAll({
+		return await Measurement.findAll({
 			where: {
 				...(searchParams.category_id && { category_id: searchParams.category_id }),
 				...(searchParams.searchTxt && {
@@ -35,7 +35,12 @@ export default class MeasurementService {
 			where: {
 				...searchObject,
 			},
-			attributes: ["measurement_id", "measurement_name", [sequelizeConnection.Sequelize.col("Category.category_name"), "category_name"]],
+			attributes: [
+				"measurement_id",
+				"measurement_name",
+				[sequelizeConnection.Sequelize.col("Category.category_id"), "category_id"],
+				[sequelizeConnection.Sequelize.col("Category.category_name"), "category_name"],
+			],
 			include: [
 				{
 					model: Category,

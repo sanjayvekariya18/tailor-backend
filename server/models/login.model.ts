@@ -5,6 +5,9 @@ export interface LoginAttributes {
 	login_id?: string;
 	user_name: string;
 	password: string;
+	address: string;
+	mobile_no: string;
+	logo: string;
 	whatsapp_id: string;
 	whatsapp_token: string;
 }
@@ -16,6 +19,9 @@ class Login extends Model<LoginAttributes, LoginInput> implements LoginAttribute
 	public login_id!: string;
 	public user_name!: string;
 	public password!: string;
+	public address!: string;
+	public mobile_no!: string;
+	public logo!: string;
 	public whatsapp_id!: string;
 	public whatsapp_token!: string;
 }
@@ -33,6 +39,18 @@ Login.init(
 			allowNull: false,
 		},
 		password: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		address: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		mobile_no: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		logo: {
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
