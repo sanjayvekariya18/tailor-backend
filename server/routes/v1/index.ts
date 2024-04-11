@@ -23,6 +23,7 @@ const userController = new UserController();
 
 router.post("/login", requestValidate(authorizationController.login.validation), use(authorizationController.login.controller));
 router.put("/:user_id", TokenVerifyMiddleware, requestValidate(userController.edit.validation), use(userController.edit.controller));
+router.get("/user", TokenVerifyMiddleware, use(userController.getAll.controller));
 router.use("/category", TokenVerifyMiddleware, categoryRoute);
 router.use("/measurement", TokenVerifyMiddleware, measurementRoute);
 router.use("/worker", TokenVerifyMiddleware, workerRoute);

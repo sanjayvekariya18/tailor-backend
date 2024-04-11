@@ -10,6 +10,13 @@ export default class UserController {
 	private userService = new UserService();
 	private loginValidation = new LoginValidation();
 
+	public getAll = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.userService.getAll();
+			return res.api.create(data);
+		},
+	};
+
 	public create = {
 		validation: this.loginValidation.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
