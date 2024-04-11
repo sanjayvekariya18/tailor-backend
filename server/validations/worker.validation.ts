@@ -22,4 +22,9 @@ export default class WorkerValidation {
 		// "worker_price.*.category_id": "required|string",
 		// "worker_price.*.price": "required|numeric",
 	};
+
+	public work_assign_task = {
+		worker_id: "required|string",
+		customer_id: "required|string",
+	};
 }

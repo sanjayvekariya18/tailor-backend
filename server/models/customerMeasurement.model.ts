@@ -31,7 +31,7 @@ CustomerMeasurement.init(
 			primaryKey: true,
 		},
 		customer_id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 			references: {
 				model: {

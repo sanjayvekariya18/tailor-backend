@@ -7,6 +7,7 @@ const router = Router();
 const workerController = new WorkerController();
 
 router.get("/", requestValidate(workerController.getAll.validation), use(workerController.getAll.controller));
+router.get("/assign", requestValidate(workerController.worker_assign_task.validation), use(workerController.worker_assign_task.controller));
 router.post("/", requestValidate(workerController.create.validation), use(workerController.create.controller));
 router.put("/:worker_id", requestValidate(workerController.edit.validation), use(workerController.edit.controller));
 router.delete("/:worker_id", use(workerController.delete.controller));

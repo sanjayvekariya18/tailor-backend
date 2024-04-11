@@ -63,14 +63,6 @@ const createTables = async () => {
 			errorTable.push(`Measurement Table Error : ${error}`);
 		});
 
-	await CustomerMeasurement.sync({ alter: { drop: false } })
-		.then(() => {
-			successFullTable.push(`CustomerMeasurement Table Created`);
-		})
-		.catch((error) => {
-			errorTable.push(`CustomerMeasurement Table Error : ${error}`);
-		});
-
 	await Order.sync({ alter: { drop: false } })
 		.then(() => {
 			successFullTable.push(`Order Table Created`);
@@ -79,12 +71,27 @@ const createTables = async () => {
 			errorTable.push(`Order Table Error : ${error}`);
 		});
 
+	await OrderProduct.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`OrderProduct Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`OrderProduct Table Error : ${error}`);
+		});
+
 	await OrderImages.sync({ alter: { drop: false } })
 		.then(() => {
 			successFullTable.push(`OrderImages Table Created`);
 		})
 		.catch((error) => {
 			errorTable.push(`OrderImages Table Error : ${error}`);
+		});
+	await CustomerMeasurement.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`CustomerMeasurement Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`CustomerMeasurement Table Error : ${error}`);
 		});
 
 	await OrderPayment.sync({ alter: { drop: false } })
@@ -117,14 +124,6 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`Worker Table Error : ${error}`);
-		});
-
-	await OrderProduct.sync({ alter: { drop: false } })
-		.then(() => {
-			successFullTable.push(`OrderProduct Table Created`);
-		})
-		.catch((error) => {
-			errorTable.push(`OrderProduct Table Error : ${error}`);
 		});
 
 	await WorkerPayment.sync({ alter: { drop: false } })

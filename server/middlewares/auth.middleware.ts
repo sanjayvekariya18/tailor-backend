@@ -29,7 +29,10 @@ const TokenVerifyMiddleware = async (req: Request, res: Response, next: NextFunc
 							return next(new UnauthorizedUserHandler());
 						}
 						if (_user) {
-							req.authUser = _user;
+							req.authUser = {
+								id: _user.login_id,
+								userName: _user.user_name,
+							};
 						}
 
 						if (Array.isArray(req.body)) {

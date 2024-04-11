@@ -3,7 +3,7 @@ import { Op } from "sequelize";
 import { fileType, isEmpty, removeFile, saveFile } from "../utils/helper";
 import { CategoryService, WorkerService } from "../services";
 import { WorkerValidation } from "../validations";
-import { CreateWorkerDTO, EditWorkerDTO, SearchWorkerDTO } from "../dto";
+import { CreateWorkerDTO, EditWorkerDTO, SearchWorkerDTO, WorkerAssignTaskDTO } from "../dto";
 import { image } from "../constants";
 import { BadResponseHandler } from "../errorHandler";
 
@@ -16,6 +16,14 @@ export default class WorkerController {
 		validation: this.workerValidation.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const data = await this.workerService.getAll(new SearchWorkerDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
+	public worker_assign_task = {
+		validation: this.workerValidation.work_assign_task,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.workerService.worker_assign_task(new WorkerAssignTaskDTO(req.query));
 			return res.api.create(data);
 		},
 	};
