@@ -21,8 +21,8 @@ class Customer extends Model<CustomerAttributes, CustomerInput> implements Custo
 Customer.init(
 	{
 		customer_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 		},

@@ -21,10 +21,10 @@ export interface LoggedInUserTokenPayload {
 export default class AuthorizationService {
 	private userMasterServices = new UserMasterService();
 	public findUserById = async (loginId: string) => {
-		const userData = await this.userMasterServices.findOne({ login_id: loginId });
-		return {
-			id: loginId,
-			userName: userData?.user_name || "",
-		};
+		return await this.userMasterServices.findOne({ login_id: loginId });
+		// return {
+		// 	id: userData?.login_id || "",
+		// 	userName: userData?.user_name || "",
+		// };
 	};
 }

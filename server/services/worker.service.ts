@@ -1,7 +1,7 @@
-import { Op, Transaction } from "sequelize";
+import { Op, QueryTypes, Transaction } from "sequelize";
 import { Category, Worker, WorkerPrice } from "../models";
-import { CreateWorkerDTO, EditWorkerDTO } from "../dto";
-import { executeTransaction } from "../config/database";
+import { CreateWorkerDTO, EditWorkerDTO, WorkerAssignTaskDTO } from "../dto";
+import { executeTransaction, sequelizeConnection } from "../config/database";
 
 export default class WorkerService {
 	public getAll = async (searchParams: any) => {
@@ -87,5 +87,23 @@ export default class WorkerService {
 		return await Worker.destroy({ where: { worker_id: worker_id } }).then(() => {
 			return "Worker Deleted successfully";
 		});
+	};
+
+	public worker_assign_task = async (searchObject: WorkerAssignTaskDTO) => {
+		return await sequelizeConnection.query(
+			`select 
+        wp.category_id ,
+        c.category_name ,
+        op.qty 
+        from worker_price wp 
+        left join category c on c.category_id =wp.category_id 
+        join order_product op on op.category_id = wp.category_id 
+        join \`order\` o on o.order_id = op.order_id
+        where 
+        o.customer_id ='${searchObject.customer_id}' and
+        wp.worker_id ='${searchObject.worker_id}' and 
+        op.status ='pending' `,
+			{ type: QueryTypes.SELECT }
+		);
 	};
 }

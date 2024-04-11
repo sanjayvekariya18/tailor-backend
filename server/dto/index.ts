@@ -1,7 +1,7 @@
 import { LoginDTO, EditUserDTO } from "./login.dto";
 import { CreateCategoryDTO, SearchCategoryDTO, EditCategoryDTO } from "./category.dto";
 import { SearchMeasurementDTO, CreateMeasurementDTO } from "./measurement.dto";
-import { SearchWorkerDTO, CreateWorkerDTO, EditWorkerDTO } from "./worker.dto";
+import { SearchWorkerDTO, CreateWorkerDTO, EditWorkerDTO, WorkerAssignTaskDTO } from "./worker.dto";
 import { CreateChestDetailsDTO, EditChestDetailsDTO } from "./chestDetails.dto";
 import { SearchWorkerPaymentDTO, CreateWorkerPaymentDTO, EditWorkerPaymentDTO } from "./workerPayment.controller";
 import { SearchCustomerDTO, CreateCustomerDTO, EditCustomerDTO, ChangeCustomerPasswordDTO } from "./customer.dto";
@@ -59,4 +59,5 @@ export {
 	EditDeliveryDTO,
 	SearchDeliveryDTO,
 	EditUserDTO,
+	WorkerAssignTaskDTO,
 };

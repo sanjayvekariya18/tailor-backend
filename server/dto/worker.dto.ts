@@ -60,3 +60,12 @@ export class EditWorkerDTO {
 		});
 	}
 }
+
+export class WorkerAssignTaskDTO {
+	worker_id: string;
+	customer_id: string;
+	constructor(data: any) {
+		this.worker_id = data.worker_id;
+		this.customer_id = data.customer_id;
+	}
+}

@@ -43,13 +43,14 @@ export default class OrderService {
             'assign', op.assign
         )
     ) AS order_products,
+    if(SUM(op.total_qty) = SUM(op.complete), 'complete', if(SUM(op.pending)+SUM(op.assign) < SUM(op.total_qty), 'partial pending', 'pending')) as status,
     cust.customer_name,
     cust.customer_mobile,
     cust.customer_address
 FROM 
-    parthdb.order o
+    \`order\` o
 JOIN 
-    parthdb.customer cust ON o.customer_id = cust.customer_id
+    customer cust ON o.customer_id = cust.customer_id
 LEFT JOIN 
     (
         SELECT 
@@ -62,9 +63,9 @@ LEFT JOIN
             SUM(CASE WHEN op.status = 'complete' THEN op.qty ELSE 0 END) AS complete,
             SUM(CASE WHEN op.status = 'assign' THEN op.qty ELSE 0 END) AS assign
         FROM 
-            parthdb.order_product op
+            order_product op
         LEFT JOIN 
-            parthdb.category c ON op.category_id = c.category_id
+            category c ON op.category_id = c.category_id
         GROUP BY 
             op.order_id,
             op.category_id,
