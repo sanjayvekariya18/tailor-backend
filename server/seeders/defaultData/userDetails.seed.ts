@@ -1,7 +1,6 @@
 import { Transaction } from "sequelize";
 import { logger } from "../../config";
 import UserDetailsJSON from "./userDetails.json";
-import { hashPassword } from "../../utils/bcrypt.helper";
 import { Login } from "../../models";
 import { LoginAttributes } from "../../models/login.model";
 
