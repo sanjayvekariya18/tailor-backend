@@ -71,6 +71,14 @@ const createTables = async () => {
 			errorTable.push(`Order Table Error : ${error}`);
 		});
 
+	await Worker.sync({ alter: { drop: false } })
+		.then(() => {
+			successFullTable.push(`Worker Table Created`);
+		})
+		.catch((error) => {
+			errorTable.push(`Worker Table Error : ${error}`);
+		});
+
 	await OrderProduct.sync({ alter: { drop: false } })
 		.then(() => {
 			successFullTable.push(`OrderProduct Table Created`);
@@ -116,14 +124,6 @@ const createTables = async () => {
 		})
 		.catch((error) => {
 			errorTable.push(`PurchasePayment Table Error : ${error}`);
-		});
-
-	await Worker.sync({ alter: { drop: false } })
-		.then(() => {
-			successFullTable.push(`Worker Table Created`);
-		})
-		.catch((error) => {
-			errorTable.push(`Worker Table Error : ${error}`);
 		});
 
 	await WorkerPayment.sync({ alter: { drop: false } })

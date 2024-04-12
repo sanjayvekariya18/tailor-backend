@@ -151,9 +151,6 @@ export default class OrderController {
 					const order_product_index = order_product_data.findIndex((row) => row.category_id == task.category_id && row.order_id == task.order_id);
 
 					let availableQty = order_product_data[order_product_index].qty - task.qty;
-					console.log(order_product_data[order_product_index].qty);
-					console.log(task.qty);
-					console.log(availableQty);
 
 					let workerPayment = {
 						worker_id: orderData.worker_id,
