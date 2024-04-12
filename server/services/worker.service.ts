@@ -92,17 +92,19 @@ export default class WorkerService {
 	public worker_assign_task = async (searchObject: WorkerAssignTaskDTO) => {
 		return await sequelizeConnection.query(
 			`select 
-        wp.category_id ,
-        c.category_name ,
-        op.qty 
-        from worker_price wp 
-        left join category c on c.category_id =wp.category_id 
-        join order_product op on op.category_id = wp.category_id 
-        join \`order\` o on o.order_id = op.order_id
-        where 
-        o.customer_id ='${searchObject.customer_id}' and
-        wp.worker_id ='${searchObject.worker_id}' and 
-        op.status ='pending' `,
+                wp.category_id ,
+                c.category_name ,
+                op.order_id,
+                op.qty,
+                op.price
+            from worker_price wp 
+            left join category c on c.category_id =wp.category_id 
+            join order_product op on op.category_id = wp.category_id 
+            join \`order\` o on o.order_id = op.order_id
+            where 
+            o.customer_id ='${searchObject.customer_id}' and
+            wp.worker_id ='${searchObject.worker_id}' and 
+            op.status ='pending' `,
 			{ type: QueryTypes.SELECT }
 		);
 	};

@@ -13,7 +13,7 @@ export interface OrderProductAttributes {
 	status: WORKER_ASSIGN_TASK;
 	work_price?: number;
 	work_total?: number;
-	assign_date?: Date;
+	assign_date?: Date | null;
 }
 
 export interface OrderProductInput
@@ -34,7 +34,7 @@ class OrderProduct extends Model<OrderProductAttributes, OrderProductInput> impl
 	public status!: WORKER_ASSIGN_TASK;
 	public work_price!: number;
 	public work_total!: number;
-	public assign_date!: Date;
+	public assign_date!: Date | null;
 }
 
 OrderProduct.init(

@@ -118,7 +118,7 @@ app.use((req: Request, res: Response) => {
 });
 
 // daily backup in tailor project
-const cronJob = nodeCron.schedule("0 0 * * *", async () => {
+const cronJob = nodeCron.schedule("0 23 * * *", async () => {
 	await DatabaseBackupService.dbBackup();
 });
 cronJob.start();

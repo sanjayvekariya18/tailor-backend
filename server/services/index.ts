@@ -12,7 +12,6 @@ import OrderProductService from "./orderProduct.service";
 import PurchaseService from "./purchase.service";
 import PurchasePaymentService from "./purchasePayment.service";
 import DeliveryService from "./delivery.service";
-import NotificationService from "./notification.service";
 
 export {
 	TokenService,
@@ -29,5 +28,4 @@ export {
 	PurchaseService,
 	PurchasePaymentService,
 	DeliveryService,
-	NotificationService,
 };
