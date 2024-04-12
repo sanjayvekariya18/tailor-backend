@@ -12,8 +12,9 @@ import {
 import { executeTransaction, sequelizeConnection } from "../config/database";
 import { CustomerMeasurementAttributes } from "../models/customerMeasurement.model";
 import { OrderProductAttributes } from "../models/orderProduct.model";
-import { BILL_STATUS, WORKER_ASSIGN_TASK } from "../constants";
+import { BILL_STATUS, NOTIFICATION_TEMPLATE, WORKER_ASSIGN_TASK } from "../constants";
 import { NotFoundHandler } from "../errorHandler";
+import WhatsAppAPIService from "./whatsApp.service";
 
 export default class OrderService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -286,6 +287,12 @@ OFFSET
 				bill_no: bill_no + 1,
 			};
 
+			for await (const iterator of customerMeasurementBulkData) {
+				await CustomerMeasurement.destroy({
+					where: { customer_id: customerId, category_id: iterator.category_id, measurement_id: iterator.measurement_id },
+					transaction,
+				});
+			}
 			await CustomerMeasurement.bulkCreate(customerMeasurementBulkData, { transaction });
 			await Order.create(newOrderData, { transaction }).then(async (data) => {
 				let orderDetailsBulkData: Array<OrderProductAttributes> = [];
@@ -299,8 +306,16 @@ OFFSET
 					});
 				});
 				await OrderProduct.bulkCreate(orderDetailsBulkData, { transaction });
+				const customer_data = await Customer.findByPk(customerId);
+				if (customer_data && customer_data.customer_mobile != "") {
+					await WhatsAppAPIService.sendMessage(customer_data.customer_mobile, NOTIFICATION_TEMPLATE.CREATE, {
+						customer_name: customer_data.customer_name,
+						order_number: data.bill_no.toString(),
+					});
+				}
 				return await OrderImages.create({ order_id: data.order_id, image_name: orderData.image_name }, { transaction });
 			});
+
 			return "Customer , CustomerMeasurement Data , OrderImage , Order Created Successfully Add";
 		});
 	};

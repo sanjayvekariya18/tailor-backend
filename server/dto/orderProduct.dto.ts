@@ -17,7 +17,6 @@ export class SearchOrderProductDTO {
 }
 
 export class createOrderProductDTO {
-	// order_product_id: string;
 	order_id: string;
 	category_id: string;
 	worker_id: string;
@@ -28,7 +27,6 @@ export class createOrderProductDTO {
 	status: WORKER_ASSIGN_TASK;
 	assign_date: Date;
 	constructor(data: any) {
-		// this.order_product_id = data.order_product_id;
 		this.order_id = data.order_id;
 		this.category_id = data.category_id;
 		this.worker_id = data.worker_id;
@@ -36,5 +34,29 @@ export class createOrderProductDTO {
 		this.price = data.price != undefined && data.price != "" ? Number(data.price) : 0;
 		this.status = WORKER_ASSIGN_TASK.assign;
 		this.assign_date = data.assign_date;
+	}
+}
+export class CreateOrderProductDTO {
+	order_id: string;
+	category_id: string;
+	qty: number;
+	price: number;
+
+	constructor(data: any) {
+		this.order_id = data.order_id;
+		this.category_id = data.category_id;
+		this.qty = data.qty;
+		this.price = data.price;
+	}
+}
+
+export class BulkCreatedDTO {
+	assign_date: Date;
+	worker_id: string;
+	worker_task: Array<CreateOrderProductDTO>;
+	constructor(data: any) {
+		this.assign_date = new Date(data.assign_date);
+		this.worker_id = data.worker_id;
+		this.worker_task = data.worker_task.map((row: any) => new CreateOrderProductDTO(row));
 	}
 }
