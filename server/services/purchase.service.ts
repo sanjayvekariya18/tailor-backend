@@ -1,7 +1,6 @@
 import { Op } from "sequelize";
 import { EditPurchaseDTO, SearchPurchaseDTO, createPurchaseDTO } from "../dto";
 import { Purchase } from "../models";
-import PurchasePaymentService from "./purchasePayment.service";
 
 export default class PurchaseService {
 	public getAll = async (searchParams: SearchPurchaseDTO) => {

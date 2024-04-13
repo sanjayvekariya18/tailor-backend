@@ -15,6 +15,7 @@ export default class WorkerPaymentService {
 							[Op.between]: [searchParams.start_date, searchParams.end_date],
 						},
 					}),
+				type: 1,
 			},
 			include: [{ model: Worker, attributes: ["worker_name", "worker_mobile", "worker_address", "worker_photo"] }],
 			attributes: [

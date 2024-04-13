@@ -2,7 +2,6 @@ import nodemailer, { Transporter } from "nodemailer";
 import { config } from "../config";
 import path from "path";
 const fs = require("fs");
-const AdmZip = require("adm-zip");
 
 interface EmailData {
 	to: string;
