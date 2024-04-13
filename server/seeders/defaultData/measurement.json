@@ -1,0 +1,14 @@
+[
+	{ "category_name": "shirt", "measurement_name": "CH" },
+	{ "category_name": "shirt", "measurement_name": "HS" },
+	{ "category_name": "shirt", "measurement_name": "L" },
+	{ "category_name": "shirt", "measurement_name": "S" },
+	{ "category_name": "shirt", "measurement_name": "SO" },
+	{ "category_name": "shirt", "measurement_name": "W" },
+
+	{ "category_name": "pant", "measurement_name": "H" },
+	{ "category_name": "pant", "measurement_name": "L" },
+	{ "category_name": "pant", "measurement_name": "nee" },
+	{ "category_name": "pant", "measurement_name": "R" },
+	{ "category_name": "pant", "measurement_name": "T" }
+]
