@@ -4,6 +4,8 @@ import logger from "../../config/logger";
 import initSchemaRelationship from "../../InitialDBSetup/initSchemaRelationship";
 import ChestDetailsSeed from "./chestDetails.seed";
 import UserDetailsSeed from "./userDetails.seed";
+import categorySeed from "./category.seed";
+import measurementSeed from "./measurement.seed";
 
 class DataSeed {
 	static async run() {
@@ -21,6 +23,8 @@ class DataSeed {
 			try {
 				await ChestDetailsSeed(transaction);
 				await UserDetailsSeed(transaction);
+				await categorySeed(transaction);
+				await measurementSeed(transaction);
 			} catch (error) {
 				transaction.rollback();
 				logger.error(`Error occurred in seeder : ${error}`);
