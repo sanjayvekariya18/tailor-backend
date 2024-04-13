@@ -4,7 +4,6 @@ import { Category, Delivery, DeliveryDetails } from "../models";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 
 export default class DeliveryService {
-	private Sequelize = sequelizeConnection.Sequelize;
 	public getAll = async (searchParams: SearchDeliveryDTO) => {
 		return await Delivery.findAndCountAll({
 			where: {
