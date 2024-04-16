@@ -21,72 +21,82 @@ export default class OrderService {
 
 	public getAll = async (searchParams: SearchOrderDTO) => {
 		const query = `
-   SELECT 
-    o.order_id,
-    o.customer_id,
-    o.total,
-    o.payment,
-    o.order_date,
-    o.delivery_date,
-    o.shirt_pocket,
-    o.pant_pocket,
-    o.pant_pinch,
-    o.type,
-    o.bill_no,
-    JSON_ARRAYAGG(
-        JSON_OBJECT(
-            'category_id', op.category_id,
-            'category_name',op.category_name,
-            'category_image',op.category_image,
-            'total_qty', op.total_qty,
-            'pending', op.pending,
-            'complete', op.complete,
-            'assign', op.assign
-        )
-    ) AS order_products,
-    if(SUM(op.total_qty) = SUM(op.complete), 'complete', if(SUM(op.pending)+SUM(op.assign) < SUM(op.total_qty), 'partial pending', 'pending')) as status,
-    cust.customer_name,
-    cust.customer_mobile,
-    cust.customer_address
-FROM 
-    \`order\` o
-JOIN 
-    customer cust ON o.customer_id = cust.customer_id
-LEFT JOIN 
-    (
-        SELECT 
-            op.order_id,
-            op.category_id,
-            c.category_name,
-            c.category_image,
-            SUM(op.qty) AS total_qty,
-            SUM(CASE WHEN op.status = 'pending' THEN op.qty ELSE 0 END) AS pending,
-            SUM(CASE WHEN op.status = 'complete' THEN op.qty ELSE 0 END) AS complete,
-            SUM(CASE WHEN op.status = 'assign' THEN op.qty ELSE 0 END) AS assign
-        FROM 
-            order_product op
-        LEFT JOIN 
-            category c ON op.category_id = c.category_id
-        GROUP BY 
-            op.order_id,
-            op.category_id,
-            c.category_name,
-            c.category_image
-    ) AS op ON o.order_id = op.order_id
-WHERE 
-    (:start_date IS NULL OR o.order_date BETWEEN :start_date AND :end_date)
-    AND (:customer_id IS NULL OR o.customer_id = :customer_id)
-    AND (:mobile_no IS NULL OR cust.customer_mobile = :mobile_no)
-GROUP BY 
-    o.order_id,
-    cust.customer_name,
-    cust.customer_mobile,
-    cust.customer_address
-LIMIT 
-    :rowsPerPage
-OFFSET 
-    :offset
-`;
+            SELECT 
+                o.order_id,
+                o.customer_id,
+                o.total,
+                o.payment,
+                o.order_date,
+                o.delivery_date,
+                o.shirt_pocket,
+                o.pant_pocket,
+                o.pant_pinch,
+                o.type,
+                o.bill_no,
+                JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'category_id', op.category_id,
+                        'category_name',op.category_name,
+                        'category_image',op.category_image,
+                        'total_qty', op.total_qty,
+                        'pending', op.pending,
+                        'complete', op.complete,
+                        'assign', op.assign
+                    )
+                ) AS order_products,
+                if(SUM(op.total_qty) = SUM(op.complete), 'complete', if(SUM(op.pending)+SUM(op.assign) < SUM(op.total_qty), 'partial pending', 'pending')) as status,
+                cust.customer_name,
+                cust.customer_mobile,
+                cust.customer_address
+            FROM 
+                \`order\` o
+            JOIN 
+                customer cust ON o.customer_id = cust.customer_id
+            LEFT JOIN 
+                (
+                    SELECT 
+                        op.order_id,
+                        op.category_id,
+                        c.category_name,
+                        c.category_image,
+                        SUM(op.qty) AS total_qty,
+                        SUM(CASE WHEN op.status = 'pending' THEN op.qty ELSE 0 END) AS pending,
+                        SUM(CASE WHEN op.status = 'complete' THEN op.qty ELSE 0 END) AS complete,
+                        SUM(CASE WHEN op.status = 'assign' THEN op.qty ELSE 0 END) AS assign
+                    FROM 
+                        order_product op
+                    LEFT JOIN 
+                        category c ON op.category_id = c.category_id
+                    GROUP BY 
+                        op.order_id,
+                        op.category_id,
+                        c.category_name,
+                        c.category_image
+                ) AS op ON o.order_id = op.order_id
+            WHERE 
+                (:start_date IS NULL OR o.order_date BETWEEN :start_date AND :end_date)
+                AND (:customer_id IS NULL OR o.customer_id = :customer_id)
+                AND (:mobile_no IS NULL OR cust.customer_mobile = :mobile_no)
+            GROUP BY 
+                o.order_id,
+                cust.customer_name,
+                cust.customer_mobile,
+                cust.customer_address
+            LIMIT 
+                :rowsPerPage
+            OFFSET 
+                :offset
+            `;
+
+		const count = `SELECT COUNT (*) as count
+        FROM  \`order\` o
+        JOIN 
+                customer cust ON o.customer_id = cust.customer_id
+        WHERE  
+        (:start_date IS NULL OR o.order_date BETWEEN :start_date AND :end_date)
+            AND (:customer_id IS NULL OR o.customer_id = :customer_id)
+            AND (:mobile_no IS NULL OR cust.customer_mobile = :mobile_no) `;
+
 		const replacements: { [key: string]: any } = {};
 		if (searchParams.start_date !== undefined) {
 			replacements.start_date = searchParams.start_date;
@@ -107,10 +117,20 @@ OFFSET
 		}
 		replacements.rowsPerPage = searchParams.rowsPerPage;
 		replacements.offset = searchParams.page * searchParams.rowsPerPage;
-		return await sequelizeConnection.query(query, {
+
+		const count_data: Array<any> = await sequelizeConnection.query(count, {
 			replacements,
 			type: QueryTypes.SELECT,
 		});
+		const order_data = await sequelizeConnection.query(query, {
+			replacements,
+			type: QueryTypes.SELECT,
+		});
+
+		return {
+			count: count_data.length > 0 ? count_data[0].count : 0,
+			rows: order_data,
+		};
 	};
 
 	public getCustomerMeasurement = async (order_id: string) => {
@@ -313,7 +333,13 @@ OFFSET
 						order_number: data.bill_no.toString(),
 					});
 				}
-				return await OrderImages.create({ order_id: data.order_id, image_name: orderData.image_name }, { transaction });
+				const images_data = orderData.image_name.map((row) => {
+					return {
+						order_id: data.order_id,
+						image_name: row,
+					};
+				});
+				return await OrderImages.bulkCreate(images_data, { transaction });
 			});
 
 			return "Customer , CustomerMeasurement Data , OrderImage , Order Created Successfully Add";
@@ -358,7 +384,13 @@ OFFSET
 			await Order.update(newOrderData, { where: { order_id: order_id }, transaction }).then(async (data) => {
 				await OrderProduct.destroy({ where: { order_id: order_id }, transaction });
 				await OrderProduct.bulkCreate(orderDetailsBulkData, { transaction });
-				return await OrderImages.update({ order_id: order_id, image_name: orderData.image_name }, { where: { order_id: order_id }, transaction });
+				const images_data = orderData.image_name.map((row) => {
+					return {
+						order_id,
+						image_name: row,
+					};
+				});
+				return await OrderImages.bulkCreate(images_data, { transaction });
 			});
 			return "Customer, CustomerMeasurement Data, OrderImage, Order Edited Successfully Add";
 		});
@@ -494,5 +526,9 @@ OFFSET
 				});
 			});
 		});
+	};
+
+	public deletedImage = async (order_image_id: string) => {
+		return await OrderImages.destroy({ where: { order_image_id: order_image_id } });
 	};
 }

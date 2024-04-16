@@ -21,7 +21,7 @@ export default class DatabaseBackupService {
 			console.log(`Folder created: ${backupDirectory}`);
 		}
 		const dumpFilePath = path.join(backupDirectory, `${file_name}.sql`);
-		const sendEmail = "dhruval@karmadhi.com";
+		const sendEmail = config.sys_email_details.email;
 
 		mysqldump({
 			connection: {
