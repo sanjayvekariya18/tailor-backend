@@ -138,7 +138,7 @@ export class CreateOrderDTO {
 	pant_pocket: number;
 	pant_pinch: number;
 	type?: number;
-	image_name: string;
+	image_name: Array<string> = [];
 	customer_id?: string;
 	customer_name: string;
 	customer_mobile: string;
@@ -156,7 +156,6 @@ export class CreateOrderDTO {
 		this.pant_pocket = data.pant_pocket;
 		this.pant_pinch = data.pant_pinch;
 		data.type != undefined ? (this.type = data.type) : delete this.type;
-		this.image_name = data.image_name;
 		data.customer_id != undefined ? (this.customer_id = data.customer_id) : delete this.customer_id;
 		this.customer_name = data.customer_name;
 		this.customer_mobile = data.customer_mobile;

@@ -134,7 +134,7 @@ export default class OrderController {
 
 			for await (const task of orderData.worker_task) {
 				const Worker_price_index = worker_price_data.findIndex((row) => row.category_id == task.category_id);
-				if (Worker_price_index > 0) {
+				if (Worker_price_index > -1) {
 					const getWorkerPrice = worker_price_data[Worker_price_index];
 					let newOrderData = {
 						order_id: task.order_id,

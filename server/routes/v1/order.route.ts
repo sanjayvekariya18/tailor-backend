@@ -29,6 +29,7 @@ router.get("/:id", use(orderController.getOrderDetails.controller));
 router.post("/", requestValidate(orderController.create.validation), use(orderController.create.controller));
 router.put("/:order_id", requestValidate(orderController.edit.validation), use(orderController.edit.controller));
 router.put("/:order_id/payment", use(orderController.payment.controller));
+router.delete("/image/:order_image_id", use(orderController.order_image_delete.controller));
 router.delete("/:order_id", use(orderController.delete.controller));
 
 export default router;
