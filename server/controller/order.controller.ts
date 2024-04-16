@@ -174,15 +174,32 @@ export default class OrderController {
 
 			const file: any = req.files;
 			if (file) {
-				if (file.image_name) {
-					let fileValidation = fileType(file.image_name, image);
+				if (!Array.isArray(file[`image_name[]`])) {
+					let fileValidation = fileType(file[`image_name[]`], image);
 					if (fileValidation === false) {
 						return res.api.validationErrors({
 							message: ["Invalid image_name file"],
 						});
 					}
-					let file_path: any = await saveFile(file.image_name, "OrderImage");
-					orderData.image_name = file_path.upload_path;
+					let file_path: any = await saveFile(file[`image_name[]`], "OrderImage");
+					orderData.image_name.push(file_path.upload_path);
+				} else {
+					const errors = [];
+					for (const image_name of file[`image_name[]`]) {
+						let fileValidation = fileType(image_name, image);
+						if (fileValidation === false) {
+							errors.push("Invalid image_name file");
+						}
+					}
+					if (errors.length > 0) {
+						return res.api.validationErrors({
+							message: errors,
+						});
+					}
+					for (const image_name of file[`image_name[]`]) {
+						let file_path: any = await saveFile(image_name, "OrderImage");
+						orderData.image_name.push(file_path.upload_path);
+					}
 				}
 			}
 
