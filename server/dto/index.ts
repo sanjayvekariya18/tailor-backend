@@ -16,7 +16,7 @@ import {
 	findCustomerMeasurementDTO,
 } from "./order.dto";
 import { CreateOrderImageDTO, EditOrderImageDTO } from "./orderImage.dto";
-import { SearchOrderProductDTO, createOrderProductDTO, BulkCreatedDTO } from "./orderProduct.dto";
+import { SearchOrderProductDTO, createOrderProductDTO, BulkCreatedDTO, GetWorkerAssignTaskDTO } from "./orderProduct.dto";
 import { SearchPurchaseDTO, createPurchaseDTO, EditPurchaseDTO } from "./purchase.dto";
 import { PurchasePaymentDTO } from "./purchasePayment.dto";
 import { CreateDeliveryDTO, EditDeliveryDTO, SearchDeliveryDTO } from "./delivery.dto";
@@ -61,4 +61,5 @@ export {
 	EditUserDTO,
 	WorkerAssignTaskDTO,
 	BulkCreatedDTO,
+	GetWorkerAssignTaskDTO,
 };

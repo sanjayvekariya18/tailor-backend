@@ -23,4 +23,9 @@ export default class OrderProductValidation {
 		worker_id: "required|string",
 		assign_date: "required|date",
 	};
+
+	public getWorkerAssignTask = {
+		order_id: "required|string",
+		category_id: "required|string",
+	};
 }
