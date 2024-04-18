@@ -60,3 +60,13 @@ export class BulkCreatedDTO {
 		this.worker_task = data.worker_task.map((row: any) => new CreateOrderProductDTO(row));
 	}
 }
+
+export class GetWorkerAssignTaskDTO {
+	order_id: string;
+	category_id: string;
+
+	constructor(data: any) {
+		this.order_id = data.order_id;
+		this.category_id = data.category_id;
+	}
+}

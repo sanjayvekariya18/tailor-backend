@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { OrderProductValidation } from "../validations";
 import { CategoryService, OrderProductService, OrderService } from "../services";
-import { SearchOrderProductDTO, BulkCreatedDTO, createOrderProductDTO } from "../dto";
+import { SearchOrderProductDTO, BulkCreatedDTO, createOrderProductDTO, WorkerAssignTaskDTO, GetWorkerAssignTaskDTO } from "../dto";
 import { WORKER_ASSIGN_TASK } from "../constants";
-import { BadResponseHandler, FormErrorsHandler, NotFoundHandler } from "../errorHandler";
+import { BadResponseHandler, FormErrorsHandler } from "../errorHandler";
 import { Category, OrderProduct, WorkerPrice } from "../models";
 import { Op } from "sequelize";
 
@@ -181,6 +181,28 @@ export default class OrderController {
 			return await OrderProduct.update({ status: WORKER_ASSIGN_TASK.complete }, { where: { order_product_id: orderProductId } }).then((data) => {
 				return res.api.create("Worker Task Completed");
 			});
+		},
+	};
+
+	public getWorkerAssignTask = {
+		validation: this.orderProductValidation.getWorkerAssignTask,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.orderProductService.getWorkerAssignTask(new GetWorkerAssignTaskDTO(req.query));
+			return res.api.create(data);
+		},
+	};
+
+	public getPendingOrder = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.orderProductService.getPendingOrder();
+			return res.api.create(data);
+		},
+	};
+
+	public getPending_completed_order = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.orderProductService.getPending_completed_order();
+			return res.api.create(data);
 		},
 	};
 }
