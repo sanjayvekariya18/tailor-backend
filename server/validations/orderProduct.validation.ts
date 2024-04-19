@@ -16,12 +16,13 @@ export default class OrderProductValidation {
 	};
 
 	public bulkCreated = {
+		worker_id: "required|string",
+		assign_date: "required|date",
 		worker_task: "required|array|min:1",
 		"worker_task.*.order_id": "required|string",
 		"worker_task.*.category_id": "required|string",
 		"worker_task.*.qty": "required|integer",
-		worker_id: "required|string",
-		assign_date: "required|date",
+		"worker_task.*.price": "required|integer",
 	};
 
 	public getWorkerAssignTask = {

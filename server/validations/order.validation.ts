@@ -2,9 +2,11 @@ import { BILL_STATUS } from "../constants";
 
 export default class OrderValidation {
 	public getAll = {
-		customer_id: "string",
 		start_date: "date",
 		end_date: "date|after_or_equal:start_date",
+		customer_id: "string",
+		mobile_no: "string",
+		status: "in:complete,partial pending,pending",
 		page: "numeric|min:0",
 		rowsPerPage: "numeric|min:1",
 	};

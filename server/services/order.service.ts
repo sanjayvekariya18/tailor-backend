@@ -20,7 +20,7 @@ export default class OrderService {
 	private Sequelize = sequelizeConnection.Sequelize;
 
 	public getAll = async (searchParams: SearchOrderDTO) => {
-		const query = `
+		let query = `
             SELECT 
                 o.order_id,
                 o.customer_id,
@@ -82,20 +82,8 @@ export default class OrderService {
                 cust.customer_name,
                 cust.customer_mobile,
                 cust.customer_address
-            LIMIT 
-                :rowsPerPage
-            OFFSET 
-                :offset
+            ${searchParams.status ? `having status = '${searchParams.status}'` : ""}
             `;
-
-		const count = `SELECT COUNT (*) as count
-        FROM  \`order\` o
-        JOIN 
-                customer cust ON o.customer_id = cust.customer_id
-        WHERE  
-        (:start_date IS NULL OR o.order_date BETWEEN :start_date AND :end_date)
-            AND (:customer_id IS NULL OR o.customer_id = :customer_id)
-            AND (:mobile_no IS NULL OR cust.customer_mobile = :mobile_no) `;
 
 		const replacements: { [key: string]: any } = {};
 		if (searchParams.start_date !== undefined) {
@@ -118,17 +106,18 @@ export default class OrderService {
 		replacements.rowsPerPage = searchParams.rowsPerPage;
 		replacements.offset = searchParams.page * searchParams.rowsPerPage;
 
-		const count_data: Array<any> = await sequelizeConnection.query(count, {
+		const count_data: Array<any> = await sequelizeConnection.query(query, {
 			replacements,
 			type: QueryTypes.SELECT,
 		});
+		query += ` LIMIT ${replacements.offset}, ${replacements.rowsPerPage};`;
 		const order_data = await sequelizeConnection.query(query, {
 			replacements,
 			type: QueryTypes.SELECT,
 		});
 
 		return {
-			count: count_data.length > 0 ? count_data[0].count : 0,
+			count: count_data.length,
 			rows: order_data,
 		};
 	};

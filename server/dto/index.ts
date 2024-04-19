@@ -20,6 +20,8 @@ import { SearchOrderProductDTO, createOrderProductDTO, BulkCreatedDTO, GetWorker
 import { SearchPurchaseDTO, createPurchaseDTO, EditPurchaseDTO } from "./purchase.dto";
 import { PurchasePaymentDTO } from "./purchasePayment.dto";
 import { CreateDeliveryDTO, EditDeliveryDTO, SearchDeliveryDTO } from "./delivery.dto";
+import PaginationData from "./dashboard.dto";
+
 export {
 	LoginDTO,
 	CreateCategoryDTO,
@@ -62,4 +64,5 @@ export {
 	WorkerAssignTaskDTO,
 	BulkCreatedDTO,
 	GetWorkerAssignTaskDTO,
+	PaginationData,
 };

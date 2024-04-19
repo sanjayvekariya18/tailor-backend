@@ -134,10 +134,19 @@ export default class OrderProductService {
 			where: {
 				status: WORKER_ASSIGN_TASK.pending,
 			},
+			include: [
+				{ model: Order, attributes: [], include: [{ model: Customer, attributes: ["customer_id", "customer_name", "customer_mobile"] }] },
+				{ model: Category, attributes: [] },
+			],
 			attributes: [
 				"order_product_id",
 				"order_id",
 				"category_id",
+				[this.Sequelize.col("Category.category_name"), "category_name"],
+				[this.Sequelize.col("Order.order_date"), "order_date"],
+				[this.Sequelize.col("Order.customer_id"), "customer_id"],
+				[this.Sequelize.col("Order.Customer.customer_name"), "customer_name"],
+				[this.Sequelize.col("Order.Customer.customer_mobile"), "customer_mobile"],
 				"worker_id",
 				"parent",
 				"qty",
