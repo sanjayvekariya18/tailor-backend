@@ -25,4 +25,11 @@ export default class DashboardController {
 			return res.api.create(data);
 		},
 	};
+
+	public get_category_wise_pending = {
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.service.get_category_wise_pending();
+			return res.api.create(data);
+		},
+	};
 }

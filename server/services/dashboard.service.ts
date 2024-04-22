@@ -120,4 +120,29 @@ export default class DashboardService {
 			rows,
 		};
 	};
+
+	public get_category_wise_pending = async () => {
+		return await sequelizeConnection.query(
+			`
+        select
+            c.category_id,
+            c.category_name,
+            c.category_type,
+            c.category_image,
+            c.is_active,
+            count(op.order_product_id) as pending_count
+        from
+            category c
+        left join order_product op on op.category_id = c.category_id 
+        where op.status = 'pending'
+        group by
+            c.category_id,
+            c.category_name,
+            c.category_type,
+            c.category_image,
+            c.is_active
+        `,
+			{ type: QueryTypes.SELECT }
+		);
+	};
 }
