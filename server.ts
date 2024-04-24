@@ -128,7 +128,7 @@ try {
 		try {
 			httpsServer.listen(port, async () => {
 				// Test DB Connection and init relations
-				// await testDBConnections();
+				await testDBConnections();
 				logger.info(`Server running on http://localhost:${port}`);
 			});
 		} catch (error) {
