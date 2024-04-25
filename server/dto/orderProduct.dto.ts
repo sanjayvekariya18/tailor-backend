@@ -2,8 +2,8 @@ import { WORKER_ASSIGN_TASK } from "../constants";
 
 export class SearchOrderProductDTO {
 	assign_date?: Date;
-	worker_id?: string;
-	order_id?: string;
+	worker_id?: number;
+	order_id?: number;
 	page: number;
 	rowsPerPage: number;
 
@@ -17,9 +17,9 @@ export class SearchOrderProductDTO {
 }
 
 export class createOrderProductDTO {
-	order_id: string;
-	category_id: string;
-	worker_id: string;
+	order_id: number;
+	category_id: number;
+	worker_id: number;
 	qty: number;
 	price?: number;
 	work_price?: number;
@@ -37,8 +37,8 @@ export class createOrderProductDTO {
 	}
 }
 export class CreateOrderProductDTO {
-	order_id: string;
-	category_id: string;
+	order_id: number;
+	category_id: number;
 	qty: number;
 	price: number;
 
@@ -52,7 +52,7 @@ export class CreateOrderProductDTO {
 
 export class BulkCreatedDTO {
 	assign_date: Date;
-	worker_id: string;
+	worker_id: number;
 	worker_task: Array<CreateOrderProductDTO>;
 	constructor(data: any) {
 		this.assign_date = new Date(data.assign_date);
@@ -62,8 +62,8 @@ export class BulkCreatedDTO {
 }
 
 export class GetWorkerAssignTaskDTO {
-	order_id: string;
-	category_id: string;
+	order_id: number;
+	category_id: number;
 
 	constructor(data: any) {
 		this.order_id = data.order_id;

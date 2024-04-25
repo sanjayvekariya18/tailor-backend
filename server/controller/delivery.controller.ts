@@ -51,7 +51,8 @@ export default class DeliveryController {
 	public edit = {
 		validation: this.deliveryValidation.edit,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const deliveryId: string = req.params["delivery_id"] as string;
+			const deliveryId: number = Number((req.params["delivery_id"] as string) || 0);
+
 			const reqDeliveryData = new EditDeliveryDTO(req.body);
 			const checkDeliveryData = await this.deliveryService.findOne({ delivery_id: deliveryId });
 			if (isEmpty(checkDeliveryData)) {
@@ -64,7 +65,7 @@ export default class DeliveryController {
 
 	public findAllCompletedTask = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			let orderId: string = req.params["order_id"] as string;
+			const orderId: number = Number((req.params["order_id"] as string) || 0);
 			const checkOrderData = await this.orderService.findOne({ order_id: orderId });
 			if (checkOrderData == null) {
 				throw new BadResponseHandler("Order Data Not Found");

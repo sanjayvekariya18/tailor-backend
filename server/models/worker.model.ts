@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 
 export interface WorkerAttributes {
-	worker_id?: string;
+	worker_id?: number;
 	worker_name: string;
 	worker_mobile: string;
 	worker_address: string;
@@ -14,7 +14,7 @@ export interface WorkerInput extends Optional<WorkerAttributes, "worker_id"> {}
 export interface WorkerOutput extends Required<WorkerAttributes> {}
 
 class Worker extends Model<WorkerAttributes, WorkerInput> implements WorkerAttributes {
-	public worker_id!: string;
+	public worker_id!: number;
 	public worker_name!: string;
 	public worker_mobile!: string;
 	public worker_address!: string;
@@ -25,8 +25,8 @@ class Worker extends Model<WorkerAttributes, WorkerInput> implements WorkerAttri
 Worker.init(
 	{
 		worker_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 		},

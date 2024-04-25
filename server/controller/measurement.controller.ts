@@ -54,7 +54,7 @@ export default class MeasurementController {
 	public edit = {
 		validation: this.measurementValidation.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const measurementID: string = req.params["measurement_id"] as string;
+			const measurementID: number = Number((req.params["measurement_id"] as string) || 0);
 			const reqMeasurementData = new CreateMeasurementDTO(req.body);
 			const checkMeasurementDataId = await this.measurementService.findOne({ measurement_id: measurementID });
 			if (isEmpty(checkMeasurementDataId)) {
@@ -79,7 +79,7 @@ export default class MeasurementController {
 
 	public delete = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const measurementId: string = req.params["measurement_id"] as string;
+			const measurementId: number = Number((req.params["measurement_id"] as string) || 0);
 			const measurementDataId = await this.measurementService.findOne({ measurement_id: measurementId });
 			if (measurementDataId == null) {
 				return res.api.badResponse({ message: "Measurement Data Not Found" });

@@ -24,7 +24,7 @@ export default class UserService {
 		return "User added successfully";
 	};
 
-	public edit = async (user_id: string, userData: EditUserDTO) => {
+	public edit = async (user_id: number, userData: EditUserDTO) => {
 		return await Login.update(userData, {
 			where: { login_id: user_id },
 		}).then(() => {

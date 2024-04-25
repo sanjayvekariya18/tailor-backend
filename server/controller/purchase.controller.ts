@@ -29,7 +29,7 @@ export default class PurchaseController {
 	public edit = {
 		validation: this.purchaseValidation.edit,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const purchase_id: string = req.params["purchase_id"] as string;
+			const purchase_id: number = Number((req.params["purchase_id"] as string) || 0);
 			const reqPurchaseData = new EditPurchaseDTO(req.body);
 			const checkPurchaseData = await this.purchaseService.findOne({ purchase_id: purchase_id });
 			if (isEmpty(checkPurchaseData)) {

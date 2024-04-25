@@ -42,7 +42,7 @@ export default class CustomerController {
 	public edit = {
 		validation: this.customerValidation.edit,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const customerId: string = req.params["customer_id"] as string;
+			const customerId: number = Number((req.params["customer_id"] as string) || 0);
 			const reqCustomerData = new EditCustomerDTO(req.body);
 			const checkCustomerData = await this.customerService.findOne({ customer_id: customerId });
 			if (isEmpty(checkCustomerData)) {
@@ -64,7 +64,7 @@ export default class CustomerController {
 
 	public delete = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const customerId: string = req.params["customer_id"] as string;
+			const customerId: number = Number((req.params["customer_id"] as string) || 0);
 			const checkCustomerData = await this.customerService.findOne({ customer_id: customerId });
 			if (isEmpty(checkCustomerData)) {
 				return res.api.badResponse({ message: "Customer data Not Found" });
@@ -77,7 +77,7 @@ export default class CustomerController {
 	public changePassword = {
 		validation: this.customerValidation.changePassword,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const userId: string = req.params["login_id"] as string;
+			const userId: number = Number((req.params["login_id"] as string) || 0);
 			const userData = new ChangeCustomerPasswordDTO(req.body);
 			const checkLoginData = await Login.findOne({ where: { login_id: userId } });
 			if (isEmpty(checkLoginData)) {

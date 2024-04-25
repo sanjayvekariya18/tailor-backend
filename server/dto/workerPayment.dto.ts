@@ -1,5 +1,5 @@
 export class SearchWorkerPaymentDTO {
-	worker_id?: string;
+	worker_id?: number;
 	start_date?: Date;
 	end_date?: Date;
 	page: number;
@@ -14,7 +14,7 @@ export class SearchWorkerPaymentDTO {
 }
 
 export class CreateWorkerPaymentDTO {
-	worker_id: string;
+	worker_id: number;
 	amount: number;
 	payment_date: Date;
 	type: number;
@@ -27,7 +27,7 @@ export class CreateWorkerPaymentDTO {
 }
 
 export class EditWorkerPaymentDTO {
-	worker_id?: string;
+	worker_id?: number;
 	amount?: number;
 	payment_date?: Date;
 	type: number;

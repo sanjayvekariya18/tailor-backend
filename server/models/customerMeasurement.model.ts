@@ -2,10 +2,10 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 
 export interface CustomerMeasurementAttributes {
-	cm_id?: string;
-	customer_id: string;
-	category_id: string;
-	measurement_id: string;
+	cm_id?: number;
+	customer_id: number;
+	category_id: number;
+	measurement_id: number;
 	measurement: string;
 	measurement_2?: string;
 }
@@ -14,10 +14,10 @@ export interface CustomerMeasurementInput extends Optional<CustomerMeasurementAt
 export interface CustomerMeasurementOutput extends Required<CustomerMeasurementAttributes> {}
 
 class CustomerMeasurement extends Model<CustomerMeasurementAttributes, CustomerMeasurementInput> implements CustomerMeasurementAttributes {
-	public cm_id!: string;
-	public customer_id!: string;
-	public category_id!: string;
-	public measurement_id!: string;
+	public cm_id!: number;
+	public customer_id!: number;
+	public category_id!: number;
+	public measurement_id!: number;
 	public measurement!: string;
 	public measurement_2!: string;
 }
@@ -25,8 +25,8 @@ class CustomerMeasurement extends Model<CustomerMeasurementAttributes, CustomerM
 CustomerMeasurement.init(
 	{
 		cm_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 		},
@@ -43,7 +43,7 @@ CustomerMeasurement.init(
 			onDelete: "CASCADE",
 		},
 		category_id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 			references: {
 				model: {
@@ -55,7 +55,7 @@ CustomerMeasurement.init(
 			onDelete: "CASCADE",
 		},
 		measurement_id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 			references: {
 				model: {

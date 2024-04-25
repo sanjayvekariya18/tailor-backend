@@ -2,8 +2,8 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 
 export interface OrderPaymentAttributes {
-	order_payment_id?: string;
-	order_id: string;
+	order_payment_id?: number;
+	order_id: number;
 	amount: number;
 	payment_date: Date;
 }
@@ -12,8 +12,8 @@ export interface OrderPaymentInput extends Optional<OrderPaymentAttributes, "ord
 export interface OrderPaymentOutput extends Required<OrderPaymentAttributes> {}
 
 class OrderPayment extends Model<OrderPaymentAttributes, OrderPaymentInput> implements OrderPaymentAttributes {
-	public order_payment_id!: string;
-	public order_id!: string;
+	public order_payment_id!: number;
+	public order_id!: number;
 	public amount!: number;
 	public payment_date!: Date;
 }
@@ -21,13 +21,13 @@ class OrderPayment extends Model<OrderPaymentAttributes, OrderPaymentInput> impl
 OrderPayment.init(
 	{
 		order_payment_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 		},
 		order_id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 			references: {
 				model: {

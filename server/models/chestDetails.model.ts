@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 
 export interface ChestDetailsAttributes {
-	chest_id?: string;
+	chest_id?: number;
 	chest: string;
 	mudho_golai: string;
 	mudho: string;
@@ -15,7 +15,7 @@ export interface ChestDetailsInput extends Optional<ChestDetailsAttributes, "che
 export interface ChestDetailsOutput extends Required<ChestDetailsAttributes> {}
 
 class ChestDetails extends Model<ChestDetailsAttributes, ChestDetailsInput> implements ChestDetailsAttributes {
-	public chest_id!: string;
+	public chest_id!: number;
 	public chest!: string;
 	public mudho_golai!: string;
 	public mudho!: string;
@@ -27,8 +27,8 @@ class ChestDetails extends Model<ChestDetailsAttributes, ChestDetailsInput> impl
 ChestDetails.init(
 	{
 		chest_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 		},

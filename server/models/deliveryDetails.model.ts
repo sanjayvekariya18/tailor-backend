@@ -2,9 +2,9 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 
 export interface DeliveryDetailsAttributes {
-	delivery_details_id?: string;
-	delivery_id: string;
-	category_id: string;
+	delivery_details_id?: number;
+	delivery_id: number;
+	category_id: number;
 	qty: number;
 }
 
@@ -12,22 +12,22 @@ export interface DeliveryDetailsInput extends Optional<DeliveryDetailsAttributes
 export interface DeliveryDetailsOutput extends Required<DeliveryDetailsAttributes> {}
 
 class DeliveryDetails extends Model<DeliveryDetailsAttributes, DeliveryDetailsInput> implements DeliveryDetailsAttributes {
-	public delivery_details_id!: string;
-	public delivery_id!: string;
-	public category_id!: string;
+	public delivery_details_id!: number;
+	public delivery_id!: number;
+	public category_id!: number;
 	public qty!: number;
 }
 
 DeliveryDetails.init(
 	{
 		delivery_details_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 		},
 		delivery_id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 			references: {
 				model: {
@@ -39,7 +39,7 @@ DeliveryDetails.init(
 			onDelete: "CASCADE",
 		},
 		category_id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 			references: {
 				model: {

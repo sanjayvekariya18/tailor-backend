@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 
 export interface PurchaseAttributes {
-	purchase_id?: string;
+	purchase_id?: number;
 	party_name: string;
 	amount: number;
 	payment?: number;
@@ -16,7 +16,7 @@ export interface PurchaseInput extends Optional<PurchaseAttributes, "purchase_id
 export interface PurchaseOutput extends Required<PurchaseAttributes> {}
 
 class Purchase extends Model<PurchaseAttributes, PurchaseInput> implements PurchaseAttributes {
-	public purchase_id!: string;
+	public purchase_id!: number;
 	public party_name!: string;
 	public amount!: number;
 	public payment!: number;
@@ -29,8 +29,8 @@ class Purchase extends Model<PurchaseAttributes, PurchaseInput> implements Purch
 Purchase.init(
 	{
 		purchase_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 		},

@@ -2,8 +2,8 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 
 export interface DeliveryAttributes {
-	delivery_id?: string;
-	order_id: string;
+	delivery_id?: number;
+	order_id: number;
 	date: Date;
 	delivered_to: string;
 	delivered_mo?: string;
@@ -15,8 +15,8 @@ export interface DeliveryInput extends Optional<DeliveryAttributes, "delivery_id
 export interface DeliveryOutput extends Required<DeliveryAttributes> {}
 
 class Delivery extends Model<DeliveryAttributes, DeliveryInput> implements DeliveryAttributes {
-	public delivery_id!: string;
-	public order_id!: string;
+	public delivery_id!: number;
+	public order_id!: number;
 	public date!: Date;
 	public delivered_to!: string;
 	public delivered_mo!: string;
@@ -27,13 +27,13 @@ class Delivery extends Model<DeliveryAttributes, DeliveryInput> implements Deliv
 Delivery.init(
 	{
 		delivery_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 		},
 		order_id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 			references: {
 				model: {

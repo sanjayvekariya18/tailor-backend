@@ -1,6 +1,6 @@
 export class SearchMeasurementDTO {
 	searchTxt?: string;
-	category_id?: string;
+	category_id?: number;
 	page: number;
 	rowsPerPage: number;
 
@@ -13,7 +13,7 @@ export class SearchMeasurementDTO {
 }
 
 export class CreateMeasurementDTO {
-	category_id: string;
+	category_id: number;
 	measurement_name: string;
 	constructor(data: any) {
 		this.category_id = data.category_id;

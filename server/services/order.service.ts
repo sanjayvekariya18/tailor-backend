@@ -122,7 +122,7 @@ export default class OrderService {
 		};
 	};
 
-	public getCustomerMeasurement = async (order_id: string) => {
+	public getCustomerMeasurement = async (order_id: number) => {
 		let orderData = await Order.findOne({
 			where: {
 				order_id: order_id,
@@ -158,7 +158,7 @@ export default class OrderService {
 		return customer_data;
 	};
 
-	public getOrderDetails = async (order_id: string) => {
+	public getOrderDetails = async (order_id: number) => {
 		const order_data = await Order.findByPk(order_id, {
 			include: [{ model: Customer }, { model: OrderProduct }, { model: OrderImages }],
 			attributes: [
@@ -261,7 +261,7 @@ export default class OrderService {
 
 	public create = async (orderData: CreateOrderDTO) => {
 		return await executeTransaction(async (transaction: Transaction) => {
-			let customerId: string = "";
+			let customerId: number = 0;
 			if (orderData.customer_id == undefined) {
 				await Customer.create(
 					{ customer_name: orderData.customer_name, customer_mobile: orderData.customer_mobile, customer_address: orderData.customer_address },
@@ -335,7 +335,7 @@ export default class OrderService {
 		});
 	};
 
-	public edit = async (orderData: CreateOrderDTO, order_id: string, customer_id: string) => {
+	public edit = async (orderData: CreateOrderDTO, order_id: number, customer_id: number) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			let customerMeasurementBulkData: Array<CustomerMeasurementAttributes> = [];
 			orderData.customer_measurement.map((Workerdata) => {
@@ -385,7 +385,7 @@ export default class OrderService {
 		});
 	};
 
-	public payment = async (orderData: OrderPaymentDTO, order_id: string) => {
+	public payment = async (orderData: OrderPaymentDTO, order_id: number) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			await OrderPayment.create({ order_id: order_id, amount: orderData.payment, payment_date: orderData.payment_date }, { transaction }).then(
 				async () => {
@@ -507,7 +507,7 @@ export default class OrderService {
 		});
 	};
 
-	public delete = async (order_id: string) => {
+	public delete = async (order_id: number) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			return await Order.destroy({ where: { order_id: order_id }, transaction }).then(async () => {
 				return await OrderImages.destroy({ where: { order_id: order_id }, transaction }).then(() => {
@@ -517,7 +517,7 @@ export default class OrderService {
 		});
 	};
 
-	public deletedImage = async (order_image_id: string) => {
+	public deletedImage = async (order_image_id: number) => {
 		return await OrderImages.destroy({ where: { order_image_id: order_image_id } });
 	};
 }

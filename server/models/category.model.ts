@@ -7,7 +7,7 @@ export enum CATEGORY_TYPE {
 }
 
 export interface CategoryAttributes {
-	category_id?: string;
+	category_id?: number;
 	category_name: string;
 	category_type: CATEGORY_TYPE;
 	category_image: string;
@@ -18,7 +18,7 @@ export interface CategoryInput extends Optional<CategoryAttributes, "category_id
 export interface CategoryOutput extends Required<CategoryAttributes> {}
 
 class Category extends Model<CategoryAttributes, CategoryInput> implements CategoryAttributes {
-	public category_id!: string;
+	public category_id!: number;
 	public category_name!: string;
 	public category_type!: CATEGORY_TYPE;
 	public category_image!: string;
@@ -28,8 +28,8 @@ class Category extends Model<CategoryAttributes, CategoryInput> implements Categ
 Category.init(
 	{
 		category_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 		},

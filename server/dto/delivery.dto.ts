@@ -1,6 +1,6 @@
 export class SearchDeliveryDTO {
-	delivery_id?: string;
-	order_id?: string;
+	delivery_id?: number;
+	order_id?: number;
 	page: number;
 	rowsPerPage: number;
 
@@ -12,18 +12,18 @@ export class SearchDeliveryDTO {
 	}
 }
 export class CreateDeliveryDetailsDTO {
-	delivery_id: string;
-	category_id: string;
+	delivery_id: number;
+	category_id: number;
 	qty: number;
 	constructor(data: any) {
-		this.delivery_id = "";
+		this.delivery_id = 0;
 		this.category_id = data.category_id;
 		this.qty = data.qty;
 	}
 }
 
 export class CreateDeliveryDTO {
-	order_id: string;
+	order_id: number;
 	date: Date;
 	delivered_to: string;
 	delivered_mo?: string;

@@ -2,7 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 
 export interface LoginAttributes {
-	login_id?: string;
+	login_id?: number;
 	user_name: string;
 	password: string;
 	address: string;
@@ -16,7 +16,7 @@ export interface LoginInput extends Optional<LoginAttributes, "login_id"> {}
 export interface LOginOutput extends Required<LoginAttributes> {}
 
 class Login extends Model<LoginAttributes, LoginInput> implements LoginAttributes {
-	public login_id!: string;
+	public login_id!: number;
 	public user_name!: string;
 	public password!: string;
 	public address!: string;
@@ -29,8 +29,8 @@ class Login extends Model<LoginAttributes, LoginInput> implements LoginAttribute
 Login.init(
 	{
 		login_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 		},

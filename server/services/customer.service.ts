@@ -43,18 +43,18 @@ export default class CustomerService {
 		});
 	};
 
-	public edit = async (customerData: EditCustomerDTO, customer_id: string) => {
+	public edit = async (customerData: EditCustomerDTO, customer_id: number) => {
 		return await Customer.update(customerData, { where: { customer_id: customer_id } }).then(() => {
 			return "Customer Edited successfully";
 		});
 	};
 
-	public delete = async (customer_id: string) => {
+	public delete = async (customer_id: number) => {
 		return await Customer.destroy({ where: { customer_id: customer_id } }).then(() => {
 			return "Customer deleted successfully";
 		});
 	};
-	public changePassword = async (userData: ChangeCustomerPasswordDTO, login_id: string) => {
+	public changePassword = async (userData: ChangeCustomerPasswordDTO, login_id: number) => {
 		return await Login.update({ password: userData.new_password }, { where: { login_id: login_id } }).then(() => {
 			return "User password change successfully";
 		});

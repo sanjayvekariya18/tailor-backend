@@ -41,7 +41,7 @@ export default class PurchasePaymentService {
 		});
 	};
 
-	public edit = async (purchasePaymentData: PurchasePaymentDTO, Purchase_payment_id: string, purchaseData: any) => {
+	public edit = async (purchasePaymentData: PurchasePaymentDTO, Purchase_payment_id: number, purchaseData: any) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			return await PurchasePayment.update(purchasePaymentData, { where: { Purchase_payment_id: Purchase_payment_id } }).then(async (data) => {
 				let edit_data = await this.PurchasePaymentData(purchaseData, transaction);
@@ -54,7 +54,7 @@ export default class PurchasePaymentService {
 		});
 	};
 
-	public delete = async (purchase_payment_id: string, purchaseData: any) => {
+	public delete = async (purchase_payment_id: number, purchaseData: any) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			return await PurchasePayment.destroy({ where: { Purchase_payment_id: purchase_payment_id }, transaction }).then(async () => {
 				let data = await this.PurchasePaymentData(purchaseData, transaction);

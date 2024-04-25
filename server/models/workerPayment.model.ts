@@ -2,8 +2,8 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 
 export interface WorkerPaymentAttributes {
-	worker_payment_id?: string;
-	worker_id: string;
+	worker_payment_id?: number;
+	worker_id: number;
 	amount: number;
 	payment_date: Date;
 	type: number;
@@ -13,8 +13,8 @@ export interface WorkerPaymentInput extends Optional<WorkerPaymentAttributes, "w
 export interface WorkerPaymentOutput extends Required<WorkerPaymentAttributes> {}
 
 class WorkerPayment extends Model<WorkerPaymentAttributes, WorkerPaymentInput> implements WorkerPaymentAttributes {
-	public worker_payment_id!: string;
-	public worker_id!: string;
+	public worker_payment_id!: number;
+	public worker_id!: number;
 	public amount!: number;
 	public payment_date!: Date;
 	public type!: number;
@@ -23,13 +23,13 @@ class WorkerPayment extends Model<WorkerPaymentAttributes, WorkerPaymentInput> i
 WorkerPayment.init(
 	{
 		worker_payment_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 		},
 		worker_id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 			references: {
 				model: {

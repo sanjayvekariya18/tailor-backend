@@ -70,7 +70,7 @@ export default class WorkerService {
 		});
 	};
 
-	public edit = async (workerData: EditWorkerDTO, Worker_id: string) => {
+	public edit = async (workerData: EditWorkerDTO, Worker_id: number) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			return await Worker.update(workerData, { where: { worker_id: Worker_id }, transaction }).then(async () => {
 				await WorkerPrice.destroy({ where: { worker_id: Worker_id }, transaction });
@@ -83,7 +83,7 @@ export default class WorkerService {
 		});
 	};
 
-	public delete = async (worker_id: string) => {
+	public delete = async (worker_id: number) => {
 		return await Worker.destroy({ where: { worker_id: worker_id } }).then(() => {
 			return "Worker Deleted successfully";
 		});

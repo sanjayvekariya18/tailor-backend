@@ -3,10 +3,10 @@ import { sequelizeConnection } from "../config/database";
 import { WORKER_ASSIGN_TASK } from "../constants";
 
 export interface OrderProductAttributes {
-	order_product_id?: string;
-	order_id: string;
-	category_id: string;
-	worker_id?: string;
+	order_product_id?: number;
+	order_id: number;
+	category_id: number;
+	worker_id?: number;
 	parent?: number;
 	qty: number;
 	price?: number;
@@ -24,10 +24,10 @@ export interface OrderProductInput
 export interface OrderProductOutput extends Required<OrderProductAttributes> {}
 
 class OrderProduct extends Model<OrderProductAttributes, OrderProductInput> implements OrderProductAttributes {
-	public order_product_id!: string;
-	public order_id!: string;
-	public category_id!: string;
-	public worker_id!: string;
+	public order_product_id!: number;
+	public order_id!: number;
+	public category_id!: number;
+	public worker_id!: number;
 	public parent!: number;
 	public qty!: number;
 	public price!: number;
@@ -40,13 +40,13 @@ class OrderProduct extends Model<OrderProductAttributes, OrderProductInput> impl
 OrderProduct.init(
 	{
 		order_product_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 		},
 		order_id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 			references: {
 				model: {
@@ -58,7 +58,7 @@ OrderProduct.init(
 			onDelete: "CASCADE",
 		},
 		category_id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 			references: {
 				model: {
@@ -70,7 +70,7 @@ OrderProduct.init(
 			onDelete: "CASCADE",
 		},
 		worker_id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			allowNull: true,
 			references: {
 				model: {

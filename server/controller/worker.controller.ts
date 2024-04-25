@@ -87,7 +87,7 @@ export default class WorkerController {
 	public edit = {
 		validation: this.workerValidation.edit,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const workerID: string = req.params["worker_id"] as string;
+			const workerID: number = Number((req.params["worker_id"] as string) || 0);
 
 			const reqWorkerData = new EditWorkerDTO(req.body);
 			const checkWorkerDataId = await this.workerService.findOne({ worker_id: workerID });
@@ -149,7 +149,7 @@ export default class WorkerController {
 
 	public delete = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const workerId: string = req.params["worker_id"] as string;
+			const workerId: number = Number((req.params["worker_id"] as string) || 0);
 			const checkWorkerDataId = await this.categoryService.findOne({ category_id: workerId });
 			if (checkWorkerDataId == null) {
 				return res.api.badResponse({ message: "Worker Data Not Found" });

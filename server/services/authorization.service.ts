@@ -9,7 +9,7 @@ export interface PermissionDetails {
 }
 
 export interface LoggedInUserDetails {
-	id: string;
+	id: number;
 	userName: string;
 }
 
@@ -20,7 +20,7 @@ export interface LoggedInUserTokenPayload {
 
 export default class AuthorizationService {
 	private userMasterServices = new UserMasterService();
-	public findUserById = async (loginId: string) => {
+	public findUserById = async (loginId: number) => {
 		return await this.userMasterServices.findOne({ login_id: loginId });
 		// return {
 		// 	id: userData?.login_id || "",

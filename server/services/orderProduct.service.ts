@@ -75,7 +75,7 @@ export default class OrderProductService {
 		});
 	};
 
-	public assignTask = async (orderProductData: createOrderProductDTO, order_product_id: string, qty: number, workerPayment: any) => {
+	public assignTask = async (orderProductData: createOrderProductDTO, order_product_id: number, qty: number, workerPayment: any) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			await OrderProduct.create(orderProductData, { transaction });
 			await OrderProduct.update({ qty: qty }, { where: { order_product_id: order_product_id }, transaction });

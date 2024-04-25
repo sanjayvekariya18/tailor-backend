@@ -42,7 +42,7 @@ export default class PurchaseService {
 		return "purchase Data Added successfully";
 	};
 
-	public edit = async (purchaseData: EditPurchaseDTO, purchase_id: string) => {
+	public edit = async (purchaseData: EditPurchaseDTO, purchase_id: number) => {
 		return await Purchase.update(purchaseData, { where: { purchase_id: purchase_id } }).then(() => {
 			return "Purchase  Data Edit successfully";
 		});

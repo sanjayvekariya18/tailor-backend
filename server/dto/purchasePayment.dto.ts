@@ -1,5 +1,5 @@
 export class PurchasePaymentDTO {
-	purchase_id: string;
+	purchase_id: number;
 	amount: number;
 	payment_date: Date;
 	constructor(data: any) {

@@ -10,7 +10,7 @@ export class SearchWorkerDTO {
 	}
 }
 class CreateWorkerPriceDTO {
-	category_id: string;
+	category_id: number;
 	price: number;
 	constructor(data: any) {
 		this.category_id = data.category_id;
@@ -62,8 +62,8 @@ export class EditWorkerDTO {
 }
 
 export class WorkerAssignTaskDTO {
-	worker_id: string;
-	customer_id: string;
+	worker_id: number;
+	customer_id: number;
 	constructor(data: any) {
 		this.worker_id = data.worker_id;
 		this.customer_id = data.customer_id;

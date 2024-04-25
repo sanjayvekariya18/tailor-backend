@@ -57,7 +57,7 @@ export default class WorkerPaymentService {
 		});
 	};
 
-	public edit = async (workerPaymentData: EditWorkerPaymentDTO, worker_payment_id: string) => {
+	public edit = async (workerPaymentData: EditWorkerPaymentDTO, worker_payment_id: number) => {
 		return await WorkerPayment.update(workerPaymentData, { where: { worker_payment_id: worker_payment_id } }).then(() => {
 			return "Worker Payment Data Edit successfully";
 		});

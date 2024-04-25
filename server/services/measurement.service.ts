@@ -83,13 +83,13 @@ export default class MeasurementService {
 		});
 	};
 
-	public edit = async (measurementData: CreateMeasurementDTO, measurement_id: string) => {
+	public edit = async (measurementData: CreateMeasurementDTO, measurement_id: number) => {
 		return await Measurement.update(measurementData, { where: { measurement_id: measurement_id } }).then(() => {
 			return "Measurement Edited successfully";
 		});
 	};
 
-	public delete = async (measurement_id: string) => {
+	public delete = async (measurement_id: number) => {
 		return await Measurement.destroy({ where: { measurement_id: measurement_id } }).then(() => {
 			return "Measurement Delete successfully";
 		});

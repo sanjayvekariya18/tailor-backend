@@ -60,7 +60,7 @@ export default class CategoryController {
 	public edit = {
 		validation: this.categoryValidation.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const categoryId: string = req.params["category_id"] as string;
+			const categoryId: number = Number((req.params["category_id"] as string) || 0);
 			const reqCategoryData = new EditCategoryDTO(req.body);
 			const checkCategoryDataId = await this.categoryService.findOne({ category_id: categoryId });
 			if (checkCategoryDataId == null) {
@@ -96,7 +96,7 @@ export default class CategoryController {
 
 	public delete = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const categoryId: string = req.params["category_id"] as string;
+			const categoryId: number = Number((req.params["category_id"] as string) || 0);
 			const checkCategoryDataId = await this.categoryService.findOne({ category_id: categoryId });
 			if (checkCategoryDataId == null) {
 				return res.api.badResponse({ message: "Category Data Not Found" });

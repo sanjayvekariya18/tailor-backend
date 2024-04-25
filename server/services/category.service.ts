@@ -72,12 +72,12 @@ export default class CategoryService {
 		});
 	};
 
-	public edit = async (categoryData: EditCategoryDTO, category_id: string) => {
+	public edit = async (categoryData: EditCategoryDTO, category_id: number) => {
 		return await Category.update(categoryData, { where: { category_id: category_id } }).then(() => {
 			return "Category Edited successfully";
 		});
 	};
-	public delete = async (category_id: string) => {
+	public delete = async (category_id: number) => {
 		return await Category.destroy({ where: { category_id: category_id } }).then(() => {
 			return "Category Deleted successfully";
 		});

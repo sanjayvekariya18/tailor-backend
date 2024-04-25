@@ -2,9 +2,9 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 
 export interface WorkerPriceAttributes {
-	worker_price_id?: string;
-	worker_id: string;
-	category_id: string;
+	worker_price_id?: number;
+	worker_id: number;
+	category_id: number;
 	price: number;
 }
 
@@ -12,22 +12,22 @@ export interface WorkerPriceInput extends Optional<WorkerPriceAttributes, "worke
 export interface WorkerPriceOutput extends Required<WorkerPriceAttributes> {}
 
 class WorkerPrice extends Model<WorkerPriceAttributes, WorkerPriceInput> implements WorkerPriceAttributes {
-	public worker_price_id!: string;
-	public worker_id!: string;
-	public category_id!: string;
+	public worker_price_id!: number;
+	public worker_id!: number;
+	public category_id!: number;
 	public price!: number;
 }
 
 WorkerPrice.init(
 	{
 		worker_price_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 		},
 		worker_id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 			references: {
 				model: {
@@ -39,7 +39,7 @@ WorkerPrice.init(
 			onDelete: "CASCADE",
 		},
 		category_id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 			references: {
 				model: {

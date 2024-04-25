@@ -49,7 +49,7 @@ export default class DeliveryService {
 		});
 	};
 
-	public edit = async (deliveryData: EditDeliveryDTO, delivery_id: string) => {
+	public edit = async (deliveryData: EditDeliveryDTO, delivery_id: number) => {
 		return await executeTransaction(async (transaction: Transaction) => {
 			return await Delivery.update(deliveryData, { where: { delivery_id: delivery_id }, transaction }).then(async () => {
 				await DeliveryDetails.destroy({ where: { delivery_id: delivery_id }, transaction });
@@ -63,7 +63,7 @@ export default class DeliveryService {
 		});
 	};
 
-	public findAllCompletedTask = async (order_id: string) => {
+	public findAllCompletedTask = async (order_id: number) => {
 		return await sequelizeConnection.query(
 			`
             select
@@ -88,7 +88,7 @@ export default class DeliveryService {
             left join category c on
                 c.category_id = op.category_id
             where
-                op.order_id = '${order_id}'
+                op.order_id = ${order_id}
                 and 
             op.status = 'complete'
             group by

@@ -2,8 +2,8 @@ import { DataTypes, Model, Optional } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 
 export interface OrderAttributes {
-	order_id?: string;
-	customer_id: string;
+	order_id?: number;
+	customer_id: number;
 	total: number;
 	payment?: number;
 	order_date: Date;
@@ -19,8 +19,8 @@ export interface OrderInput extends Optional<OrderAttributes, "order_id" | "paym
 export interface OrderOutput extends Required<OrderAttributes> {}
 
 class Order extends Model<OrderAttributes, OrderInput> implements OrderAttributes {
-	public order_id!: string;
-	public customer_id!: string;
+	public order_id!: number;
+	public customer_id!: number;
 	public total!: number;
 	public payment!: number;
 	public order_date!: Date;
@@ -35,8 +35,8 @@ class Order extends Model<OrderAttributes, OrderInput> implements OrderAttribute
 Order.init(
 	{
 		order_id: {
-			type: DataTypes.UUID,
-			defaultValue: DataTypes.UUIDV4,
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
 			allowNull: false,
 			primaryKey: true,
 		},

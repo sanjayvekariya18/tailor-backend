@@ -1,5 +1,5 @@
 export class CreateOrderImageDTO {
-	order_id: string;
+	order_id: number;
 	image_name: string;
 	constructor(data: any) {
 		this.order_id = data.order_id;
@@ -8,7 +8,7 @@ export class CreateOrderImageDTO {
 }
 
 export class EditOrderImageDTO {
-	order_id?: string;
+	order_id?: number;
 	image_name?: string;
 	constructor(data: any) {
 		data.order_id != undefined ? (this.order_id = data.order_id) : delete this.order_id;

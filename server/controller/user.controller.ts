@@ -33,7 +33,7 @@ export default class UserController {
 	public edit = {
 		validation: this.loginValidation.edit,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const userId: string = req.params["user_id"] as string;
+			const userId: number = Number((req.params["user_id"] as string) || 0);
 			const reqUserData = new EditUserDTO(req.body);
 			const checkUserData = await this.userService.findOne({ login_id: userId });
 			if (checkUserData == null) {

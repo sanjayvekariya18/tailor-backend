@@ -26,7 +26,7 @@ export default class PurchaseController {
 	public edit = {
 		validation: this.purchasePaymentValidation.create,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const purchase_payment_id: string = req.params["purchase_payment_id"] as string;
+			const purchase_payment_id: number = Number((req.params["purchase_payment_id"] as string) || 0);
 			const reqPurchasePaymentData = new PurchasePaymentDTO(req.body);
 			const checkPurchasePaymentData = await this.purchasePaymentService.findOne({ purchase_payment_id: purchase_payment_id });
 			if (isEmpty(checkPurchasePaymentData)) {
@@ -43,7 +43,7 @@ export default class PurchaseController {
 
 	public delete = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const purchasePaymentId: string = req.params["purchase_payment_id"] as string;
+			const purchasePaymentId: number = Number((req.params["purchase_payment_id"] as string) || 0);
 			const checkPurchasePaymentData = await this.purchasePaymentService.findOne({ purchase_payment_id: purchasePaymentId });
 			if (checkPurchasePaymentData == null) {
 				return res.api.badResponse({ message: "Payment Data Not Found" });

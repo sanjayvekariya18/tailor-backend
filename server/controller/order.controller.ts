@@ -26,7 +26,7 @@ export default class OrderController {
 	public getCustomerMeasurement = {
 		validation: this.orderValidation.getAll,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			let orderId: string = req.params["order_id"] as string;
+			const orderId: number = Number((req.params["order_id"] as string) || 0);
 			const checkOrderData = await this.orderService.findOne({ order_id: orderId });
 			if (checkOrderData == null) {
 				throw new BadResponseHandler("Order Data Not Found");
@@ -58,7 +58,7 @@ export default class OrderController {
 
 	public getOrderDetails = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			let orderId: string = req.params["id"] as string;
+			const orderId: number = Number((req.params["id"] as string) || 0);
 			const data = await this.orderService.getOrderDetails(orderId);
 			return res.api.create(data);
 		},
@@ -144,7 +144,7 @@ export default class OrderController {
 	public edit = {
 		validation: this.orderValidation.edit,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			let orderId: string = req.params["order_id"] as string;
+			const orderId: number = Number((req.params["order_id"] as string) || 0);
 			const orderData = new CreateOrderDTO(req.body);
 			const checkOrderData = await this.orderService.findOne({ order_id: orderId });
 			if (checkOrderData == null) {
@@ -211,7 +211,7 @@ export default class OrderController {
 	public payment = {
 		validation: this.orderValidation.OrderPayment,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			let orderId: string = req.params["order_id"] as string;
+			const orderId: number = Number((req.params["order_id"] as string) || 0);
 			const orderData = new OrderPaymentDTO(req.body);
 			const checkOrderData = await this.orderService.findOne({ order_id: orderId });
 			if (checkOrderData == null) {
@@ -249,7 +249,7 @@ export default class OrderController {
 
 	public delete = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const orderId: string = req.params["order_id"] as string;
+			const orderId: number = Number((req.params["order_id"] as string) || 0);
 			const checkOrderDataId = await this.orderService.findOne({ order_id: orderId });
 			if (checkOrderDataId == null) {
 				return res.api.badResponse({ message: "Order Not Found" });
@@ -261,7 +261,7 @@ export default class OrderController {
 
 	public order_image_delete = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const orderImageId: string = req.params["order_image_id"] as string;
+			const orderImageId: number = Number((req.params["order_image_id"] as string) || 0);
 			const checkOrderImageId = await OrderImages.findOne({ where: { order_image_id: orderImageId } });
 			if (checkOrderImageId != null) {
 				checkOrderImageId.image_name && (await removeFile(checkOrderImageId.image_name));

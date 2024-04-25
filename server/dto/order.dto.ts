@@ -3,7 +3,7 @@ import { BILL_STATUS } from "../constants";
 export class SearchOrderDTO {
 	start_date?: Date;
 	end_date?: Date;
-	customer_id?: string;
+	customer_id?: number;
 	mobile_no?: string;
 	status?: string;
 	page: number;
@@ -21,8 +21,8 @@ export class SearchOrderDTO {
 }
 
 export class SearchOrderBillDTO {
-	customer_id?: string;
-	order_id?: string;
+	customer_id?: number;
+	order_id?: number;
 	page: number;
 	rowsPerPage: number;
 
@@ -35,7 +35,7 @@ export class SearchOrderBillDTO {
 }
 
 export class findCustomerMeasurementDTO {
-	customer_id?: string;
+	customer_id?: number;
 	mobile_no?: string;
 
 	constructor(data: any) {
@@ -76,7 +76,7 @@ export class SearchDeliveryOrderRemainDTO {
 }
 
 export class getCustomerPaymentDataDTO {
-	customer_id?: string;
+	customer_id?: number;
 	mobile_no?: string;
 	start_date?: Date;
 	end_date?: Date;
@@ -95,8 +95,8 @@ export class getCustomerPaymentDataDTO {
 }
 
 class CreateCustomerMeasurement {
-	category_id: string;
-	measurement_id: string;
+	category_id: number;
+	measurement_id: number;
 	measurement: string;
 	measurement_2: string;
 
@@ -109,9 +109,9 @@ class CreateCustomerMeasurement {
 }
 
 class CreateOrderProductDTO {
-	order_id: string;
-	category_id: string;
-	worker_id?: string;
+	order_id: number;
+	category_id: number;
+	worker_id?: number;
 	parent?: number;
 	qty: number;
 	price: number;
@@ -141,7 +141,7 @@ export class CreateOrderDTO {
 	pant_pinch: number;
 	type?: number;
 	image_name: Array<string> = [];
-	customer_id?: string;
+	customer_id?: number;
 	customer_name: string;
 	customer_mobile: string;
 	customer_address: string;

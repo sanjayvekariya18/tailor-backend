@@ -33,7 +33,7 @@ export default class WorkerPaymentController {
 	public edit = {
 		validation: this.workerPaymentValidation.edit,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const worker_payment_id: string = req.params["worker_payment_id"] as string;
+			const worker_payment_id: number = Number((req.params["worker_payment_id"] as string) || 0);
 			const reqWorkerPaymentData = new EditWorkerPaymentDTO(req.body);
 			const checkWorkerPaymentData = await this.workerPaymentService.findOne({ worker_payment_id: worker_payment_id });
 			if (isEmpty(checkWorkerPaymentData)) {
