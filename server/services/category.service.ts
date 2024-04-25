@@ -14,7 +14,6 @@ export default class CategoryService {
 				}),
 			},
 			attributes: ["category_id", "category_name", "category_type", "category_image", "is_active"],
-			order: [["category_name", "ASC"]],
 			offset: searchParams.rowsPerPage * searchParams.page,
 			limit: searchParams.rowsPerPage,
 		});

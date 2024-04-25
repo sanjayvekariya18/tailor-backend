@@ -24,7 +24,6 @@ export default class MeasurementService {
 					attributes: [],
 				},
 			],
-			order: [["measurement_name", "ASC"]],
 			offset: searchParams.rowsPerPage * searchParams.page,
 			limit: searchParams.rowsPerPage,
 		});
