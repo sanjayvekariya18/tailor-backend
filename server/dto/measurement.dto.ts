@@ -5,7 +5,7 @@ export class SearchMeasurementDTO {
 	rowsPerPage: number;
 
 	constructor(data: any) {
-		data.searchTxt != undefined ? (this.searchTxt = data.searchTxt) : delete this.searchTxt;
+		data.searchTxt != undefined ? (this.searchTxt = data.searchTxt.trim()) : delete this.searchTxt;
 		data.category_id != undefined ? (this.category_id = data.category_id) : delete this.category_id;
 		this.page = data.page != undefined ? Number(data.page) : 0;
 		this.rowsPerPage = data.rowsPerPage != undefined ? Number(data.rowsPerPage) : 10;

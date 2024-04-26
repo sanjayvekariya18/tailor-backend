@@ -4,7 +4,7 @@ export class SearchWorkerDTO {
 	rowsPerPage: number;
 
 	constructor(data: any) {
-		data.searchTxt != undefined ? (this.searchTxt = data.searchTxt) : delete this.searchTxt;
+		data.searchTxt != undefined ? (this.searchTxt = data.searchTxt.trim()) : delete this.searchTxt;
 		this.page = data.page != undefined ? Number(data.page) : 0;
 		this.rowsPerPage = data.rowsPerPage != undefined ? Number(data.rowsPerPage) : 10;
 	}
@@ -27,9 +27,9 @@ export class CreateWorkerDTO {
 	worker_price: Array<CreateWorkerPriceDTO> = [];
 	constructor(data: any) {
 		let parseData = JSON.parse(data.worker_price);
-		this.worker_name = data.worker_name;
-		this.worker_mobile = data.worker_mobile;
-		this.worker_address = data.worker_address;
+		this.worker_name = data.worker_name.trim();
+		this.worker_mobile = data.worker_mobile.trim();
+		this.worker_address = data.worker_address.trim();
 		this.worker_photo = data.worker_photo;
 		this.worker_proof = data.worker_proof;
 		parseData.forEach((workerPrice: CreateWorkerPriceDTO) => {
@@ -50,9 +50,9 @@ export class EditWorkerDTO {
 		if (data.worker_price != undefined) {
 			parseData = JSON.parse(data.worker_price);
 		}
-		data.worker_name != undefined ? (this.worker_name = data.worker_name) : delete this.worker_name;
-		data.worker_mobile != undefined ? (this.worker_mobile = data.worker_mobile) : delete this.worker_mobile;
-		data.worker_address != undefined ? (this.worker_address = data.worker_address) : delete this.worker_address;
+		data.worker_name != undefined ? (this.worker_name = data.worker_name.trim()) : delete this.worker_name;
+		data.worker_mobile != undefined ? (this.worker_mobile = data.worker_mobile.trim()) : delete this.worker_mobile;
+		data.worker_address != undefined ? (this.worker_address = data.worker_address.trim()) : delete this.worker_address;
 		data.worker_photo != undefined ? (this.worker_photo = data.worker_photo) : delete this.worker_photo;
 		data.worker_proof != undefined ? (this.worker_proof = data.worker_proof) : delete this.worker_proof;
 		parseData.forEach((workerPrice: CreateWorkerPriceDTO) => {

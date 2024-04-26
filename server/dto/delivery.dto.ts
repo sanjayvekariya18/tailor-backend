@@ -54,10 +54,9 @@ export class EditDeliveryDTO {
 	delivery_details: Array<CreateDeliveryDetailsDTO> = [];
 	constructor(data: any) {
 		data.date != undefined ? (this.date = data.date) : delete this.date;
-		data.delivered_to != undefined ? (this.delivered_to = data.delivered_to) : delete this.delivered_to;
-		data.delivered_mo != undefined ? (this.delivered_mo = data.delivered_mo) : delete this.delivered_mo;
-		data.total_delivered != undefined ? (this.total_delivered = data.total_delivered) : delete this.total_delivered;
-		data.note != undefined ? (this.note = data.note) : delete this.note;
+		data.delivered_to != undefined ? (this.delivered_to = data.delivered_to.trim()) : delete this.delivered_to;
+		data.delivered_mo != undefined ? (this.delivered_mo = data.delivered_mo.trim()) : delete this.delivered_mo;
+		data.note != undefined ? (this.note = data.note.trim()) : delete this.note;
 		data.delivery_details.forEach((row: any) => {
 			if (row.qty > 0) {
 				this.delivery_details.push(new CreateDeliveryDetailsDTO(row));

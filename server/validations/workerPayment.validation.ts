@@ -2,19 +2,19 @@ export default class WorkerPaymentValidation {
 	public getAll = {
 		start_date: "date",
 		end_date: "date|after_or_equal:start_date",
-		worker_id: "string",
+		worker_id: "integer",
 		page: "numeric|min:0",
 		rowsPerPage: "numeric|min:1",
 	};
 
 	public create = {
-		worker_id: "required|string",
+		worker_id: "required|integer",
 		amount: "required|numeric",
 		payment_date: "required|date",
 	};
 
 	public edit = {
-		worker_id: "string",
+		worker_id: "integer",
 		amount: "numeric",
 		payment_date: "date",
 	};

@@ -24,7 +24,7 @@ export default class WorkerValidation {
 	};
 
 	public work_assign_task = {
-		worker_id: "required|string",
-		customer_id: "required|string",
+		worker_id: "required|integer",
+		customer_id: "required|integer",
 	};
 }

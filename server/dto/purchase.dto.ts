@@ -20,11 +20,11 @@ export class createPurchaseDTO {
 	challan?: string;
 	purchase_date: Date;
 	constructor(data: any) {
-		this.party_name = data.party_name;
+		this.party_name = data.party_name.trim();
 		this.amount = data.amount;
 		this.outstand = data.amount;
-		data.details != undefined ? (this.details = data.details) : delete this.details;
-		data.challan != undefined ? (this.challan = data.challan) : delete this.challan;
+		data.details != undefined ? (this.details = data.details.trim()) : delete this.details;
+		data.challan != undefined ? (this.challan = data.challan.trim()) : delete this.challan;
 		this.purchase_date = data.purchase_date;
 	}
 }
@@ -37,10 +37,10 @@ export class EditPurchaseDTO {
 	purchase_date?: Date;
 	outstand?: number;
 	constructor(data: any) {
-		data.party_name != undefined ? (this.party_name = data.party_name) : delete this.party_name;
+		data.party_name != undefined ? (this.party_name = data.party_name.trim()) : delete this.party_name;
 		data.amount != undefined ? (this.amount = data.amount) : delete this.amount;
-		data.details != undefined ? (this.details = data.details) : delete this.details;
-		data.challan != undefined ? (this.challan = data.challan) : delete this.challan;
+		data.details != undefined ? (this.details = data.details.trim()) : delete this.details;
+		data.challan != undefined ? (this.challan = data.challan.trim()) : delete this.challan;
 		data.purchase_date != undefined ? (this.purchase_date = data.purchase_date) : delete this.purchase_date;
 		data.outstand != undefined ? (this.outstand = data.outstand) : delete this.outstand;
 	}

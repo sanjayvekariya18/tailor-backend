@@ -1,12 +1,12 @@
 export default class DeliveryValidation {
 	public getAll = {
-		delivery_id: "string",
+		delivery_id: "integer",
 		page: "numeric|min:0",
 		rowsPerPage: "numeric|min:1",
 	};
 
 	public create = {
-		order_id: "required|string",
+		order_id: "required|integer",
 		date: "required|date",
 		delivered_to: "required|string",
 		delivered_mo: "string",

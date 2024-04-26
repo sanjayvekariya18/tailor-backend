@@ -21,7 +21,7 @@ export class CreateCategoryDTO {
 	is_active?: boolean;
 
 	constructor(data: any) {
-		this.category_name = data.category_name;
+		this.category_name = data.category_name.trim();
 		this.category_image = data.category_image;
 		this.category_type = data.category_type;
 		data.is_active != undefined && data.is_active != "" ? (this.is_active = data.is_active) : delete this.is_active;

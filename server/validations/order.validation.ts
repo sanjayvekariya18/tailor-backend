@@ -4,7 +4,7 @@ export default class OrderValidation {
 	public getAll = {
 		start_date: "date",
 		end_date: "date|after_or_equal:start_date",
-		customer_id: "string",
+		customer_id: "integer",
 		mobile_no: "string",
 		status: "in:complete,partial pending,pending",
 		page: "numeric|min:0",
@@ -12,14 +12,14 @@ export default class OrderValidation {
 	};
 
 	public getBill = {
-		customer_id: "string",
-		order_id: "string",
+		customer_id: "integer",
+		order_id: "integer",
 		page: "numeric|min:0",
 		rowsPerPage: "numeric|min:1",
 	};
 
 	public findOneMeasurement = {
-		customer_id: "required|string",
+		customer_id: "required|integer",
 		customer_mobile: "string",
 	};
 
@@ -37,7 +37,7 @@ export default class OrderValidation {
 	public getCustomerPaymentData = {
 		start_date: "date",
 		end_date: "date|after_or_equal:start_date",
-		customer_id: "string",
+		customer_id: "integer",
 		bill_status: "in:" + Object.values(BILL_STATUS),
 		page: "numeric|min:0",
 		rowsPerPage: "numeric|min:1",
@@ -56,7 +56,7 @@ export default class OrderValidation {
 		pant_pocket: "required|numeric",
 		pant_pinch: "required|numeric",
 		type: "numeric",
-		customer_id: "string",
+		customer_id: "integer",
 		customer_name: "required|string",
 		customer_mobile: "required|string",
 		customer_address: "required|string",

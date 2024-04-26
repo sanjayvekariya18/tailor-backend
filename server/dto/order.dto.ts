@@ -13,8 +13,8 @@ export class SearchOrderDTO {
 		data.start_date != undefined && data.start_date != "" ? (this.start_date = data.start_date) : delete this.start_date;
 		data.end_date != undefined && data.end_date != "" ? (this.end_date = new Date(data.end_date + " 23:59:59.0")) : delete this.end_date;
 		data.customer_id != undefined && data.customer_id != "" ? (this.customer_id = data.customer_id) : delete this.customer_id;
-		data.mobile_no != undefined && data.mobile_no != "" ? (this.mobile_no = data.mobile_no) : delete this.mobile_no;
-		data.status != undefined && data.status != "" ? (this.status = data.status) : delete this.status;
+		data.mobile_no != undefined && data.mobile_no != "" ? (this.mobile_no = data.mobile_no.trim()) : delete this.mobile_no;
+		data.status != undefined && data.status != "" ? (this.status = data.status.trim()) : delete this.status;
 		this.page = data.page != undefined && data.page != "" ? Number(data.page) : 0;
 		this.rowsPerPage = data.rowsPerPage != undefined && data.rowsPerPage != "" ? Number(data.rowsPerPage) : 10;
 	}
@@ -40,7 +40,7 @@ export class findCustomerMeasurementDTO {
 
 	constructor(data: any) {
 		data.customer_id != undefined && data.customer_id != "" ? (this.customer_id = data.customer_id) : delete this.customer_id;
-		data.mobile_no != undefined && data.mobile_no != "" ? (this.mobile_no = data.mobile_no) : delete this.mobile_no;
+		data.mobile_no != undefined && data.mobile_no != "" ? (this.mobile_no = data.mobile_no.trim()) : delete this.mobile_no;
 	}
 }
 

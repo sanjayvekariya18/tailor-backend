@@ -1,10 +1,10 @@
 import { Op, QueryTypes } from "sequelize";
 import { sequelizeConnection } from "../config/database";
 import { Customer, Login } from "../models";
-import { ChangeCustomerPasswordDTO, CreateCustomerDTO, EditCustomerDTO } from "../dto";
+import { ChangeCustomerPasswordDTO, CreateCustomerDTO, EditCustomerDTO, SearchCustomerDTO } from "../dto";
 
 export default class CustomerService {
-	public getAll = async (searchParams: any) => {
+	public getAll = async (searchParams: SearchCustomerDTO) => {
 		return await Customer.findAndCountAll({
 			where: {
 				...(searchParams.searchTxt && {
