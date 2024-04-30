@@ -440,6 +440,8 @@ export default class OrderService {
 			include: [{ model: Customer, attributes: [] }],
 			order: [["delivery_date", "ASC"]],
 			raw: true,
+			offset: searchParams.rowsPerPage * searchParams.page,
+			limit: searchParams.rowsPerPage,
 		});
 	};
 
@@ -504,6 +506,8 @@ export default class OrderService {
 			],
 			order: [["payment_date", "ASC"]],
 			raw: true,
+			offset: searchParams.rowsPerPage * searchParams.page,
+			limit: searchParams.rowsPerPage,
 		});
 	};
 

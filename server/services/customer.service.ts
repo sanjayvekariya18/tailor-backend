@@ -31,7 +31,8 @@ export default class CustomerService {
 	public findAll = async () => {
 		return await sequelizeConnection.query(
 			`
-        SELECT customer_id, CONCAT(customer_name, '-', customer_mobile) AS customer_name FROM customer
+            SELECT customer_id, CONCAT(customer_name, ' - ', customer_mobile) AS customer_name FROM customer
+            where customer_name is not null and customer_mobile is not null 
         `,
 			{ type: QueryTypes.SELECT }
 		);

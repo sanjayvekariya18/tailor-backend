@@ -24,8 +24,6 @@ export default class MeasurementService {
 					attributes: [],
 				},
 			],
-			offset: searchParams.rowsPerPage * searchParams.page,
-			limit: searchParams.rowsPerPage,
 		});
 	};
 
