@@ -52,7 +52,7 @@ OrderPayment.init(
 		paranoid: false,
 		freezeTableName: true,
 		timestamps: false,
-		tableName: `order_payments`,
+		tableName: `order_payment`,
 	}
 );
 

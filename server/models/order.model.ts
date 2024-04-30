@@ -97,7 +97,7 @@ Order.init(
 		paranoid: false,
 		freezeTableName: true,
 		timestamps: false,
-		tableName: `order`,
+		tableName: `orders`,
 	}
 );
 
