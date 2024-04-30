@@ -8,7 +8,10 @@ export default class CustomerService {
 		return await Customer.findAndCountAll({
 			where: {
 				...(searchParams.searchTxt && {
-					customer_name: { [Op.like]: "%" + searchParams.searchTxt + "%" },
+					[Op.or]: [
+						{ customer_name: { [Op.like]: "%" + searchParams.searchTxt + "%" } },
+						{ customer_mobile: { [Op.like]: searchParams.searchTxt + "%" } },
+					],
 				}),
 			},
 			attributes: ["customer_id", "customer_name", "customer_mobile", "customer_address"],

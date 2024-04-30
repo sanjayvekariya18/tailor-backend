@@ -138,3 +138,5 @@ public/invoicePdf/*
 
 *.cert
 *.key
+
+local.sh

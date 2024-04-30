@@ -12,7 +12,7 @@ export default class DashboardService {
 		const pending_order: Array<{ pending_count: number }> = await sequelizeConnection.query(
 			`select 
             COUNT(*) as pending_count
-            from \`order\` o 
+            from \`orders\` o 
             where 
             o.order_id in (select op.order_id  from order_product op where op.status = '${WORKER_ASSIGN_TASK.pending}')
             `,
@@ -21,7 +21,7 @@ export default class DashboardService {
 		const completed_order: Array<{ complete_count: number }> = await sequelizeConnection.query(
 			`select 
             COUNT(*) as complete_count
-            from \`order\` o 
+            from \`orders\` o 
             where 
             o.order_id in (select op.order_id  from order_product op where op.status = '${WORKER_ASSIGN_TASK.complete}')
             `,
@@ -89,7 +89,7 @@ export default class DashboardService {
                 sum(op.qty) - coalesce(sum(dd.qty), 0) as pending_delivery
             from
                 order_product op
-            left join \`order\` o on
+            left join \`orders\` o on
                 o.order_id = op.order_id
             left join customer c on
                 c.customer_id = o.customer_id

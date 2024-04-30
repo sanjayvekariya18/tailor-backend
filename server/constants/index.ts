@@ -17,9 +17,9 @@ export enum SORTING {
 }
 
 export enum WORKER_ASSIGN_TASK {
-	pending = "pending",
-	assign = "assign",
-	complete = "complete",
+	pending = 0,
+	assign = 1,
+	complete = 2,
 }
 
 export enum BILL_STATUS {

@@ -100,7 +100,7 @@ export default class WorkerService {
             from worker_price wp 
             left join category c on c.category_id =wp.category_id 
             join order_product op on op.category_id = wp.category_id 
-            join \`order\` o on o.order_id = op.order_id
+            join \`orders\` o on o.order_id = op.order_id
             where 
             o.customer_id ='${searchObject.customer_id}' and
             wp.worker_id ='${searchObject.worker_id}' and 

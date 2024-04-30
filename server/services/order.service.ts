@@ -49,7 +49,7 @@ export default class OrderService {
                 cust.customer_mobile,
                 cust.customer_address
             FROM 
-                \`order\` o
+                \`orders\` o
             JOIN 
                 customer cust ON o.customer_id = cust.customer_id
             LEFT JOIN 
