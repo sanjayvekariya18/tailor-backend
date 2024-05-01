@@ -59,7 +59,7 @@ export default class OrderValidation {
 		customer_id: "integer",
 		customer_name: "required|string",
 		customer_mobile: "required|string",
-		customer_address: "required|string",
+		customer_address: "string",
 		// customer_measurement: "required|array|min:1",
 		// "customer_measurement.*.category_id": "required|string",
 		// "customer_measurement.*.measurement_id": "required|string",

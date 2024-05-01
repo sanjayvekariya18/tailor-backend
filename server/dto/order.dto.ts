@@ -144,7 +144,7 @@ export class CreateOrderDTO {
 	customer_id?: number;
 	customer_name: string;
 	customer_mobile: string;
-	customer_address: string;
+	customer_address?: string;
 	customer_measurement: Array<CreateCustomerMeasurement> = [];
 	order_details: Array<CreateOrderProductDTO> = [];
 

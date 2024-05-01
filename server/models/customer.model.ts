@@ -8,7 +8,7 @@ export interface CustomerAttributes {
 	customer_address: string;
 }
 
-export interface CustomerInput extends Optional<CustomerAttributes, "customer_id"> {}
+export interface CustomerInput extends Optional<CustomerAttributes, "customer_id" | "customer_address"> {}
 export interface CustomerOutput extends Required<CustomerAttributes> {}
 
 class Customer extends Model<CustomerAttributes, CustomerInput> implements CustomerAttributes {
@@ -36,7 +36,7 @@ Customer.init(
 		},
 		customer_address: {
 			type: DataTypes.TEXT,
-			allowNull: false,
+			defaultValue: "",
 		},
 	},
 	{

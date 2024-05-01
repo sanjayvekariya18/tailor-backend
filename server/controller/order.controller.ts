@@ -4,10 +4,10 @@ import { OrderValidation } from "../validations";
 import { CategoryService, MeasurementService, OrderService } from "../services";
 import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
 import { image } from "../constants";
-import { BadResponseHandler } from "../errorHandler";
+import { BadResponseHandler, FormErrorsHandler } from "../errorHandler";
 import { OrderPaymentDTO, findCustomerMeasurementDTO, getCustomerBillDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
 import moment from "moment";
-import { ChestDetails, OrderImages } from "../models";
+import { Category, ChestDetails, Measurement, OrderImages } from "../models";
 
 export default class OrderController {
 	private orderService = new OrderService();
@@ -85,60 +85,81 @@ export default class OrderController {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const orderData = new CreateOrderDTO(req.body);
 
-			let categoryID: any = [];
-			let measurementID: any = [];
-			let categoryData = await this.categoryService.findAll().then((data) => {
-				data.map((id) => {
-					categoryID.push(id.category_id);
-				});
-			});
-			let measurementData = await this.measurementService.findAll().then((data) => {
-				data.map((id) => {
-					measurementID.push(id.measurement_id);
-				});
-			});
-			orderData.customer_measurement.map((data) => {
-				if (!categoryID.includes(data.category_id)) {
-					throw new BadResponseHandler("Category not found");
-				}
-				if (!measurementID.includes(data.measurement_id)) {
-					throw new BadResponseHandler("Measurement not found");
+			const errors: any = {};
+
+			const category_ids: Array<number> = [];
+			orderData.order_details.forEach((row) => {
+				if (!category_ids.includes(row.category_id)) {
+					category_ids.push(row.category_id);
 				}
 			});
+			const measurement_ids: Array<number> = [];
+			orderData.customer_measurement.forEach((row) => {
+				if (!measurement_ids.includes(row.measurement_id)) {
+					measurement_ids.push(row.measurement_id);
+				}
+			});
+			const measurement_category_ids: Array<number> = [];
+			orderData.customer_measurement.forEach((row) => {
+				if (!measurement_category_ids.includes(row.category_id)) {
+					measurement_category_ids.push(row.category_id);
+				}
+			});
+			const category_data = await Category.findAll().then((data) => data.map((row) => row.category_id));
+			const measurement_data = await Measurement.findAll().then((data) => data.map((row) => row.measurement_id));
+
+			if (category_data.filter((row) => category_ids.includes(row)).length != category_ids.length) {
+				this.pushErrors(errors, "order_details", `Some category not found`);
+			}
+
+			if (category_data.filter((row) => measurement_category_ids.includes(row)).length != measurement_category_ids.length) {
+				this.pushErrors(errors, "customer_measurement", `Some category not found`);
+			}
+
+			if (measurement_data.filter((row) => measurement_ids.includes(row)).length != measurement_ids.length) {
+				this.pushErrors(errors, "customer_measurement", `Some measurement not found`);
+			}
+
 			const file: any = req.files;
 			if (file) {
 				if (!Array.isArray(file[`image_name[]`])) {
 					let fileValidation = fileType(file[`image_name[]`], image);
 					if (fileValidation === false) {
-						return res.api.validationErrors({
-							message: ["Invalid image_name file"],
-						});
+						this.pushErrors(errors, "image", `Invalid image_name file`);
+					} else {
+						let file_path: any = await saveFile(file[`image_name[]`], "OrderImage");
+						orderData.image_name.push(file_path.upload_path);
 					}
-					let file_path: any = await saveFile(file[`image_name[]`], "OrderImage");
-					orderData.image_name.push(file_path.upload_path);
 				} else {
-					const errors = [];
 					for (const image_name of file[`image_name[]`]) {
 						let fileValidation = fileType(image_name, image);
 						if (fileValidation === false) {
-							errors.push("Invalid image_name file");
+							this.pushErrors(errors, "image", `Invalid image_name file`);
 						}
 					}
-					if (errors.length > 0) {
-						return res.api.validationErrors({
-							message: errors,
-						});
-					}
-					for (const image_name of file[`image_name[]`]) {
-						let file_path: any = await saveFile(image_name, "OrderImage");
-						orderData.image_name.push(file_path.upload_path);
+					if (errors.image?.length == 0) {
+						for (const image_name of file[`image_name[]`]) {
+							let file_path: any = await saveFile(image_name, "OrderImage");
+							orderData.image_name.push(file_path.upload_path);
+						}
 					}
 				}
+			}
+
+			if (Object.keys(errors).length > 0) {
+				throw new FormErrorsHandler(errors);
 			}
 
 			let data = await this.orderService.create(orderData);
 			return res.api.create(data);
 		},
+	};
+
+	private pushErrors = (errors: any, key: string, message: string) => {
+		if (!errors[`${key}`]) {
+			errors[`${key}`] = [];
+		}
+		errors[`${key}`].push(message);
 	};
 
 	public edit = {
@@ -151,56 +172,69 @@ export default class OrderController {
 				throw new BadResponseHandler("Order data not found");
 			}
 
-			let categoryID: any = [];
-			let measurementID: any = [];
-			await this.categoryService.findAll().then((data) => {
-				data.map((id) => {
-					categoryID.push(id.category_id);
-				});
-			});
-			await this.measurementService.findAll().then((data) => {
-				data.map((id) => {
-					measurementID.push(id.measurement_id);
-				});
-			});
-			orderData.customer_measurement.map((data) => {
-				if (!categoryID.includes(data.category_id)) {
-					throw new BadResponseHandler("Category Not Found");
-				}
-				if (!measurementID.includes(data.measurement_id)) {
-					throw new BadResponseHandler("Measurement Not Found");
+			const errors: any = {};
+
+			const category_ids: Array<number> = [];
+			orderData.order_details.forEach((row) => {
+				if (!category_ids.includes(row.category_id)) {
+					category_ids.push(row.category_id);
 				}
 			});
+			const measurement_ids: Array<number> = [];
+			orderData.customer_measurement.forEach((row) => {
+				if (!measurement_ids.includes(row.measurement_id)) {
+					measurement_ids.push(row.measurement_id);
+				}
+			});
+			const measurement_category_ids: Array<number> = [];
+			orderData.customer_measurement.forEach((row) => {
+				if (!measurement_category_ids.includes(row.category_id)) {
+					measurement_category_ids.push(row.category_id);
+				}
+			});
+			const category_data = await Category.findAll().then((data) => data.map((row) => row.category_id));
+			const measurement_data = await Measurement.findAll().then((data) => data.map((row) => row.measurement_id));
+
+			if (category_data.filter((row) => category_ids.includes(row)).length != category_ids.length) {
+				this.pushErrors(errors, "order_details", `Some category not found`);
+			}
+
+			if (category_data.filter((row) => measurement_category_ids.includes(row)).length != measurement_category_ids.length) {
+				this.pushErrors(errors, "customer_measurement", `Some category not found`);
+			}
+
+			if (measurement_data.filter((row) => measurement_ids.includes(row)).length != measurement_ids.length) {
+				this.pushErrors(errors, "customer_measurement", `Some measurement not found`);
+			}
 
 			const file: any = req.files;
 			if (file) {
 				if (!Array.isArray(file[`image_name[]`])) {
 					let fileValidation = fileType(file[`image_name[]`], image);
 					if (fileValidation === false) {
-						return res.api.validationErrors({
-							message: ["Invalid image_name file"],
-						});
+						this.pushErrors(errors, "image", `Invalid image_name file`);
+					} else {
+						let file_path: any = await saveFile(file[`image_name[]`], "OrderImage");
+						orderData.image_name.push(file_path.upload_path);
 					}
-					let file_path: any = await saveFile(file[`image_name[]`], "OrderImage");
-					orderData.image_name.push(file_path.upload_path);
 				} else {
-					const errors = [];
 					for (const image_name of file[`image_name[]`]) {
 						let fileValidation = fileType(image_name, image);
 						if (fileValidation === false) {
-							errors.push("Invalid image_name file");
+							this.pushErrors(errors, "image", `Invalid image_name file`);
 						}
 					}
-					if (errors.length > 0) {
-						return res.api.validationErrors({
-							message: errors,
-						});
-					}
-					for (const image_name of file[`image_name[]`]) {
-						let file_path: any = await saveFile(image_name, "OrderImage");
-						orderData.image_name.push(file_path.upload_path);
+					if (errors.image?.length == 0) {
+						for (const image_name of file[`image_name[]`]) {
+							let file_path: any = await saveFile(image_name, "OrderImage");
+							orderData.image_name.push(file_path.upload_path);
+						}
 					}
 				}
+			}
+
+			if (Object.keys(errors).length > 0) {
+				throw new FormErrorsHandler(errors);
 			}
 
 			let data = await this.orderService.edit(orderData, orderId, checkOrderData.customer_id);

@@ -11,7 +11,7 @@ export default class DeliveryValidation {
 		delivered_to: "required|string",
 		delivered_mo: "string",
 		delivery_details: "required|array|min:1",
-		"delivery_details.*.category_id": "required|string",
+		"delivery_details.*.category_id": "required|integer",
 		"delivery_details.*.qty": "required|integer",
 		note: "string",
 	};

@@ -2,6 +2,7 @@ import { QueryTypes, Transaction } from "sequelize";
 import { CreateDeliveryDTO, EditDeliveryDTO, SearchDeliveryDTO } from "../dto";
 import { Category, Delivery, DeliveryDetails } from "../models";
 import { executeTransaction, sequelizeConnection } from "../config/database";
+import { WORKER_ASSIGN_TASK } from "../constants";
 
 export default class DeliveryService {
 	public getAll = async (searchParams: SearchDeliveryDTO) => {
@@ -90,7 +91,7 @@ export default class DeliveryService {
             where
                 op.order_id = ${order_id}
                 and 
-            op.status = 'complete'
+            op.status = '${WORKER_ASSIGN_TASK.complete}'
             group by
                 op.order_id,
                 op.category_id,

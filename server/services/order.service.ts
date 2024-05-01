@@ -60,9 +60,9 @@ export default class OrderService {
                         c.category_name,
                         c.category_image,
                         SUM(op.qty) AS total_qty,
-                        SUM(CASE WHEN op.status = 'pending' THEN op.qty ELSE 0 END) AS pending,
-                        SUM(CASE WHEN op.status = 'complete' THEN op.qty ELSE 0 END) AS complete,
-                        SUM(CASE WHEN op.status = 'assign' THEN op.qty ELSE 0 END) AS assign
+                        SUM(CASE WHEN op.status = '${WORKER_ASSIGN_TASK.pending}' THEN op.qty ELSE 0 END) AS pending,
+                        SUM(CASE WHEN op.status = '${WORKER_ASSIGN_TASK.complete}' THEN op.qty ELSE 0 END) AS complete,
+                        SUM(CASE WHEN op.status = '${WORKER_ASSIGN_TASK.assign}' THEN op.qty ELSE 0 END) AS assign
                     FROM 
                         order_product op
                     LEFT JOIN 

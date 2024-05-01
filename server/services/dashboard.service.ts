@@ -101,7 +101,7 @@ export default class DashboardService {
                 dd.delivery_id = d.delivery_id
                 and dd.category_id = op.category_id
             where
-                op.status = 'complete'
+                op.status = '${WORKER_ASSIGN_TASK.complete}'
             group by 
                 op.order_id,
                 c.customer_name ,
@@ -134,7 +134,7 @@ export default class DashboardService {
         from
             category c
         left join order_product op on op.category_id = c.category_id 
-        where op.status = 'pending'
+        where op.status = '${WORKER_ASSIGN_TASK.pending}'
         group by
             c.category_id,
             c.category_name,
