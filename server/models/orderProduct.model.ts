@@ -96,7 +96,7 @@ OrderProduct.init(
 			allowNull: true,
 		},
 		status: {
-			type: DataTypes.ENUM(...Object.keys(WORKER_ASSIGN_TASK)),
+			type: DataTypes.INTEGER,
 			defaultValue: WORKER_ASSIGN_TASK.pending,
 			allowNull: false,
 		},
