@@ -1,102 +1,102 @@
 [
 	{
 		"measurement_id": 1,
-		"category_name": "Shirts",
+		"category_name": "Shirt",
 		"measurement_name": "L"
 	},
 	{
 		"measurement_id": 2,
-		"category_name": "Shirts",
+		"category_name": "Shirt",
 		"measurement_name": "SO"
 	},
 	{
 		"measurement_id": 3,
-		"category_name": "Shirts",
+		"category_name": "Shirt",
 		"measurement_name": "S"
 	},
 	{
 		"measurement_id": 4,
-		"category_name": "Shirts",
+		"category_name": "Shirt",
 		"measurement_name": "HS"
 	},
 	{
 		"measurement_id": 5,
-		"category_name": "Shirts",
+		"category_name": "Shirt",
 		"measurement_name": "CH"
 	},
 	{
 		"measurement_id": 6,
-		"category_name": "Shirts",
+		"category_name": "Shirt",
 		"measurement_name": "W"
 	},
 	{
 		"measurement_id": 7,
-		"category_name": "Shirts",
+		"category_name": "Shirt",
 		"measurement_name": "H"
 	},
 	{
 		"measurement_id": 8,
-		"category_name": "Shirts",
+		"category_name": "Shirt",
 		"measurement_name": "CO"
 	},
 	{
 		"measurement_id": 9,
-		"category_name": "Shirts",
+		"category_name": "Shirt",
 		"measurement_name": "C"
 	},
 	{
 		"measurement_id": 10,
-		"category_name": "Shirts",
+		"category_name": "Shirt",
 		"measurement_name": "@"
 	},
 	{
 		"measurement_id": 11,
-		"category_name": "Shirts",
+		"category_name": "Shirt",
 		"measurement_name": "or"
 	},
 	{
 		"measurement_id": 12,
-		"category_name": "Pants",
+		"category_name": "Pant",
 		"measurement_name": "L"
 	},
 	{
 		"measurement_id": 13,
-		"category_name": "Pants",
+		"category_name": "Pant",
 		"measurement_name": "W"
 	},
 	{
 		"measurement_id": 14,
-		"category_name": "Pants",
+		"category_name": "Pant",
 		"measurement_name": "H"
 	},
 	{
 		"measurement_id": 15,
-		"category_name": "Pants",
+		"category_name": "Pant",
 		"measurement_name": "R"
 	},
 	{
 		"measurement_id": 16,
-		"category_name": "Pants",
+		"category_name": "Pant",
 		"measurement_name": "T"
 	},
 	{
 		"measurement_id": 17,
-		"category_name": "Pants",
+		"category_name": "Pant",
 		"measurement_name": "B"
 	},
 	{
 		"measurement_id": 18,
-		"category_name": "Pants",
+		"category_name": "Pant",
 		"measurement_name": "nee"
 	},
 	{
 		"measurement_id": 19,
-		"category_name": "Pants",
+		"category_name": "Pant",
 		"measurement_name": "@"
 	},
 	{
 		"measurement_id": 20,
-		"category_name": "Pants",
+		"category_name": "Pant",
 		"measurement_name": "or"
 	}
 ]
