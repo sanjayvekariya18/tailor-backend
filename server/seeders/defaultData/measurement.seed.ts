@@ -14,6 +14,7 @@ const measurementSeed = async (transaction: Transaction) => {
 
 		if (categoryId) {
 			tableData.push({
+				measurement_id: data.measurement_id,
 				category_id: categoryId.category_id,
 				measurement_name: data.measurement_name,
 			});
