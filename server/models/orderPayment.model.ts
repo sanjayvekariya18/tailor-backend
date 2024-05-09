@@ -31,7 +31,7 @@ OrderPayment.init(
 			allowNull: false,
 			references: {
 				model: {
-					tableName: "order",
+					tableName: "orders",
 				},
 				key: "order_id",
 			},
