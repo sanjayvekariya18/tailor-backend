@@ -1,4 +1,4 @@
 [
-	{ "category_name": "shirt", "category_type": "top", "category_image": "../../../public/images/CategoryImage/1712834537.png", "is_active": true },
-	{ "category_name": "pant", "category_type": "bottom", "category_image": "../../../public/images/CategoryImage/1712754530.jpg", "is_active": true }
+	{ "category_name": "Shirts", "category_type": "top", "category_image": "../../../public/images/CategoryImage/1712834537.png", "is_active": true },
+	{ "category_name": "Pants", "category_type": "bottom", "category_image": "../../../public/images/CategoryImage/1712754530.jpg", "is_active": true }
 ]
