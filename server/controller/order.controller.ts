@@ -139,8 +139,9 @@ export default class OrderController {
 					}
 					if (errors.image?.length == 0) {
 						for (const image_name of file[`image_name[]`]) {
-							let file_path: any = await saveFile(image_name, "OrderImage");
-							orderData.image_name.push(file_path.upload_path);
+							await saveFile(image_name, "OrderImage").then((file_path: any) => {
+								orderData.image_name.push(file_path.upload_path);
+							});
 						}
 					}
 				}
