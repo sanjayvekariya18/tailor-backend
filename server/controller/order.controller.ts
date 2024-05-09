@@ -137,7 +137,7 @@ export default class OrderController {
 							this.pushErrors(errors, "image", `Invalid image_name file`);
 						}
 					}
-					if (errors.image?.length == 0) {
+					if (errors.image == undefined) {
 						for (const image_name of file[`image_name[]`]) {
 							await saveFile(image_name, "OrderImage").then((file_path: any) => {
 								orderData.image_name.push(file_path.upload_path);
@@ -225,7 +225,7 @@ export default class OrderController {
 							this.pushErrors(errors, "image", `Invalid image_name file`);
 						}
 					}
-					if (errors.image?.length == 0) {
+					if (errors.image == undefined) {
 						for (const image_name of file[`image_name[]`]) {
 							let file_path: any = await saveFile(image_name, "OrderImage");
 							orderData.image_name.push(file_path.upload_path);
