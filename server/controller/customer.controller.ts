@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { isEmpty } from "../utils/helper";
 import { CustomerService } from "../services";
 import { CustomerValidation } from "../validations";
-import { ChangeCustomerPasswordDTO, CreateCustomerDTO, EditCustomerDTO, SearchCustomerDTO } from "../dto";
+import { BulkCustomerMeasurementDTO, ChangeCustomerPasswordDTO, CreateCustomerDTO, EditCustomerDTO, SearchCustomerDTO } from "../dto";
 import { Op } from "sequelize";
 import { Login } from "../models";
 import { BadResponseHandler } from "../errorHandler";
@@ -93,6 +93,14 @@ export default class CustomerController {
 			} else {
 				throw new BadResponseHandler("old password not match");
 			}
+		},
+	};
+
+	public createOrEditCustomerMeasurement = {
+		validation: this.customerValidation.createOrEditCustomerMeasurement,
+		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const data = await this.customerService.createOrEditCustomerMeasurement(new BulkCustomerMeasurementDTO(req.body));
+			return res.api.create(data);
 		},
 	};
 }

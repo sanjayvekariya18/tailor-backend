@@ -1,7 +1,7 @@
 import { Op, QueryTypes } from "sequelize";
 import { sequelizeConnection } from "../config/database";
-import { Customer, Login } from "../models";
-import { ChangeCustomerPasswordDTO, CreateCustomerDTO, EditCustomerDTO, SearchCustomerDTO } from "../dto";
+import { Customer, CustomerMeasurement, Login } from "../models";
+import { BulkCustomerMeasurementDTO, ChangeCustomerPasswordDTO, CreateCustomerDTO, EditCustomerDTO, SearchCustomerDTO } from "../dto";
 
 export default class CustomerService {
 	public getAll = async (searchParams: SearchCustomerDTO) => {
@@ -62,5 +62,27 @@ export default class CustomerService {
 		return await Login.update({ password: userData.new_password }, { where: { login_id: login_id } }).then(() => {
 			return "User password change successfully";
 		});
+	};
+
+	public createOrEditCustomerMeasurement = async (tableData: BulkCustomerMeasurementDTO) => {
+		const customer_measurement_data = await CustomerMeasurement.findAll({ where: { customer_id: tableData.customer_id } });
+
+		for await (const measurement of tableData.measurement) {
+			const customer_measurement = customer_measurement_data.find(
+				(row) => row.category_id == measurement.category_id && row.measurement_id == measurement.measurement_id
+			);
+
+			if (customer_measurement) {
+				customer_measurement.measurement = measurement.measurement;
+				customer_measurement.measurement_2 = measurement.measurement_2;
+				await customer_measurement.save();
+			} else {
+				await CustomerMeasurement.create(measurement).then((data) => {
+					customer_measurement_data.push(data);
+				});
+			}
+		}
+
+		return { message: "Customer measurements updated" };
 	};
 }

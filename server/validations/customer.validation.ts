@@ -22,4 +22,13 @@ export default class CustomerValidation {
 		new_password: "required|string",
 		confirm_password: "required|string",
 	};
+
+	public createOrEditCustomerMeasurement = {
+		customer_id: "required|integer",
+		measurement: "required|array|min:1",
+		"measurement.*.category_id": "required|integer",
+		"measurement.*.measurement_id": "required|integer",
+		"measurement.*.measurement": "required|string",
+		"measurement.*.measurement_2": "string",
+	};
 }
