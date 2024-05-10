@@ -274,16 +274,16 @@ export default class OrderService {
 			}
 			let bill_no: number = await Order.max("bill_no");
 
-			let customerMeasurementBulkData: Array<CustomerMeasurementAttributes> = [];
-			orderData.customer_measurement.map((Workerdata) => {
-				customerMeasurementBulkData.push({
-					customer_id: customerId,
-					category_id: Workerdata.category_id,
-					measurement_id: Workerdata.measurement_id,
-					measurement: Workerdata.measurement,
-					measurement_2: Workerdata.measurement_2,
-				});
-			});
+			// let customerMeasurementBulkData: Array<CustomerMeasurementAttributes> = [];
+			// orderData.customer_measurement.map((Workerdata) => {
+			// 	customerMeasurementBulkData.push({
+			// 		customer_id: customerId,
+			// 		category_id: Workerdata.category_id,
+			// 		measurement_id: Workerdata.measurement_id,
+			// 		measurement: Workerdata.measurement,
+			// 		measurement_2: Workerdata.measurement_2,
+			// 	});
+			// });
 			let newOrderData = {
 				customer_id: customerId,
 				total: orderData.total,
@@ -296,13 +296,27 @@ export default class OrderService {
 				bill_no: bill_no + 1,
 			};
 
-			for await (const iterator of customerMeasurementBulkData) {
-				await CustomerMeasurement.destroy({
-					where: { customer_id: customerId, category_id: iterator.category_id, measurement_id: iterator.measurement_id },
-					transaction,
-				});
+			for await (const iterator of orderData.customer_measurement) {
+				// await CustomerMeasurement.destroy({
+				// 	where: { customer_id: customerId, category_id: iterator.category_id, measurement_id: iterator.measurement_id },
+				// 	transaction,
+				// });
+				await CustomerMeasurement.update(
+					{
+						measurement: iterator.measurement,
+						measurement_2: iterator.measurement_2,
+					},
+					{
+						where: {
+							customer_id: customerId,
+							category_id: iterator.category_id,
+							measurement_id: iterator.measurement_id,
+						},
+						transaction,
+					}
+				);
 			}
-			await CustomerMeasurement.bulkCreate(customerMeasurementBulkData, { transaction });
+			// await CustomerMeasurement.bulkCreate(customerMeasurementBulkData, { transaction });
 			await Order.create(newOrderData, { transaction }).then(async (data) => {
 				let orderDetailsBulkData: Array<OrderProductAttributes> = [];
 				orderData.order_details.map((productData) => {
@@ -337,16 +351,16 @@ export default class OrderService {
 
 	public edit = async (orderData: CreateOrderDTO, order_id: number, customer_id: number) => {
 		return await executeTransaction(async (transaction: Transaction) => {
-			let customerMeasurementBulkData: Array<CustomerMeasurementAttributes> = [];
-			orderData.customer_measurement.map((Workerdata) => {
-				customerMeasurementBulkData.push({
-					customer_id: customer_id,
-					category_id: Workerdata.category_id,
-					measurement_id: Workerdata.measurement_id,
-					measurement: Workerdata.measurement,
-					measurement_2: Workerdata.measurement_2,
-				});
-			});
+			// let customerMeasurementBulkData: Array<CustomerMeasurementAttributes> = [];
+			// orderData.customer_measurement.map((Workerdata) => {
+			// 	customerMeasurementBulkData.push({
+			// 		customer_id: customer_id,
+			// 		category_id: Workerdata.category_id,
+			// 		measurement_id: Workerdata.measurement_id,
+			// 		measurement: Workerdata.measurement,
+			// 		measurement_2: Workerdata.measurement_2,
+			// 	});
+			// });
 			let newOrderData = {
 				customer_id: customer_id,
 				total: orderData.total,
@@ -367,9 +381,31 @@ export default class OrderService {
 					status: WORKER_ASSIGN_TASK.pending,
 				});
 			});
-			await CustomerMeasurement.destroy({ where: { customer_id: customer_id } }).then(async (data) => {
-				return await CustomerMeasurement.bulkCreate(customerMeasurementBulkData, { transaction });
-			});
+
+			for await (const iterator of orderData.customer_measurement) {
+				// await CustomerMeasurement.destroy({
+				// 	where: { customer_id: customerId, category_id: iterator.category_id, measurement_id: iterator.measurement_id },
+				// 	transaction,
+				// });
+				await CustomerMeasurement.update(
+					{
+						measurement: iterator.measurement,
+						measurement_2: iterator.measurement_2,
+					},
+					{
+						where: {
+							customer_id: customer_id,
+							category_id: iterator.category_id,
+							measurement_id: iterator.measurement_id,
+						},
+						transaction,
+					}
+				);
+			}
+
+			// await CustomerMeasurement.destroy({ where: { customer_id: customer_id } }).then(async (data) => {
+			// 	return await CustomerMeasurement.bulkCreate(customerMeasurementBulkData, { transaction });
+			// });
 			await Order.update(newOrderData, { where: { order_id: order_id }, transaction }).then(async (data) => {
 				await OrderProduct.destroy({ where: { order_id: order_id }, transaction });
 				await OrderProduct.bulkCreate(orderDetailsBulkData, { transaction });
