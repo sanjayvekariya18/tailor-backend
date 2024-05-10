@@ -14,6 +14,7 @@ import {
 	SearchOrderBillDTO,
 	getCustomerBillDTO,
 	findCustomerMeasurementDTO,
+	CreateCustomerMeasurement,
 } from "./order.dto";
 import { CreateOrderImageDTO, EditOrderImageDTO } from "./orderImage.dto";
 import { SearchOrderProductDTO, createOrderProductDTO, BulkCreatedDTO, GetWorkerAssignTaskDTO } from "./orderProduct.dto";
@@ -21,6 +22,7 @@ import { SearchPurchaseDTO, createPurchaseDTO, EditPurchaseDTO } from "./purchas
 import { PurchasePaymentDTO } from "./purchasePayment.dto";
 import { CreateDeliveryDTO, EditDeliveryDTO, SearchDeliveryDTO } from "./delivery.dto";
 import PaginationData from "./dashboard.dto";
+import { BulkCustomerMeasurementDTO } from "./customerMeasurement.dto";
 
 export {
 	LoginDTO,
@@ -56,6 +58,7 @@ export {
 	SearchOrderBillDTO,
 	getCustomerBillDTO,
 	findCustomerMeasurementDTO,
+	CreateCustomerMeasurement,
 	ChangeCustomerPasswordDTO,
 	CreateDeliveryDTO,
 	EditDeliveryDTO,
@@ -65,4 +68,5 @@ export {
 	BulkCreatedDTO,
 	GetWorkerAssignTaskDTO,
 	PaginationData,
+	BulkCustomerMeasurementDTO,
 };

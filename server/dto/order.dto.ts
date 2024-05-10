@@ -94,7 +94,7 @@ export class getCustomerPaymentDataDTO {
 	}
 }
 
-class CreateCustomerMeasurement {
+export class CreateCustomerMeasurement {
 	category_id: number;
 	measurement_id: number;
 	measurement: string;

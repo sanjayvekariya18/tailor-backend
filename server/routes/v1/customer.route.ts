@@ -12,6 +12,11 @@ router.put(
 	requestValidate(customerController.changePassword.validation),
 	use(customerController.changePassword.controller)
 );
+router.post(
+	"/measurements",
+	requestValidate(customerController.createOrEditCustomerMeasurement.validation),
+	use(customerController.createOrEditCustomerMeasurement.controller)
+);
 router.post("/", requestValidate(customerController.create.validation), use(customerController.create.controller));
 router.put("/:customer_id", requestValidate(customerController.edit.validation), use(customerController.edit.controller));
 router.delete("/:customer_id", use(customerController.delete.controller));

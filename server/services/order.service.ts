@@ -296,26 +296,24 @@ export default class OrderService {
 				bill_no: bill_no + 1,
 			};
 
-			for await (const iterator of orderData.customer_measurement) {
-				// await CustomerMeasurement.destroy({
-				// 	where: { customer_id: customerId, category_id: iterator.category_id, measurement_id: iterator.measurement_id },
-				// 	transaction,
-				// });
-				await CustomerMeasurement.update(
-					{
-						measurement: iterator.measurement,
-						measurement_2: iterator.measurement_2,
-					},
-					{
-						where: {
-							customer_id: customerId,
-							category_id: iterator.category_id,
-							measurement_id: iterator.measurement_id,
-						},
-						transaction,
-					}
+			const customer_measurement_data = await CustomerMeasurement.findAll({ where: { customer_id: customerId }, transaction });
+
+			for await (const measurement of orderData.customer_measurement) {
+				const customer_measurement = customer_measurement_data.find(
+					(row) => row.category_id == measurement.category_id && row.measurement_id == measurement.measurement_id
 				);
+
+				if (customer_measurement) {
+					customer_measurement.measurement = measurement.measurement;
+					customer_measurement.measurement_2 = measurement.measurement_2;
+					await customer_measurement.save({ transaction });
+				} else {
+					await CustomerMeasurement.create({ ...measurement, customer_id: customerId }, { transaction }).then((data) => {
+						customer_measurement_data.push(data);
+					});
+				}
 			}
+
 			// await CustomerMeasurement.bulkCreate(customerMeasurementBulkData, { transaction });
 			await Order.create(newOrderData, { transaction }).then(async (data) => {
 				let orderDetailsBulkData: Array<OrderProductAttributes> = [];
@@ -382,30 +380,24 @@ export default class OrderService {
 				});
 			});
 
-			for await (const iterator of orderData.customer_measurement) {
-				// await CustomerMeasurement.destroy({
-				// 	where: { customer_id: customerId, category_id: iterator.category_id, measurement_id: iterator.measurement_id },
-				// 	transaction,
-				// });
-				await CustomerMeasurement.update(
-					{
-						measurement: iterator.measurement,
-						measurement_2: iterator.measurement_2,
-					},
-					{
-						where: {
-							customer_id: customer_id,
-							category_id: iterator.category_id,
-							measurement_id: iterator.measurement_id,
-						},
-						transaction,
-					}
+			const customer_measurement_data = await CustomerMeasurement.findAll({ where: { customer_id: customer_id }, transaction });
+
+			for await (const measurement of orderData.customer_measurement) {
+				const customer_measurement = customer_measurement_data.find(
+					(row) => row.category_id == measurement.category_id && row.measurement_id == measurement.measurement_id
 				);
+
+				if (customer_measurement) {
+					customer_measurement.measurement = measurement.measurement;
+					customer_measurement.measurement_2 = measurement.measurement_2;
+					await customer_measurement.save({ transaction });
+				} else {
+					await CustomerMeasurement.create({ ...measurement, customer_id }, { transaction }).then((data) => {
+						customer_measurement_data.push(data);
+					});
+				}
 			}
 
-			// await CustomerMeasurement.destroy({ where: { customer_id: customer_id } }).then(async (data) => {
-			// 	return await CustomerMeasurement.bulkCreate(customerMeasurementBulkData, { transaction });
-			// });
 			await Order.update(newOrderData, { where: { order_id: order_id }, transaction }).then(async (data) => {
 				await OrderProduct.destroy({ where: { order_id: order_id }, transaction });
 				await OrderProduct.bulkCreate(orderDetailsBulkData, { transaction });
