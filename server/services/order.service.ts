@@ -1,5 +1,5 @@
 import { Op, QueryTypes, Transaction } from "sequelize";
-import { Category, Customer, CustomerMeasurement, Measurement, Order, OrderImages, OrderPayment, OrderProduct } from "../models";
+import { Category, Customer, CustomerMeasurement, Measurement, Order, OrderImages, OrderPayment, OrderProduct, Worker } from "../models";
 import {
 	CreateOrderDTO,
 	SearchDeliveryOrderRemainDTO,
@@ -494,6 +494,9 @@ export default class OrderService {
 		if (order_data) {
 			const response_data: any = order_data.get({ plain: true });
 			const category_ids = response_data.OrderProducts.map((row: any) => row.category_id);
+			const worker_ids = response_data.OrderProducts.map((row: any) => row.worker_id);
+			const worker_data = await Worker.findAll({ where: { worker_id: { [Op.in]: worker_ids } } });
+			response_data.workers_data = worker_data;
 			const customer_measurement_data = await CustomerMeasurement.findAll({
 				where: { customer_id: order_data.customer_id, category_id: { [Op.in]: category_ids } },
 			});
