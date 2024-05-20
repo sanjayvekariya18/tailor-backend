@@ -92,6 +92,7 @@ export default class WorkerService {
 	public worker_assign_task = async (searchObject: WorkerAssignTaskDTO) => {
 		return await sequelizeConnection.query(
 			`select 
+                op.order_product_id,
                 wp.category_id ,
                 c.category_name ,
                 op.order_id,
