@@ -34,8 +34,19 @@ export default class WorkerService {
 		});
 	};
 
-	public findAll = async () => {
+	public findAll = async (category_id?: number) => {
 		return await Worker.findAll({
+			...(category_id && {
+				include: [
+					{
+						model: WorkerPrice,
+						where: {
+							price: { [Op.gt]: 0 },
+							category_id,
+						},
+					},
+				],
+			}),
 			attributes: ["worker_id", "worker_name", "worker_mobile", "worker_address"],
 			raw: true,
 		});

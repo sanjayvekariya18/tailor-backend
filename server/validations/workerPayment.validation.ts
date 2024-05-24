@@ -3,6 +3,7 @@ export default class WorkerPaymentValidation {
 		start_date: "date",
 		end_date: "date|after_or_equal:start_date",
 		worker_id: "integer",
+		type: "integer|min:0|max:1",
 		page: "numeric|min:0",
 		rowsPerPage: "numeric|min:1",
 	};

@@ -1,5 +1,5 @@
 import { Op } from "sequelize";
-import { Worker, WorkerPayment } from "../models";
+import { Worker, WorkerPayment, WorkerPrice } from "../models";
 import { CreateWorkerPaymentDTO, EditWorkerPaymentDTO, SearchWorkerPaymentDTO } from "../dto";
 import { sequelizeConnection } from "../config/database";
 
@@ -15,7 +15,7 @@ export default class WorkerPaymentService {
 							[Op.between]: [searchParams.start_date, searchParams.end_date],
 						},
 					}),
-				type: 1,
+				...(searchParams.type && { type: searchParams.type }),
 			},
 			include: [{ model: Worker, attributes: ["worker_name", "worker_mobile", "worker_address", "worker_photo"] }],
 			attributes: [
