@@ -300,22 +300,26 @@ export default class OrderService {
 
 		const summary_data = await sequelizeConnection.query(
 			`
-        SELECT 
-            op.category_id,
-            c.category_name,
-            c.category_image,
-            SUM(op.qty) AS quantity
-        FROM
-            orders o
-                LEFT JOIN
-            order_product op ON op.order_id = o.order_id
-                LEFT JOIN
-            category c ON c.category_id = op.category_id
-        WHERE
-            o.delivery_date BETWEEN '${replacements.start_date}' AND '${replacements.end_date}'
-        GROUP BY op.category_id
-        `,
-			{ type: QueryTypes.SELECT }
+            SELECT 
+                op.category_id,
+                c.category_name,
+                c.category_image,
+                SUM(op.qty) AS quantity
+            FROM
+                orders o
+                    LEFT JOIN
+                order_product op ON op.order_id = o.order_id
+                    LEFT JOIN
+                category c ON c.category_id = op.category_id
+                    LEFT JOIN
+                customer cust ON o.customer_id = cust.customer_id
+            WHERE
+                (:start_date IS NULL OR o.delivery_date BETWEEN :start_date AND :end_date)
+                AND (:customer_id IS NULL OR o.customer_id = :customer_id)
+                AND (:mobile_no IS NULL OR cust.customer_mobile = :mobile_no)
+            GROUP BY op.category_id
+            `,
+			{ replacements, type: QueryTypes.SELECT }
 		);
 
 		return {

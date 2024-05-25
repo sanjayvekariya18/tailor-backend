@@ -75,7 +75,7 @@ export default class OrderController {
 	public deliveryOrderRemain = {
 		validation: this.orderValidation.deliveryDateRemain,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const data = await this.orderService.deliveryOrderRemain(new SearchDeliveryOrderRemainDTO(req.query));
+			const data = await this.orderService.deliveryOrderRemain(new SearchOrderDTO(req.query));
 			return res.api.create(data);
 		},
 	};
