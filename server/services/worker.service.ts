@@ -116,7 +116,8 @@ export default class WorkerService {
             where 
             o.customer_id ='${searchObject.customer_id}' and
             wp.worker_id ='${searchObject.worker_id}' and 
-            op.status ='pending' `,
+            op.status ='pending' and
+            wp.price > 0 `,
 			{ type: QueryTypes.SELECT }
 		);
 	};
