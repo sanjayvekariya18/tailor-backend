@@ -30,7 +30,9 @@ export default class WorkerController {
 
 	public getWorkerList = {
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-			const data = await this.workerService.findAll();
+			const input = req.query.category_id == "" ? undefined : req.query.category_id;
+			const category_id = isNaN(Number(input)) ? undefined : Number(input);
+			const data = await this.workerService.findAll(category_id);
 			return res.api.create(data);
 		},
 	};
@@ -97,7 +99,7 @@ export default class WorkerController {
 			if (!isEmpty(reqWorkerData.worker_mobile)) {
 				const checkWorkerMobile = await this.workerService.findOne({ worker_id: { [Op.not]: workerID }, worker_mobile: reqWorkerData.worker_mobile });
 				if (!isEmpty(checkWorkerMobile)) {
-					return res.api.badResponse({ message: "Worker MobileNo Already Exit" });
+					return res.api.badResponse({ message: "Worker MobileNo Already Exist" });
 				}
 			}
 

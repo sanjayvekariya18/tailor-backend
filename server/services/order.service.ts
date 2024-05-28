@@ -10,11 +10,11 @@ import {
 	getCustomerPaymentDataDTO,
 } from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
-import { CustomerMeasurementAttributes } from "../models/customerMeasurement.model";
 import { OrderProductAttributes } from "../models/orderProduct.model";
 import { BILL_STATUS, NOTIFICATION_TEMPLATE, WORKER_ASSIGN_TASK } from "../constants";
 import { NotFoundHandler } from "../errorHandler";
 import WhatsAppAPIService from "./whatsApp.service";
+import moment from "moment";
 
 export default class OrderService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -203,37 +203,130 @@ export default class OrderService {
 		}
 	};
 
-	public deliveryOrderRemain = async (searchParams: SearchDeliveryOrderRemainDTO) => {
-		return await Order.findAndCountAll({
-			where: {
-				...(searchParams.start_date &&
-					searchParams.end_date && {
-						delivery_date: {
-							[Op.between]: [searchParams.start_date, searchParams.end_date],
-						},
-					}),
-			},
-			attributes: [
-				"order_id",
-				"customer_id",
-				[sequelizeConnection.Sequelize.col("Customer.customer_name"), "customer_name"],
-				[sequelizeConnection.Sequelize.col("Customer.customer_mobile"), "customer_mobile"],
-				[sequelizeConnection.Sequelize.col("Customer.customer_address"), "customer_address"],
-				"total",
-				"payment",
-				"order_date",
-				"delivery_date",
-				"shirt_pocket",
-				"pant_pocket",
-				"pant_pinch",
-				"type",
-				"bill_no",
-			],
-			include: [{ model: Customer, attributes: [] }],
-			order: [["delivery_date", "ASC"]],
-			offset: searchParams.rowsPerPage * searchParams.page,
-			limit: searchParams.rowsPerPage,
+	public deliveryOrderRemain = async (searchParams: SearchOrderDTO) => {
+		let query = `
+            SELECT 
+                o.order_id,
+                o.customer_id,
+                o.total,
+                o.payment,
+                o.order_date,
+                o.delivery_date,
+                o.shirt_pocket,
+                o.pant_pocket,
+                o.pant_pinch,
+                o.type,
+                o.bill_no,
+                JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'category_id', op.category_id,
+                        'category_name',op.category_name,
+                        'category_image',op.category_image,
+                        'total_qty', op.total_qty,
+                        'pending', op.pending,
+                        'complete', op.complete,
+                        'assign', op.assign
+                    )
+                ) AS order_products,
+                if(SUM(op.total_qty) = SUM(op.complete), 'complete', if(SUM(op.pending)+SUM(op.assign) < SUM(op.total_qty), 'partial pending', 'pending')) as status,
+                cust.customer_name,
+                cust.customer_mobile,
+                cust.customer_address
+            FROM 
+                \`orders\` o
+            JOIN 
+                customer cust ON o.customer_id = cust.customer_id
+            LEFT JOIN 
+                (
+                    SELECT 
+                        op.order_id,
+                        op.category_id,
+                        c.category_name,
+                        c.category_image,
+                        SUM(op.qty) AS total_qty,
+                        SUM(CASE WHEN op.status = '${WORKER_ASSIGN_TASK.pending}' THEN op.qty ELSE 0 END) AS pending,
+                        SUM(CASE WHEN op.status = '${WORKER_ASSIGN_TASK.complete}' THEN op.qty ELSE 0 END) AS complete,
+                        SUM(CASE WHEN op.status = '${WORKER_ASSIGN_TASK.assign}' THEN op.qty ELSE 0 END) AS assign
+                    FROM 
+                        order_product op
+                    LEFT JOIN 
+                        category c ON op.category_id = c.category_id
+                    GROUP BY 
+                        op.order_id,
+                        op.category_id,
+                        c.category_name,
+                        c.category_image
+                ) AS op ON o.order_id = op.order_id
+            WHERE 
+                (:start_date IS NULL OR o.delivery_date BETWEEN :start_date AND :end_date)
+                AND (:customer_id IS NULL OR o.customer_id = :customer_id)
+                AND (:mobile_no IS NULL OR cust.customer_mobile = :mobile_no)
+            GROUP BY 
+                o.order_id,
+                cust.customer_name,
+                cust.customer_mobile,
+                cust.customer_address
+            `;
+		const replacements: { [key: string]: any } = {};
+		if (searchParams.start_date !== undefined) {
+			replacements.start_date = moment(searchParams.start_date).format("YYYY-MM-DD");
+			replacements.end_date = moment(searchParams.end_date).format("YYYY-MM-DD");
+		} else {
+			replacements.start_date = null;
+			replacements.end_date = null;
+		}
+		if (searchParams.customer_id != undefined) {
+			replacements.customer_id = searchParams.customer_id;
+		} else {
+			replacements.customer_id = null;
+		}
+		if (searchParams.mobile_no !== undefined) {
+			replacements.mobile_no = searchParams.mobile_no;
+		} else {
+			replacements.mobile_no = null;
+		}
+		replacements.rowsPerPage = searchParams.rowsPerPage;
+		replacements.offset = searchParams.page * searchParams.rowsPerPage;
+
+		const count_data: Array<any> = await sequelizeConnection.query(query, {
+			replacements,
+			type: QueryTypes.SELECT,
 		});
+		query += ` LIMIT ${replacements.offset}, ${replacements.rowsPerPage};`;
+		const order_data = await sequelizeConnection.query(query, {
+			replacements,
+			type: QueryTypes.SELECT,
+		});
+
+		const summary_data = await sequelizeConnection.query(
+			`
+            SELECT 
+                op.category_id,
+                c.category_name,
+                c.category_image,
+                SUM(op.qty) AS quantity
+            FROM
+                orders o
+                    LEFT JOIN
+                order_product op ON op.order_id = o.order_id
+                    LEFT JOIN
+                category c ON c.category_id = op.category_id
+                    LEFT JOIN
+                customer cust ON o.customer_id = cust.customer_id
+            WHERE
+                (:start_date IS NULL OR o.delivery_date BETWEEN :start_date AND :end_date)
+                AND (:customer_id IS NULL OR o.customer_id = :customer_id)
+                AND (:mobile_no IS NULL OR cust.customer_mobile = :mobile_no)
+            GROUP BY op.category_id
+            `,
+			{ replacements, type: QueryTypes.SELECT }
+		);
+
+		return {
+			summary: summary_data,
+			count: count_data.length,
+			rows: order_data,
+		};
 	};
 
 	public findOne = async (searchObject: any) => {
