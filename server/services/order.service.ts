@@ -420,13 +420,14 @@ export default class OrderService {
 					});
 				});
 				await OrderProduct.bulkCreate(orderDetailsBulkData, { transaction });
-				const customer_data = await Customer.findByPk(customerId);
-				if (customer_data && customer_data.customer_mobile != "") {
-					await WhatsAppAPIService.sendMessage(customer_data.customer_mobile, NOTIFICATION_TEMPLATE.CREATE, {
-						customer_name: customer_data.customer_name,
-						order_number: data.bill_no.toString(),
-					});
-				}
+				// Uncomment Below Logic To send notification
+				// const customer_data = await Customer.findByPk(customerId);
+				// if (customer_data && customer_data.customer_mobile != "") {
+				// 	// await WhatsAppAPIService.sendMessage(customer_data.customer_mobile, NOTIFICATION_TEMPLATE.CREATE, {
+				// 	// 	customer_name: customer_data.customer_name,
+				// 	// 	order_number: data.bill_no.toString(),
+				// 	// });
+				// }
 				const images_data = orderData.image_name.map((row) => {
 					return {
 						order_id: data.order_id,

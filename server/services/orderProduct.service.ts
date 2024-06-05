@@ -1,7 +1,7 @@
 import { Category, Customer, Order, OrderProduct, Worker, WorkerPayment } from "../models";
 import { GetWorkerAssignTaskDTO, SearchOrderProductDTO, createOrderProductDTO } from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
-import { Transaction } from "sequelize";
+import { QueryTypes, Transaction } from "sequelize";
 import { Op } from "sequelize";
 import { WORKER_ASSIGN_TASK } from "../constants";
 import moment from "moment";
@@ -178,5 +178,79 @@ export default class OrderProductService {
 			raw: true,
 		});
 		return { pending_order, completed_order };
+	};
+
+	public get_order_status = async (order_id: number) => {
+		const query = `
+            SELECT 
+                o.order_id,
+                o.customer_id,
+                o.total,
+                o.payment,
+                o.order_date,
+                o.delivery_date,
+                o.shirt_pocket,
+                o.pant_pocket,
+                o.pant_pinch,
+                o.type,
+                o.bill_no,
+                if(SUM(op.total_qty) = SUM(op.complete), 'complete', if(SUM(op.pending)+SUM(op.assign) < SUM(op.total_qty), 'partial pending', 'pending')) as status,
+                cust.customer_id,
+                cust.customer_name,
+                cust.customer_mobile,
+                cust.customer_address
+            FROM 
+                \`orders\` o
+            JOIN 
+                customer cust ON o.customer_id = cust.customer_id
+            LEFT JOIN 
+                (
+                    SELECT 
+                        op.order_id,
+                        op.category_id,
+                        c.category_name,
+                        c.category_image,
+                        SUM(op.qty) AS total_qty,
+                        SUM(CASE WHEN op.status = '${WORKER_ASSIGN_TASK.pending}' THEN op.qty ELSE 0 END) AS pending,
+                        SUM(CASE WHEN op.status = '${WORKER_ASSIGN_TASK.complete}' THEN op.qty ELSE 0 END) AS complete,
+                        SUM(CASE WHEN op.status = '${WORKER_ASSIGN_TASK.assign}' THEN op.qty ELSE 0 END) AS assign
+                    FROM 
+                        order_product op
+                    LEFT JOIN 
+                        category c ON op.category_id = c.category_id
+                    GROUP BY 
+                        op.order_id,
+                        op.category_id,
+                        c.category_name,
+                        c.category_image
+                ) AS op ON o.order_id = op.order_id
+            WHERE 
+                o.order_id = ${order_id}
+            GROUP BY 
+                o.order_id,
+                cust.customer_name,
+                cust.customer_mobile,
+                cust.customer_address
+            `;
+
+		const db_data: Array<any> = await sequelizeConnection.query(query, {
+			type: QueryTypes.SELECT,
+		});
+
+		let response_data = {
+			status: "",
+			customer_no: 0,
+			customer_name: "",
+			mobile_number: "",
+		};
+
+		if (db_data.length > 0) {
+			response_data.status = db_data[0].status;
+			response_data.customer_no = db_data[0].customer_id;
+			response_data.customer_name = db_data[0].customer_name;
+			response_data.mobile_number = db_data[0].customer_mobile;
+		}
+
+		return response_data;
 	};
 }
