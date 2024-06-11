@@ -1,0 +1,3402 @@
+{
+	"info": {
+		"_postman_id": "bafc9c1e-7906-4ac4-b13b-2cb2243e1238",
+		"name": "parthTailor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27027774",
+		"_collection_link": "https://dark-spaceship-811960.postman.co/workspace/Team-Workspace~81f3fe2d-0d97-468d-897f-694a1e21ca29/collection/27027774-bafc9c1e-7906-4ac4-b13b-2cb2243e1238?action=share&source=collection_link&creator=27027774"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const response = pm.response.json();\r",
+									"pm.collectionVariables.set(\"adminToken\",response.data?.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_name\":\"parth\",\r\n    \"password\":\"parth123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin}}login",
+							"host": [
+								"{{admin}}login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_name",
+									"value": "parth tailor",
+									"type": "text"
+								},
+								{
+									"key": "logo",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/images.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}/:user_id",
+							"host": [
+								"{{admin}}"
+							],
+							"path": [
+								":user_id"
+							],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "98bb2631-5ff7-489e-8cc8-e97e0fe25897"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{admin}}/user",
+							"host": [
+								"{{admin}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"old_password\":\"parth123\",\r\n\"new_password\":\"parth@123\",\r\n\"confirm_password\":\"parth@123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin}}customer/change_password/:login_id",
+							"host": [
+								"{{admin}}customer"
+							],
+							"path": [
+								"change_password",
+								":login_id"
+							],
+							"variable": [
+								{
+									"key": "login_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "category",
+			"item": [
+				{
+					"name": "GetAll category",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}category?is_active=true",
+							"host": [
+								"{{admin}}category"
+							],
+							"query": [
+								{
+									"key": "is_active",
+									"value": "true"
+								},
+								{
+									"key": "searchTxt",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "rowsPerPage",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create category",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "category_name",
+									"value": "shirt",
+									"type": "text"
+								},
+								{
+									"key": "category_type",
+									"value": "top",
+									"type": "text"
+								},
+								{
+									"key": "category_image",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/images.jpg"
+								},
+								{
+									"key": "is_active",
+									"value": "true",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}category",
+							"host": [
+								"{{admin}}category"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit category Name",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "category_name",
+									"value": "shirt",
+									"type": "text"
+								},
+								{
+									"key": "category_type",
+									"value": "",
+									"description": "top/bottom",
+									"type": "text"
+								},
+								{
+									"key": "category_image",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}category/:category_id",
+							"host": [
+								"{{admin}}category"
+							],
+							"path": [
+								":category_id"
+							],
+							"variable": [
+								{
+									"key": "category_id",
+									"value": "844deddb-8fb3-445f-8c2e-9fb4f0fe061a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delet category Name",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin}}category/:category_id",
+							"host": [
+								"{{admin}}category"
+							],
+							"path": [
+								":category_id"
+							],
+							"variable": [
+								{
+									"key": "category_id",
+									"value": "844deddb-8fb3-445f-8c2e-9fb4f0fe061a"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "measurement",
+			"item": [
+				{
+					"name": "GetAll  measurement",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}measurement?category_id=1",
+							"host": [
+								"{{admin}}measurement"
+							],
+							"query": [
+								{
+									"key": "searchTxt",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "rowsPerPage",
+									"value": "2",
+									"disabled": true
+								},
+								{
+									"key": "category_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAll  mesarment",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}measurement/:category_id",
+							"host": [
+								"{{admin}}measurement"
+							],
+							"path": [
+								":category_id"
+							],
+							"variable": [
+								{
+									"key": "category_id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create measurement",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "category_id",
+									"value": "4b1b31cb-089b-46df-990e-32acc4e8055d",
+									"type": "text"
+								},
+								{
+									"key": "measurement_name",
+									"value": "X",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}measurement",
+							"host": [
+								"{{admin}}measurement"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit measurement",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "category_id",
+									"value": "844deddb-8fb3-445f-8c2e-9fb4f0fe061a",
+									"type": "text"
+								},
+								{
+									"key": "measurement_name",
+									"value": "XXL",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}measurement/:measurement_id",
+							"host": [
+								"{{admin}}measurement"
+							],
+							"path": [
+								":measurement_id"
+							],
+							"variable": [
+								{
+									"key": "measurement_id",
+									"value": "01412d96-edf4-47f1-b759-d0431c399f6c"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delet measurement",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}measurement/:measurement_id",
+							"host": [
+								"{{admin}}measurement"
+							],
+							"path": [
+								":measurement_id"
+							],
+							"variable": [
+								{
+									"key": "measurement_id",
+									"value": "01412d96-edf4-47f1-b759-d0431c399f6c"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Worker",
+			"item": [
+				{
+					"name": "GetAll  Worker",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}worker",
+							"host": [
+								"{{admin}}worker"
+							],
+							"query": [
+								{
+									"key": "searchTxt",
+									"value": "karan",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "rowsPerPage",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "pendingOrder",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}worker/assign?worker_id=c5267922-9b3f-4147-bb03-4610afe4857f&customer_id=23",
+							"host": [
+								"{{admin}}worker"
+							],
+							"path": [
+								"assign"
+							],
+							"query": [
+								{
+									"key": "worker_id",
+									"value": "c5267922-9b3f-4147-bb03-4610afe4857f"
+								},
+								{
+									"key": "customer_id",
+									"value": "23"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Worker",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "worker_name",
+									"value": "heet",
+									"type": "text"
+								},
+								{
+									"key": "worker_mobile",
+									"value": "9574530374",
+									"type": "text"
+								},
+								{
+									"key": "worker_address",
+									"value": "At.Surat",
+									"type": "text"
+								},
+								{
+									"key": "worker_photo",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/2.png"
+								},
+								{
+									"key": "worker_proof",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/2.png"
+								},
+								{
+									"key": "worker_price",
+									"value": "[{\"category_id\":1,\"price\":20}]",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}worker",
+							"host": [
+								"{{admin}}worker"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Worker",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "worker_name",
+									"value": "ajay",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "worker_mobile",
+									"value": "9327967269",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "worker_address",
+									"value": "At.Surat",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "worker_photo",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/dolly34.jpg",
+									"disabled": true
+								},
+								{
+									"key": "worker_proof",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/dolly34.jpg",
+									"disabled": true
+								},
+								{
+									"key": "worker_price",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}worker/:worker_id",
+							"host": [
+								"{{admin}}worker"
+							],
+							"path": [
+								":worker_id"
+							],
+							"variable": [
+								{
+									"key": "worker_id",
+									"value": "fa53e661-7f56-4946-9d5e-657cfa2617a3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Worker",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}worker/:worker_id",
+							"host": [
+								"{{admin}}worker"
+							],
+							"path": [
+								":worker_id"
+							],
+							"variable": [
+								{
+									"key": "worker_id",
+									"value": "fa53e661-7f56-4946-9d5e-657cfa2617a3"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Purchase",
+			"item": [
+				{
+					"name": "GetAll  Purchase Data",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}purchase",
+							"host": [
+								"{{admin}}purchase"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2024-02-10",
+									"disabled": true
+								},
+								{
+									"key": "end_date",
+									"value": "2024-02-10",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "rowsPerPage",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Purchase",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "party_name",
+									"value": "aalidhra",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "20000",
+									"type": "text"
+								},
+								{
+									"key": "details",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "challan",
+									"value": "102",
+									"type": "text"
+								},
+								{
+									"key": "purchase_date",
+									"value": "2024-04-01",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}purchase",
+							"host": [
+								"{{admin}}purchase"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Purchase",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "party_name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "details",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "challan",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "purchase_date",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}purchase/:purchase_id",
+							"host": [
+								"{{admin}}purchase"
+							],
+							"path": [
+								":purchase_id"
+							],
+							"variable": [
+								{
+									"key": "purchase_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Purchase Payment",
+			"item": [
+				{
+					"name": "Create Purchase Payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "purchase_id",
+									"value": "0f65fed0-85c6-496b-810a-a5fadf18ac4f",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "payment_date",
+									"value": "2024-04-01",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}purchase_payment",
+							"host": [
+								"{{admin}}purchase_payment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Purchase payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "purchase_id",
+									"value": "0f65fed0-85c6-496b-810a-a5fadf18ac4f",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "150",
+									"type": "text"
+								},
+								{
+									"key": "payment_date",
+									"value": "2024-04-01",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}purchase_payment/:purchase_payment_id",
+							"host": [
+								"{{admin}}purchase_payment"
+							],
+							"path": [
+								":purchase_payment_id"
+							],
+							"variable": [
+								{
+									"key": "purchase_payment_id",
+									"value": "fe18f4a5-e937-42f2-834c-41d2212a26e1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deleted Purchase payment Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}purchase_payment/:purchase_payment_id",
+							"host": [
+								"{{admin}}purchase_payment"
+							],
+							"path": [
+								":purchase_payment_id"
+							],
+							"variable": [
+								{
+									"key": "purchase_payment_id",
+									"value": "e39f7433-695f-4bba-a7bb-59add2cb6d75"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "GetAll  Customer",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}customer?searchTxt=karan&page=0",
+							"host": [
+								"{{admin}}customer"
+							],
+							"query": [
+								{
+									"key": "searchTxt",
+									"value": "karan"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "rowsPerPage",
+									"value": "2",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Customer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "customer_name",
+									"value": "Aashish",
+									"type": "text"
+								},
+								{
+									"key": "customer_mobile",
+									"value": "321456789",
+									"type": "text"
+								},
+								{
+									"key": "customer_address",
+									"value": "At Surat",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}customer",
+							"host": [
+								"{{admin}}customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Customer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "worker_name",
+									"value": "ajay",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "worker_mobile",
+									"value": "9327967269",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "worker_address",
+									"value": "At.Surat",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "worker_photo",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/dolly34.jpg",
+									"disabled": true
+								},
+								{
+									"key": "worker_proof",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/dolly34.jpg",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}customer/:customer_id",
+							"host": [
+								"{{admin}}customer"
+							],
+							"path": [
+								":customer_id"
+							],
+							"variable": [
+								{
+									"key": "customer_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete customer",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "worker_photo",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/dolly34.jpg",
+									"disabled": true
+								},
+								{
+									"key": "worker_proof",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/dolly34.jpg",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}customer/:customer_id",
+							"host": [
+								"{{admin}}customer"
+							],
+							"path": [
+								":customer_id"
+							],
+							"variable": [
+								{
+									"key": "customer_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create/Edit Measurement",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"customer_id\": \"\",\r\n    \"measurement\": [\r\n        {\r\n            \"category_id\": \"\",\r\n            \"measurement_id\": \"\",\r\n            \"measurement\": \"\",\r\n            \"measurement_2\": \"\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin}}customer/measurements",
+							"host": [
+								"{{admin}}customer"
+							],
+							"path": [
+								"measurements"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Worker Payment",
+			"item": [
+				{
+					"name": "GetAll  Worker Payment",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}worker_payment?worker_id=80&type=",
+							"host": [
+								"{{admin}}worker_payment"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2024-03-04",
+									"disabled": true
+								},
+								{
+									"key": "end_date",
+									"value": "2024-03-05",
+									"disabled": true
+								},
+								{
+									"key": "worker_id",
+									"value": "80"
+								},
+								{
+									"key": "type",
+									"value": ""
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "rowsPerPage",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Worker Payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "worker_id",
+									"value": "88f2912b-d203-4df6-8ef3-3d6bf17a8720",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "5000",
+									"type": "text"
+								},
+								{
+									"key": "payment_date",
+									"value": "2024-03-14",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}worker_payment",
+							"host": [
+								"{{admin}}worker_payment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Worker Payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "worker_id",
+									"value": "fa53e661-7f56-4946-9d5e-657cfa2617a3",
+									"type": "text"
+								},
+								{
+									"key": "amount",
+									"value": "5000",
+									"type": "text"
+								},
+								{
+									"key": "payment_date",
+									"value": "2024-03-14",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}worker_payment/:worker_payment_id",
+							"host": [
+								"{{admin}}worker_payment"
+							],
+							"path": [
+								":worker_payment_id"
+							],
+							"variable": [
+								{
+									"key": "worker_payment_id",
+									"value": "9041302b-cb57-44db-9386-a1d1cce88a21"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Chest Details",
+			"item": [
+				{
+					"name": "GetAll  chest deatails",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}chest_details",
+							"host": [
+								"{{admin}}chest_details"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Create Order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "total",
+									"value": "350",
+									"type": "text"
+								},
+								{
+									"key": "payment",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "order_date",
+									"value": "2024-06-04",
+									"type": "text"
+								},
+								{
+									"key": "delivery_date",
+									"value": "2024-06-08",
+									"type": "text"
+								},
+								{
+									"key": "shirt_pocket",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "pant_pocket",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "pant_pinch",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "0",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "customer_id",
+									"value": "7945",
+									"type": "text"
+								},
+								{
+									"key": "customer_name",
+									"value": "ABC",
+									"type": "text"
+								},
+								{
+									"key": "customer_mobile",
+									"value": "7874331250",
+									"type": "text"
+								},
+								{
+									"key": "customer_address",
+									"value": "Surat",
+									"type": "text"
+								},
+								{
+									"key": "customer_measurement",
+									"value": "[{\"category_id\":1,\"measurement_id\":1,\"measurement\":\"1\"},{\"category_id\":1,\"measurement_id\":2,\"measurement\":\"1\"},{\"category_id\":1,\"measurement_id\":3,\"measurement\":\"1\",\"measurement_2\":\"1\"},{\"category_id\":1,\"measurement_id\":4,\"measurement\":\"1\"},{\"category_id\":1,\"measurement_id\":5,\"measurement_2\":\"1\",\"measurement\":\"30.25\"},{\"category_id\":1,\"measurement_id\":6,\"measurement\":\"1\",\"measurement_2\":\"1\"},{\"category_id\":1,\"measurement_id\":7,\"measurement\":\"1\",\"measurement_2\":\"1\"},{\"category_id\":1,\"measurement_id\":8,\"measurement\":\"1\"},{\"category_id\":1,\"measurement_id\":27,\"measurement\":\"1\"},{\"category_id\":1,\"measurement_id\":29,\"measurement\":\"1\"},{\"category_id\":2,\"measurement_id\":11,\"measurement\":\"1\",\"measurement_2\":\"1\"},{\"category_id\":2,\"measurement_id\":12,\"measurement\":\"1\"},{\"category_id\":2,\"measurement_id\":13,\"measurement\":\"11\"},{\"category_id\":2,\"measurement_id\":14,\"measurement\":\"1\",\"measurement_2\":\"1\"},{\"category_id\":2,\"measurement_id\":15,\"measurement\":\"1\",\"measurement_2\":\"1\"},{\"category_id\":2,\"measurement_id\":16,\"measurement\":\"1\"},{\"category_id\":2,\"measurement_id\":17,\"measurement\":\"1\",\"measurement_2\":\"1\"},{\"category_id\":2,\"measurement_id\":26,\"measurement\":\"1\"},{\"category_id\":2,\"measurement_id\":28,\"measurement\":\"1\"}]",
+									"type": "text"
+								},
+								{
+									"key": "order_details",
+									"value": "[{\"price\":\"150\",\"qty\":\"1\",\"category_id\":1,\"total\":150},{\"price\":\"250\",\"qty\":\"1\",\"category_id\":2,\"total\":250}]",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}order",
+							"host": [
+								"{{admin}}order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAll Order",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}order?start_date=2024-05-01&end_date=2024-05-01",
+							"host": [
+								"{{admin}}order"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2024-05-01"
+								},
+								{
+									"key": "end_date",
+									"value": "2024-05-01"
+								},
+								{
+									"key": "customer_id",
+									"value": "f0f4dc9e-6b39-4ed1-9c47-ea3c34558b60",
+									"disabled": true
+								},
+								{
+									"key": "mobile_no",
+									"value": "741852960",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "rowsPerPage",
+									"value": "1",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get customer measurement",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}order/customer_measurement/:order_id",
+							"host": [
+								"{{admin}}order"
+							],
+							"path": [
+								"customer_measurement",
+								":order_id"
+							],
+							"variable": [
+								{
+									"key": "order_id",
+									"value": "22403"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Customer Bill",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}order/bill?bill_no=1",
+							"host": [
+								"{{admin}}order"
+							],
+							"path": [
+								"bill"
+							],
+							"query": [
+								{
+									"key": "bill_no",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "findOne Customer Measurment",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}order/get_measurement",
+							"host": [
+								"{{admin}}order"
+							],
+							"path": [
+								"get_measurement"
+							],
+							"query": [
+								{
+									"key": "customer_id",
+									"value": "0c517be6-fbef-4926-b004-04a4602e5509",
+									"disabled": true
+								},
+								{
+									"key": "mobile_no",
+									"value": "8528528529",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Order By Id",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}order/:id",
+							"host": [
+								"{{admin}}order"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "af756861-3a24-4002-8a29-924962589613"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAll DeliveryOrderRemain",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}order/delivery_order_reminder?start_date=2024-05-25&end_date=2024-05-27&customer_id=&mobile_no=",
+							"host": [
+								"{{admin}}order"
+							],
+							"path": [
+								"delivery_order_reminder"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2024-05-25"
+								},
+								{
+									"key": "end_date",
+									"value": "2024-05-27"
+								},
+								{
+									"key": "customer_id",
+									"value": ""
+								},
+								{
+									"key": "mobile_no",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAll chestDetails",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}chest_details",
+							"host": [
+								"{{admin}}chest_details"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get customer payment data",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}order/customer_payment_data?start_date=&end_date=&customer_id=&page=&rowsPerPage=&bill_status=",
+							"host": [
+								"{{admin}}order"
+							],
+							"path": [
+								"customer_payment_data"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": ""
+								},
+								{
+									"key": "end_date",
+									"value": ""
+								},
+								{
+									"key": "customer_id",
+									"value": ""
+								},
+								{
+									"key": "page",
+									"value": ""
+								},
+								{
+									"key": "rowsPerPage",
+									"value": ""
+								},
+								{
+									"key": "bill_status",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "income",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}order/income?customer_id=f7c2587a-5fed-4e1c-a35f-83452ed87dd9",
+							"host": [
+								"{{admin}}order"
+							],
+							"path": [
+								"income"
+							],
+							"query": [
+								{
+									"key": "start_date",
+									"value": "2024-01-01",
+									"disabled": true
+								},
+								{
+									"key": "end_date",
+									"value": "2024-01-02",
+									"disabled": true
+								},
+								{
+									"key": "customer_id",
+									"value": "f7c2587a-5fed-4e1c-a35f-83452ed87dd9"
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "rowsPerPage",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "total",
+									"value": "2000",
+									"type": "text"
+								},
+								{
+									"key": "payment",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "order_date",
+									"value": "2024-03-15",
+									"type": "text"
+								},
+								{
+									"key": "delivery_date",
+									"value": "2024-03-18",
+									"type": "text"
+								},
+								{
+									"key": "shirt_pocket",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "pant_pocket",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "pant_pinch",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "image_name",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/2.png"
+								},
+								{
+									"key": "customer_name",
+									"value": "a",
+									"type": "text"
+								},
+								{
+									"key": "customer_mobile",
+									"value": "1234567890",
+									"type": "text"
+								},
+								{
+									"key": "customer_address",
+									"value": "ddd",
+									"type": "text"
+								},
+								{
+									"key": "customer_measurement",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}order/order_id",
+							"host": [
+								"{{admin}}order"
+							],
+							"path": [
+								"order_id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order Payment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "payment",
+									"value": "300",
+									"type": "text"
+								},
+								{
+									"key": "payment_date",
+									"value": "2024-01-01",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}order/:order_id/payment",
+							"host": [
+								"{{admin}}order"
+							],
+							"path": [
+								":order_id",
+								"payment"
+							],
+							"variable": [
+								{
+									"key": "order_id",
+									"value": "12f0a9bf-c1cb-4581-b0bd-140429b0cd92"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deleted Order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}order/:order_id",
+							"host": [
+								"{{admin}}order"
+							],
+							"path": [
+								":order_id"
+							],
+							"variable": [
+								{
+									"key": "order_id",
+									"value": "acecf880-9cfd-41e6-8d9d-5e389c4db0c8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deleted Order Image",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{admin}}order/image/:order_image_id",
+							"host": [
+								"{{admin}}order"
+							],
+							"path": [
+								"image",
+								":order_image_id"
+							],
+							"variable": [
+								{
+									"key": "order_image_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "List Api",
+			"item": [
+				{
+					"name": "Worker List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "total",
+									"value": "2000",
+									"type": "text"
+								},
+								{
+									"key": "payment",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "order_date",
+									"value": "2024-03-15",
+									"type": "text"
+								},
+								{
+									"key": "delivery_date",
+									"value": "2024-03-18",
+									"type": "text"
+								},
+								{
+									"key": "shirt_pocket",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "pant_pocket",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "pant_pinch",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "image_name",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/2.png"
+								},
+								{
+									"key": "customer_name",
+									"value": "a",
+									"type": "text"
+								},
+								{
+									"key": "customer_mobile",
+									"value": "1234567890",
+									"type": "text"
+								},
+								{
+									"key": "customer_address",
+									"value": "ddd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}list/worker_list?category_id=6",
+							"host": [
+								"{{admin}}list"
+							],
+							"path": [
+								"worker_list"
+							],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "6"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Category List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "total",
+									"value": "2000",
+									"type": "text"
+								},
+								{
+									"key": "payment",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "order_date",
+									"value": "2024-03-15",
+									"type": "text"
+								},
+								{
+									"key": "delivery_date",
+									"value": "2024-03-18",
+									"type": "text"
+								},
+								{
+									"key": "shirt_pocket",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "pant_pocket",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "pant_pinch",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "image_name",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/2.png"
+								},
+								{
+									"key": "customer_name",
+									"value": "a",
+									"type": "text"
+								},
+								{
+									"key": "customer_mobile",
+									"value": "1234567890",
+									"type": "text"
+								},
+								{
+									"key": "customer_address",
+									"value": "ddd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}list/category_list?sorted",
+							"host": [
+								"{{admin}}list"
+							],
+							"path": [
+								"category_list"
+							],
+							"query": [
+								{
+									"key": "sorted",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Order Category List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "total",
+									"value": "2000",
+									"type": "text"
+								},
+								{
+									"key": "payment",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "order_date",
+									"value": "2024-03-15",
+									"type": "text"
+								},
+								{
+									"key": "delivery_date",
+									"value": "2024-03-18",
+									"type": "text"
+								},
+								{
+									"key": "shirt_pocket",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "pant_pocket",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "pant_pinch",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "image_name",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/2.png"
+								},
+								{
+									"key": "customer_name",
+									"value": "a",
+									"type": "text"
+								},
+								{
+									"key": "customer_mobile",
+									"value": "1234567890",
+									"type": "text"
+								},
+								{
+									"key": "customer_address",
+									"value": "ddd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}list/order_category_list",
+							"host": [
+								"{{admin}}list"
+							],
+							"path": [
+								"order_category_list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Customer List",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "total",
+									"value": "2000",
+									"type": "text"
+								},
+								{
+									"key": "payment",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "order_date",
+									"value": "2024-03-15",
+									"type": "text"
+								},
+								{
+									"key": "delivery_date",
+									"value": "2024-03-18",
+									"type": "text"
+								},
+								{
+									"key": "shirt_pocket",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "pant_pocket",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "pant_pinch",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "type",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "image_name",
+									"type": "file",
+									"src": "/C:/Users/dhruval/Downloads/2.png"
+								},
+								{
+									"key": "customer_name",
+									"value": "a",
+									"type": "text"
+								},
+								{
+									"key": "customer_mobile",
+									"value": "1234567890",
+									"type": "text"
+								},
+								{
+									"key": "customer_address",
+									"value": "ddd",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}list/customer_list",
+							"host": [
+								"{{admin}}list"
+							],
+							"path": [
+								"customer_list"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order Product",
+			"item": [
+				{
+					"name": "getAll Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{admin}}order_product?page&rowsPerPage",
+							"host": [
+								"{{admin}}order_product"
+							],
+							"query": [
+								{
+									"key": "assign_date",
+									"value": "2024-04-04",
+									"disabled": true
+								},
+								{
+									"key": "worker_id",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "order_id",
+									"value": "24482bb0-31f1-4764-9493-930be1a7908c",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": null
+								},
+								{
+									"key": "rowsPerPage",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAll WorkerAssign Task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{admin}}order_product/worker_assign_task?category_id=0be9a689-7e13-4bee-a4bc-ee5b8a3670f8&order_id=41ac71a8-83f4-482c-b6d8-1ed02d190977",
+							"host": [
+								"{{admin}}order_product"
+							],
+							"path": [
+								"worker_assign_task"
+							],
+							"query": [
+								{
+									"key": "category_id",
+									"value": "0be9a689-7e13-4bee-a4bc-ee5b8a3670f8"
+								},
+								{
+									"key": "order_id",
+									"value": "41ac71a8-83f4-482c-b6d8-1ed02d190977"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get Pending Order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{admin}}order_product/pending_order",
+							"host": [
+								"{{admin}}order_product"
+							],
+							"path": [
+								"pending_order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get All pending_completed_order",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{admin}}order_product/pending_completed_order",
+							"host": [
+								"{{admin}}order_product"
+							],
+							"path": [
+								"pending_completed_order"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Product",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "order_id",
+									"value": "a4e422ca-a62e-40a0-8048-571d4ad898e3",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "4ed7b833-3c88-440e-9f28-97d555680d19",
+									"type": "text"
+								},
+								{
+									"key": "worker_id",
+									"value": "1ed581b3-8e8b-4cfd-baa0-cc7c81a8d8c7",
+									"type": "text"
+								},
+								{
+									"key": "qty",
+									"value": "10",
+									"type": "text"
+								},
+								{
+									"key": "assign_date",
+									"value": "2024-03-30",
+									"type": "text"
+								},
+								{
+									"key": "order_product_id",
+									"value": "414a9bab-76d2-473b-bfe9-db81e5a1a0f0",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}order_product",
+							"host": [
+								"{{admin}}order_product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "bulk create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"worker_task\":[ { \"order_id\":\"0772b8a4-12cb-4d4b-a4de-3d248f72360c\",\"category_id\":\"8a667ea3-11cf-41bd-aaed-0bf2755d0d12\",\"qty\":2,\"price\":0 }  ],\r\n\"worker_id\":\"c5267922-9b3f-4147-bb03-4610afe4857f\",\r\n\"assign_date\":\"2024/04/12\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin}}worker/worker_assign_task",
+							"host": [
+								"{{admin}}worker"
+							],
+							"path": [
+								"worker_assign_task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "order Product Status Chang",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "order_id",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "worker_id",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "qty",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "price",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "assign_date",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{admin}}order_product/:order_product_id",
+							"host": [
+								"{{admin}}order_product"
+							],
+							"path": [
+								":order_product_id"
+							],
+							"variable": [
+								{
+									"key": "order_product_id",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order Delivery",
+			"item": [
+				{
+					"name": "get all deliverydata",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{admin}}delivery?order_id=97099fed-64e2-4d96-ad63-a30bccb0f6bc",
+							"host": [
+								"{{admin}}delivery"
+							],
+							"query": [
+								{
+									"key": "delivery_id",
+									"value": "24482bb0-31f1-4764-9493-930be1a7908c",
+									"disabled": true
+								},
+								{
+									"key": "order_id",
+									"value": "97099fed-64e2-4d96-ad63-a30bccb0f6bc"
+								},
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "rowsPerPage",
+									"value": "",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get One",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{admin}}delivery/:id",
+							"host": [
+								"{{admin}}delivery"
+							],
+							"path": [
+								":id"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "",
+									"disabled": true
+								},
+								{
+									"key": "rowsPerPage",
+									"value": "",
+									"disabled": true
+								}
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "77b6f84c-7964-492b-b323-38454cee4bc8"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "find All Complated Task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{admin}}delivery/find_completed_order/:order_id",
+							"host": [
+								"{{admin}}delivery"
+							],
+							"path": [
+								"find_completed_order",
+								":order_id"
+							],
+							"variable": [
+								{
+									"key": "order_id",
+									"value": "97099fed-64e2-4d96-ad63-a30bccb0f6bc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "created Delivery Data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"order_id\": \"97099fed-64e2-4d96-ad63-a30bccb0f6bc\",\r\n    \"date\": \"2024-04-06\",\r\n    \"delivered_to\": \"ajay\",\r\n    \"delivered_mo\": \"7896541230\",\r\n    \"note\": \"abc\",\r\n    \"delivery_details\": [\r\n        {\r\n            \"category_id\": \"4de70153-4e11-4fb7-969c-d0d131a4ae21\",\r\n            \"qty\": 2\r\n        },\r\n        {\r\n            \"category_id\": \"bb3405b5-c852-474f-bda4-22045bcc6389\",\r\n            \"qty\": 1\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin}}delivery",
+							"host": [
+								"{{admin}}delivery"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit deliveryData",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"date\": \"2024-04-06\",\r\n    \"delivered_to\": \"ajay\",\r\n    \"delivered_mo\": \"7896541230\",\r\n    \"note\": \"abc\",\r\n    \"delivery_details\": [\r\n        {\r\n            \"category_id\": \"4de70153-4e11-4fb7-969c-d0d131a4ae21\",\r\n            \"qty\": 2\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{admin}}delivery/:delivery_id",
+							"host": [
+								"{{admin}}delivery"
+							],
+							"path": [
+								":delivery_id"
+							],
+							"variable": [
+								{
+									"key": "delivery_id",
+									"value": "77b6f84c-7964-492b-b323-38454cee4bc8"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "Get Counts",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{admin}}dashboard/get_counts",
+							"host": [
+								"{{admin}}dashboard"
+							],
+							"path": [
+								"get_counts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Pending Orders",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{admin}}dashboard/get_pending_orders",
+							"host": [
+								"{{admin}}dashboard"
+							],
+							"path": [
+								"get_pending_orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Pending Delivery",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{admin}}dashboard/get_pending_delivery_orders",
+							"host": [
+								"{{admin}}dashboard"
+							],
+							"path": [
+								"get_pending_delivery_orders"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "admin",
+			"value": "http://localhost:6565/api/v1/",
+			"type": "string"
+		},
+		{
+			"key": "adminToken",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiM2ZhMzljNTYtYjU1Yi00N2NlLTgxMWItYTdlYzFmNDhjZWZmIiwidXNlck5hbWUiOiJwYXJ0aCIsImFkZHJlc3MiOiJwYXJ0aCB0YWlsb3IgMXN0IGZsb29yICwgc2h3ZXRyYWpoYW5zIHNvY2l0eSAsa2FwdXJ3YWRpIGNob2NrICxraG9kaXlhciBuYWdhciByb2FkIHZhcmFjaGhhLCBzdXJhdCIsIm1vYmlsZV9ubyI6Ijk3MjczOTA2MTMiLCJsb2dvIjoiL2ltYWdlcy9sb2dvLzE3MTMyNDc3MzkucG5nIn0sImV4cGlyZXMiOjE3MTM2MTgxNjQsImlhdCI6MTcxMzQzODE2NH0.0dYiTxjj1bK-oT8uIrxIHG5zB-W1OfRls974l249KFI",
+			"type": "string"
+		}
+	]
+}
