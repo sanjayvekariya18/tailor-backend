@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { OrderProductValidation } from "../validations";
 import { CategoryService, OrderProductService, OrderService } from "../services";
-import { SearchOrderProductDTO, BulkCreatedDTO, createOrderProductDTO, WorkerAssignTaskDTO, GetWorkerAssignTaskDTO } from "../dto";
+import { SearchOrderProductDTO, BulkCreatedDTO, createOrderProductDTO, GetWorkerAssignTaskDTO } from "../dto";
 import { WORKER_ASSIGN_TASK } from "../constants";
 import { BadResponseHandler, FormErrorsHandler } from "../errorHandler";
 import { Category, OrderProduct, WorkerPrice } from "../models";
@@ -178,9 +178,17 @@ export default class OrderController {
 			if (checkOrderProductData == null) {
 				throw new BadResponseHandler("Order Product Not Found");
 			}
-			return await OrderProduct.update({ status: WORKER_ASSIGN_TASK.complete }, { where: { order_product_id: orderProductId } }).then((data) => {
-				return res.api.create("Worker Task Completed");
-			});
+			return await OrderProduct.update({ status: WORKER_ASSIGN_TASK.complete }, { where: { order_product_id: orderProductId } }).then(
+				async (data) => {
+					// Uncomment Below Logic To send notification
+					// await this.orderProductService.get_order_status(checkOrderProductData.order_id).then(async (status_data) => {
+					// 	if (status_data.status == "complete") {
+					// 		// Write Logic to send WhatsApp Message
+					// 	}
+					// });
+					return res.api.create("Worker Task Completed");
+				}
+			);
 		},
 	};
 

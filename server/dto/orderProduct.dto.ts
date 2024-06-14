@@ -4,6 +4,10 @@ export class SearchOrderProductDTO {
 	assign_date?: Date;
 	worker_id?: number;
 	order_id?: number;
+	customer_id?: number;
+	mobile_no?: string;
+	customer_name?: string;
+	status?: WORKER_ASSIGN_TASK;
 	page: number;
 	rowsPerPage: number;
 
@@ -11,6 +15,12 @@ export class SearchOrderProductDTO {
 		data.assign_date != undefined && data.assign_date != "" ? (this.assign_date = data.assign_date) : delete this.assign_date;
 		data.worker_id != undefined && data.worker_id != "" ? (this.worker_id = data.worker_id) : delete this.worker_id;
 		data.order_id != undefined && data.order_id != "" ? (this.order_id = data.order_id) : delete this.order_id;
+
+		data.customer_id != undefined && data.customer_id != "" ? (this.customer_id = data.customer_id) : delete this.customer_id;
+		data.mobile_no != undefined && data.mobile_no != "" ? (this.mobile_no = data.mobile_no) : delete this.mobile_no;
+		data.customer_name != undefined && data.customer_name != "" ? (this.customer_name = data.customer_name) : delete this.customer_name;
+		data.status != undefined && data.status != "" ? (this.status = data.status) : delete this.status;
+
 		this.page = data.page != undefined && data.page != "" ? Number(data.page) : 0;
 		this.rowsPerPage = data.rowsPerPage != undefined && data.rowsPerPage != "" ? Number(data.rowsPerPage) : 10;
 	}
