@@ -21,6 +21,38 @@ export default class OrderProductService {
 					},
 				}),
 				...(searchParams.order_id && { order_id: searchParams.order_id }),
+				...(searchParams.customer_id && {
+					order_id: {
+						[Op.in]: this.Sequelize.literal(`(select order_id from orders where customer_id = ${searchParams.customer_id})`),
+					},
+				}),
+				...(searchParams.mobile_no && {
+					order_id: {
+						[Op.in]: this.Sequelize.literal(`
+                            (SELECT 
+                                o.order_id
+                            FROM
+                                orders o
+                                left join customer c on c.customer_id = o.customer_id
+                            WHERE
+                                c.customer_mobile like '%${searchParams.mobile_no}%')
+                           `),
+					},
+				}),
+				...(searchParams.customer_name && {
+					order_id: {
+						[Op.in]: this.Sequelize.literal(`
+                            (SELECT 
+                                o.order_id
+                            FROM
+                                orders o
+                                left join customer c on c.customer_id = o.customer_id
+                            WHERE
+                                c.customer_name like '%${searchParams.customer_name}%')
+                           `),
+					},
+				}),
+				...(searchParams.status && { status: searchParams.status }),
 			},
 			include: [
 				{ model: Category, attributes: [] },
@@ -32,6 +64,7 @@ export default class OrderProductService {
 				"order_id",
 				"category_id",
 				[this.Sequelize.col("Order.order_date"), "order_date"],
+				[this.Sequelize.col("Order.delivery_date"), "delivery_date"],
 				[this.Sequelize.col("Category.category_name"), "category_name"],
 				[this.Sequelize.col("Order.customer_id"), "customer_id"],
 				[this.Sequelize.col("Order.Customer.customer_name"), "customer_name"],

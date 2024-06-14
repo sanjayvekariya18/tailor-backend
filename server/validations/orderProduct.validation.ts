@@ -1,8 +1,14 @@
+import { WORKER_ASSIGN_TASK } from "../constants";
+
 export default class OrderProductValidation {
 	public getAll = {
-		start_date: "date",
-		end_date: "date|after_or_equal:start_date",
+		assign_date: "date",
+		worker_id: "integer",
+		order_id: "integer",
 		customer_id: "integer",
+		mobile_no: "string",
+		customer_name: "string",
+		status: "in:" + Object.values(WORKER_ASSIGN_TASK),
 		page: "numeric|min:0",
 		rowsPerPage: "numeric|min:1",
 	};
