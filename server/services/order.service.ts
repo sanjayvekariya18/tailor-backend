@@ -83,6 +83,7 @@ export default class OrderService {
                 cust.customer_mobile,
                 cust.customer_address
             ${searchParams.status ? `having status = '${searchParams.status}'` : ""}
+            ORDER BY o.bill_no DESC
             `;
 
 		const replacements: { [key: string]: any } = {};
@@ -266,6 +267,8 @@ export default class OrderService {
                 cust.customer_name,
                 cust.customer_mobile,
                 cust.customer_address
+            ORDER BY
+                o.order_date ASC
             `;
 		const replacements: { [key: string]: any } = {};
 		if (searchParams.start_date !== undefined) {
@@ -561,7 +564,7 @@ export default class OrderService {
 				"bill_no",
 			],
 			include: [{ model: Customer, attributes: [] }],
-			order: [["delivery_date", "ASC"]],
+			order: [["delivery_date", "DESC"]],
 			raw: true,
 			offset: searchParams.rowsPerPage * searchParams.page,
 			limit: searchParams.rowsPerPage,
@@ -630,7 +633,7 @@ export default class OrderService {
 					include: [{ model: Customer, attributes: [] }],
 				},
 			],
-			order: [["payment_date", "ASC"]],
+			order: [["payment_date", "DESC"]],
 			raw: true,
 			offset: searchParams.rowsPerPage * searchParams.page,
 			limit: searchParams.rowsPerPage,
