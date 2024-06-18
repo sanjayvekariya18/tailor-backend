@@ -85,12 +85,16 @@ export default class OrderController {
 		validation: this.orderProductValidation.bulkCreated,
 		controller: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const orderData = new BulkCreatedDTO(req.body);
-			const category_ids = orderData.worker_task.map((row) => row.category_id);
+			let category_ids = orderData.worker_task.map((row) => row.category_id);
+			category_ids = category_ids.filter((item, index) => {
+				return category_ids.indexOf(item) === index;
+			});
 			const order_ids = orderData.worker_task.map((row) => row.order_id);
 
 			const errors: any = {};
 
 			const category_data = await Category.findAll({ where: { category_id: { [Op.in]: category_ids } }, raw: true });
+
 			if (category_ids.length != category_data.length) {
 				const not_found = category_data.map((row) => row.category_id).filter((data) => !category_ids.includes(data));
 				errors.category_id = [`${not_found.join(", ")} categories not found`];

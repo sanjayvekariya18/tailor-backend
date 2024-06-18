@@ -80,7 +80,10 @@ export default class OrderProductService {
 				"work_total",
 				"assign_date",
 			],
-			order: [["assign_date", "ASC"]],
+			order: [
+				["order_date", "DESC"],
+				["assign_date", "DESC"],
+			],
 			offset: searchParams.rowsPerPage * searchParams.page,
 			limit: searchParams.rowsPerPage,
 		});
@@ -189,6 +192,7 @@ export default class OrderProductService {
 				"work_total",
 				"assign_date",
 			],
+			order: [["order_date", "DESC"]],
 			raw: true,
 		});
 		let completed_order = await OrderProduct.findAll({
@@ -208,6 +212,7 @@ export default class OrderProductService {
 				"work_total",
 				"assign_date",
 			],
+			order: [["order_date", "DESC"]],
 			raw: true,
 		});
 		return { pending_order, completed_order };
