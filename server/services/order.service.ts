@@ -408,7 +408,7 @@ export default class OrderService {
 			}
 
 			// await CustomerMeasurement.bulkCreate(customerMeasurementBulkData, { transaction });
-			await Order.create(newOrderData, { transaction }).then(async (data) => {
+			const order_data = await Order.create(newOrderData, { transaction }).then(async (data) => {
 				let orderDetailsBulkData: Array<OrderProductAttributes> = [];
 				orderData.order_details.map((productData) => {
 					orderDetailsBulkData.push({
@@ -434,10 +434,11 @@ export default class OrderService {
 						image_name: row,
 					};
 				});
-				return await OrderImages.bulkCreate(images_data, { transaction });
+				await OrderImages.bulkCreate(images_data, { transaction });
+				return data;
 			});
 
-			return "Customer , CustomerMeasurement Data , OrderImage , Order Created Successfully Add";
+			return order_data;
 		});
 	};
 
@@ -503,7 +504,7 @@ export default class OrderService {
 				});
 				return await OrderImages.bulkCreate(images_data, { transaction });
 			});
-			return "Customer, CustomerMeasurement Data, OrderImage, Order Edited Successfully Add";
+			return await this.findOne({ order_id });
 		});
 	};
 
