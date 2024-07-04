@@ -184,11 +184,15 @@ export default class OrderController {
 			}
 			return await OrderProduct.update({ status: WORKER_ASSIGN_TASK.complete }, { where: { order_product_id: orderProductId } }).then(
 				async (data) => {
-					// Uncomment Below Logic To send notification
-					// await this.orderProductService.get_order_status(checkOrderProductData.order_id).then(async (status_data) => {
-					// 	if (status_data.status == "complete") {
-					// 		// Write Logic to send WhatsApp Message
-					// 	}
+					await this.orderProductService.get_order_status(checkOrderProductData.order_id).then(async (status_data) => {
+						if (status_data.status == "complete") {
+							// Uncomment Below Logic To send notification
+							// await TwilioMessageService.sendMessage(status_data.mobile_number, NOTIFICATION_TEMPLATE.COMPLETE, {
+							// 	customer_name: status_data.customer_name,
+							// 	order_number: status_data.bill_no.toString(),
+							// });
+						}
+					});
 					// });
 					return res.api.create("Worker Task Completed");
 				}

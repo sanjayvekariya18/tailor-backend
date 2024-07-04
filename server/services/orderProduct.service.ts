@@ -280,6 +280,7 @@ export default class OrderProductService {
 			customer_no: 0,
 			customer_name: "",
 			mobile_number: "",
+			bill_no: "",
 		};
 
 		if (db_data.length > 0) {
@@ -287,6 +288,7 @@ export default class OrderProductService {
 			response_data.customer_no = db_data[0].customer_id;
 			response_data.customer_name = db_data[0].customer_name;
 			response_data.mobile_number = db_data[0].customer_mobile;
+			response_data.bill_no = db_data[0].bill_no;
 		}
 
 		return response_data;
