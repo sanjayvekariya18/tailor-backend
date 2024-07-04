@@ -32,6 +32,10 @@ const envVarsSchema = Joi.object()
 		WHATSAPP_MOBILE_NUMBER_ID: Joi.string().required().description("WHATSAPP_MOBILE_NUMBER_ID is required"),
 		WHATSAPP_BUSINESS_ACCOUNT_ID: Joi.string().required().description("WHATSAPP_BUSINESS_ACCOUNT_ID is required"),
 		WHATSAPP_TOKEN: Joi.string().required().description("WHATSAPP_TOKEN is required"),
+
+		TWILIO_ACCOUNT_SID: Joi.string().required().description("TWILIO_ACCOUNT_SID is required"),
+		TWILIO_AUTH_TOKEN: Joi.string().required().description("TWILIO_AUTH_TOKEN is required"),
+		TWILIO_FROM: Joi.string().required().description("TWILIO_FROM is required"),
 	})
 	.unknown();
 
@@ -74,5 +78,10 @@ export = {
 		whatsapp_mobile_number_id: envVars.WHATSAPP_MOBILE_NUMBER_ID,
 		whatsapp_business_account_id: envVars.WHATSAPP_BUSINESS_ACCOUNT_ID,
 		whatsapp_token: envVars.WHATSAPP_TOKEN,
+	},
+	twilio: {
+		account_sid: envVars.TWILIO_ACCOUNT_SID,
+		auth_token: envVars.TWILIO_AUTH_TOKEN,
+		from: envVars.TWILIO_FROM,
 	},
 };

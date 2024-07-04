@@ -13,6 +13,7 @@ import PurchaseService from "./purchase.service";
 import PurchasePaymentService from "./purchasePayment.service";
 import DeliveryService from "./delivery.service";
 import DashboardService from "./dashboard.service";
+import TwilioMessageService from "./twilioMessage.service";
 
 export {
 	TokenService,
@@ -30,4 +31,5 @@ export {
 	PurchasePaymentService,
 	DeliveryService,
 	DashboardService,
+	TwilioMessageService,
 };

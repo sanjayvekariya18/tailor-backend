@@ -15,6 +15,7 @@ import { BILL_STATUS, NOTIFICATION_TEMPLATE, WORKER_ASSIGN_TASK } from "../const
 import { NotFoundHandler } from "../errorHandler";
 import WhatsAppAPIService from "./whatsApp.service";
 import moment from "moment";
+import TwilioMessageService from "./twilioMessage.service";
 
 export default class OrderService {
 	private Sequelize = sequelizeConnection.Sequelize;
@@ -424,13 +425,18 @@ export default class OrderService {
 				});
 				await OrderProduct.bulkCreate(orderDetailsBulkData, { transaction });
 				// Uncomment Below Logic To send notification
-				// const customer_data = await Customer.findByPk(customerId);
-				// if (customer_data && customer_data.customer_mobile != "") {
-				// 	// await WhatsAppAPIService.sendMessage(customer_data.customer_mobile, NOTIFICATION_TEMPLATE.CREATE, {
-				// 	// 	customer_name: customer_data.customer_name,
-				// 	// 	order_number: data.bill_no.toString(),
-				// 	// });
-				// }
+				const customer_data = await Customer.findByPk(customerId);
+				if (customer_data && customer_data.customer_mobile != "") {
+					// await WhatsAppAPIService.sendMessage(customer_data.customer_mobile, NOTIFICATION_TEMPLATE.CREATE, {
+					// 	customer_name: customer_data.customer_name,
+					// 	order_number: data.bill_no.toString(),
+					// });
+
+					await TwilioMessageService.sendMessage(customer_data.customer_mobile, NOTIFICATION_TEMPLATE.CREATE, {
+						customer_name: customer_data.customer_name,
+						order_number: data.bill_no.toString(),
+					});
+				}
 				const images_data = orderData.image_name.map((row) => {
 					return {
 						order_id: data.order_id,
