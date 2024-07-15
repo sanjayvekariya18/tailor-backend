@@ -545,7 +545,7 @@ export default class OrderService {
 			},
 			...(searchParams.bill_status &&
 				searchParams.bill_status == BILL_STATUS.PAID && {
-					where: this.Sequelize.where(this.Sequelize.col("order.payment"), "=", this.Sequelize.col("order.total")),
+					where: this.Sequelize.where(this.Sequelize.col("payment"), "=", this.Sequelize.col("total")),
 				}),
 			attributes: [
 				"order_id",
