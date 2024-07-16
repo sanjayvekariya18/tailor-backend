@@ -44,7 +44,9 @@ export default class OrderController {
 					}
 				}
 			}
-			return res.api.create({ ...data.get({ plain: true }), CustomerChestDetails });
+
+			const order_products = await this.orderService.getOrderProductCategoryWise(orderId);
+			return res.api.create({ ...data.get({ plain: true }), CustomerChestDetails, order_products });
 		},
 	};
 

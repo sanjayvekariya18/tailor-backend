@@ -147,6 +147,25 @@ export default class OrderService {
 		return orderData;
 	};
 
+	public getOrderProductCategoryWise = async (orderId: number) => {
+		return await sequelizeConnection.query(
+			`
+            SELECT 
+                c.category_id, c.category_name, SUM(op.qty) as qty
+            FROM
+                order_product op
+                    LEFT JOIN
+                orders o ON o.order_id = op.order_id
+                    LEFT JOIN
+                category c ON c.category_id = op.category_id
+            WHERE
+                o.bill_no = ${orderId}
+            GROUP BY c.category_id, c.category_name;
+            `,
+			{ type: QueryTypes.SELECT }
+		);
+	};
+
 	public findOneCustomerMeasurement = async (searchParams: findCustomerMeasurementDTO) => {
 		const customer_data = await Customer.findOne({
 			where: {
