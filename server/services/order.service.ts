@@ -151,7 +151,7 @@ export default class OrderService {
 		return await sequelizeConnection.query(
 			`
             SELECT 
-                c.category_id, c.category_name, SUM(op.qty) as qty
+                c.category_id, c.category_name, c.category_type, SUM(op.qty) as qty
             FROM
                 order_product op
                     LEFT JOIN
@@ -159,8 +159,8 @@ export default class OrderService {
                     LEFT JOIN
                 category c ON c.category_id = op.category_id
             WHERE
-                o.bill_no = ${orderId}
-            GROUP BY c.category_id, c.category_name;
+                o.order_id = ${orderId}
+            GROUP BY c.category_id, c.category_name, c.category_type;
             `,
 			{ type: QueryTypes.SELECT }
 		);
