@@ -268,7 +268,7 @@ export default class OrderService {
                 cust.customer_mobile,
                 cust.customer_address
             ORDER BY
-                o.order_date ASC
+                o.delivery_date DESC
             `;
 		const replacements: { [key: string]: any } = {};
 		if (searchParams.start_date !== undefined) {
@@ -321,6 +321,7 @@ export default class OrderService {
                 AND (:customer_id IS NULL OR o.customer_id = :customer_id)
                 AND (:mobile_no IS NULL OR cust.customer_mobile = :mobile_no)
             GROUP BY op.category_id
+            ORDER BY c.category_id
             `,
 			{ replacements, type: QueryTypes.SELECT }
 		);

@@ -14,7 +14,7 @@ export default class PurchaseService {
 					}),
 			},
 			attributes: ["purchase_id", "party_name", "amount", "payment", "outstand", "details", "challan", "purchase_date"],
-			order: [["purchase_date", "ASC"]],
+			order: [["purchase_date", "DESC"]],
 			offset: searchParams.rowsPerPage * searchParams.page,
 			limit: searchParams.rowsPerPage,
 		});

@@ -28,7 +28,7 @@ export default class WorkerPaymentService {
 				"payment_date",
 				"type",
 			],
-			order: [["payment_date", "ASC"]],
+			order: [["payment_date", "DESC"]],
 			offset: searchParams.rowsPerPage * searchParams.page,
 			limit: searchParams.rowsPerPage,
 		});

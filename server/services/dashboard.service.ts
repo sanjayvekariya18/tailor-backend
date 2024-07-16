@@ -130,7 +130,7 @@ export default class DashboardService {
             c.category_type,
             c.category_image,
             c.is_active,
-            count(op.order_product_id) as pending_count
+            sum(op.qty) as pending_count
         from
             category c
         left join order_product op on op.category_id = c.category_id 
@@ -141,6 +141,7 @@ export default class DashboardService {
             c.category_type,
             c.category_image,
             c.is_active
+        order by c.category_id
         `,
 			{ type: QueryTypes.SELECT }
 		);
