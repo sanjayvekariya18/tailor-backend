@@ -387,6 +387,14 @@ export default class OrderService {
 				});
 			} else {
 				customerId = orderData.customer_id;
+				await Customer.update(
+					{
+						customer_name: orderData.customer_name,
+						customer_mobile: orderData.customer_mobile,
+						customer_address: orderData.customer_address,
+					},
+					{ where: { customer_id: customerId }, transaction }
+				);
 			}
 			let bill_no: number = await Order.max("bill_no");
 
@@ -477,6 +485,14 @@ export default class OrderService {
 			// 		measurement_2: Workerdata.measurement_2,
 			// 	});
 			// });
+			await Customer.update(
+				{
+					customer_name: orderData.customer_name,
+					customer_mobile: orderData.customer_mobile,
+					customer_address: orderData.customer_address,
+				},
+				{ where: { customer_id }, transaction }
+			);
 			let newOrderData = {
 				customer_id: customer_id,
 				total: orderData.total,
