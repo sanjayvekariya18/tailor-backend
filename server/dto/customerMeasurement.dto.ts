@@ -9,8 +9,8 @@ export class CustomerMeasurementDTO {
 		this.customer_id = data.customer_id;
 		this.category_id = data.category_id;
 		this.measurement_id = data.measurement_id;
-		this.measurement = data.measurement;
-		this.measurement_2 = data.measurement_2;
+		this.measurement = data.measurement ? data.measurement : "";
+		this.measurement_2 = data.measurement_2 ? data.measurement_2 : "";
 	}
 }
 

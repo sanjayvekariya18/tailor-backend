@@ -28,7 +28,7 @@ export default class CustomerValidation {
 		measurement: "required|array|min:1",
 		"measurement.*.category_id": "required|integer",
 		"measurement.*.measurement_id": "required|integer",
-		"measurement.*.measurement": "required|string",
+		"measurement.*.measurement": "string",
 		"measurement.*.measurement_2": "string",
 	};
 }
