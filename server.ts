@@ -18,6 +18,7 @@ import fs from "fs";
 import { NODE_MODE } from "./server/constants";
 import nodeCron from "node-cron";
 import DatabaseBackupService from "./server/services/databaseBackup.service";
+import { OrderService } from "./server/services";
 
 const app: Application = express();
 const port = config.port;
@@ -112,6 +113,8 @@ app.use("/api/v1", routes);
 // Error Handling & Not Found Page
 app.use(RootErrorHandler);
 app.use((req: Request, res: Response) => {
+
+	
 	return res.api.notFound({
 		message: "Page Not Found",
 	});
@@ -121,7 +124,21 @@ app.use((req: Request, res: Response) => {
 const cronJob = nodeCron.schedule("0 23 * * *", async () => {
 	await DatabaseBackupService.dbBackup();
 });
+
 cronJob.start();
+
+const cronJob2 = nodeCron.schedule("0 0 1 * *", async () => {
+	try {
+		const orderService: any = new OrderService();
+		const response:any = await orderService.deleteOrdersByCron();
+		console.log(response);
+		// your logic
+	} catch (error) {
+		console.error("Monthly cron error", error);
+	}
+});
+
+cronJob2.start();
 
 try {
 	if (config.env == "production") {
@@ -138,6 +155,7 @@ try {
 		httpServer.listen(port, async () => {
 			// Test DB Connection and init relations
 			await testDBConnections();
+
 			logger.info(`Server running on http://localhost:${port}`);
 		});
 	}

@@ -569,20 +569,20 @@ export default class OrderService {
 				...(searchParams.customer_id && { customer_id: searchParams.customer_id }),
 				...(searchParams.start_date &&
 					searchParams.end_date && {
-						order_date: {
-							[Op.between]: [searchParams.start_date, searchParams.end_date],
-						},
-					}),
+					order_date: {
+						[Op.between]: [searchParams.start_date, searchParams.end_date],
+					},
+				}),
 
 				...(searchParams.bill_status &&
 					searchParams.bill_status == BILL_STATUS.UNPAID && {
-						payment: 0,
-					}),
+					payment: 0,
+				}),
 			},
 			...(searchParams.bill_status &&
 				searchParams.bill_status == BILL_STATUS.PAID && {
-					where: this.Sequelize.where(this.Sequelize.col("payment"), "=", this.Sequelize.col("total")),
-				}),
+				where: this.Sequelize.where(this.Sequelize.col("payment"), "=", this.Sequelize.col("total")),
+			}),
 			attributes: [
 				"order_id",
 				"customer_id",
@@ -649,10 +649,10 @@ export default class OrderService {
 			where: {
 				...(searchParams.start_date &&
 					searchParams.end_date && {
-						payment_date: {
-							[Op.between]: [searchParams.start_date, searchParams.end_date],
-						},
-					}),
+					payment_date: {
+						[Op.between]: [searchParams.start_date, searchParams.end_date],
+					},
+				}),
 			},
 			attributes: [
 				"order_id",
@@ -688,5 +688,51 @@ export default class OrderService {
 
 	public deletedImage = async (order_image_id: number) => {
 		return await OrderImages.destroy({ where: { order_image_id: order_image_id } });
+	};
+
+	public deleteOrdersByCron = async () => {
+		return await executeTransaction(async (transaction: Transaction) => {
+			const twoDaysAgoDateOnly = moment()
+				.subtract(15, "months")
+				.toDate();
+
+			const oldOrders = await Order.findAll({
+				attributes: ["order_id", "order_date"],
+				where: {
+					order_date: {
+						[Op.lt]: twoDaysAgoDateOnly,
+					},
+				},
+				transaction,
+			});
+
+			if (!oldOrders.length) {
+				return "No orders older than 15 months found";
+			}
+
+			const orderIds = oldOrders.map(o => o.order_id);
+
+			// Step 2: delete order images
+			await OrderImages.destroy({
+				where: {
+					order_id: {
+						[Op.in]: orderIds,
+					},
+				},
+				transaction,
+			});
+
+			// Step 3: delete orders
+			await Order.destroy({
+				where: {
+					order_id: {
+						[Op.in]: orderIds,
+					},
+				},
+				transaction,
+			});
+
+			return `${orderIds.length} orders older than 15 months deleted successfully`;
+		});
 	};
 }
