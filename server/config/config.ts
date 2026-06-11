@@ -25,9 +25,6 @@ const envVarsSchema = Joi.object()
 		FRONTEND_URL: Joi.string().required(),
 		BACKEND_URL: Joi.string().required(),
 
-		SSL_KEY_PATH: Joi.string().required().description("SSL_KEY_PATH is required"),
-		SSL_CERT_PATH: Joi.string().required().description("SSL_CERT_PATH is required"),
-
 		WHATSAPP_VERSION: Joi.string().required().description("WHATSAPP_VERSION is required"),
 		WHATSAPP_MOBILE_NUMBER_ID: Joi.string().required().description("WHATSAPP_MOBILE_NUMBER_ID is required"),
 		WHATSAPP_BUSINESS_ACCOUNT_ID: Joi.string().required().description("WHATSAPP_BUSINESS_ACCOUNT_ID is required"),
@@ -65,10 +62,6 @@ export = {
 	file_path: envVars.FILEPATH,
 	frontend_url: envVars.FRONTEND_URL,
 	backend_url: envVars.BACKEND_URL,
-	ssl: {
-		key_path: envVars.SSL_KEY_PATH,
-		cert_path: envVars.SSL_CERT_PATH,
-	},
 	whatsapp: {
 		whatsapp_version: envVars.WHATSAPP_VERSION,
 		whatsapp_mobile_number_id: envVars.WHATSAPP_MOBILE_NUMBER_ID,

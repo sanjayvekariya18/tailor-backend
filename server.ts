@@ -13,9 +13,6 @@ import { RootErrorHandler } from "./server/errorHandler";
 import { TokenVerifyMiddleware, setApiResponse } from "./server/middlewares";
 import { testDBConnections } from "./server/InitialDBSetup";
 import http from "http";
-import https from "https";
-import fs from "fs";
-import { NODE_MODE } from "./server/constants";
 import nodeCron from "node-cron";
 import DatabaseBackupService from "./server/services/databaseBackup.service";
 import { OrderService } from "./server/services";
@@ -38,25 +35,11 @@ app.use(
 
 //socket start
 var httpServer: any;
-var httpsServer: any;
 var io: any;
 
 /* ---------------------------------------- Server Config -------------------------------------------- */
 try {
-	if (config.env == NODE_MODE.PRODUCTION) {
-		try {
-			const options = {
-				key: fs.readFileSync(config.ssl.key_path) || null,
-				cert: fs.readFileSync(config.ssl.cert_path) || null,
-			};
-
-			httpsServer = https.createServer(options, app);
-		} catch (error) {
-			console.log(error);
-		}
-	} else {
-		httpServer = http.createServer(app);
-	}
+	httpServer = http.createServer(app);
 } catch (error) {
 	logger.error(`Error occurred: ${error}`);
 }
@@ -141,24 +124,11 @@ const cronJob2 = nodeCron.schedule("0 0 1 * *", async () => {
 cronJob2.start();
 
 try {
-	if (config.env == "production") {
-		try {
-			httpsServer.listen(port, async () => {
-				// Test DB Connection and init relations
-				await testDBConnections();
-				logger.info(`Server running on http://localhost:${port}`);
-			});
-		} catch (error) {
-			console.log(error);
-		}
-	} else {
-		httpServer.listen(port, async () => {
-			// Test DB Connection and init relations
-			await testDBConnections();
-
-			logger.info(`Server running on http://localhost:${port}`);
-		});
-	}
+	httpServer.listen(port, async () => {
+		// Test DB Connection and init relations
+		await testDBConnections();
+		logger.info(`Server running on http://localhost:${port}`);
+	});
 } catch (error) {
 	logger.error(`Error occurred: ${error}`);
 }
