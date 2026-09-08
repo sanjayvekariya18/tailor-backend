@@ -27,7 +27,11 @@ export enum BILL_STATUS {
 	PAID = "paid",
 }
 
+// Internal keys picking which free-form WhatsApp message text to send (see
+// whatsApp.service.ts's messageTextFor). Since we're sending via Baileys, not
+// Meta's Cloud API, these are no longer restricted to pre-approved template names.
 export enum NOTIFICATION_TEMPLATE {
-	CREATE = "create",
-	COMPLETE = "complete",
+	CREATE = "order_created",
+	COMPLETE = "order_ready",
+	DELIVERED = "order_delivered",
 }

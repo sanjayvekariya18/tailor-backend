@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from "express";
 import { OrderProductValidation } from "../validations";
-import { CategoryService, OrderProductService, OrderService } from "../services";
+import { CategoryService, OrderProductService, OrderService, WhatsAppAPIService } from "../services";
 import { SearchOrderProductDTO, BulkCreatedDTO, createOrderProductDTO, GetWorkerAssignTaskDTO } from "../dto";
-import { WORKER_ASSIGN_TASK } from "../constants";
+import { WORKER_ASSIGN_TASK, NOTIFICATION_TEMPLATE } from "../constants";
 import { BadResponseHandler, FormErrorsHandler } from "../errorHandler";
 import { Category, OrderProduct, WorkerPrice } from "../models";
 import { Op } from "sequelize";
+import { logger } from "../config";
 
 export default class OrderController {
 	public orderProductValidation = new OrderProductValidation();
@@ -182,18 +183,19 @@ export default class OrderController {
 			if (checkOrderProductData == null) {
 				throw new BadResponseHandler("Order Product Not Found");
 			}
+			// Guards against re-sending the "order ready" notification every time this
+			// endpoint is hit for an item that was already marked complete earlier.
+			const wasAlreadyComplete = checkOrderProductData.status == WORKER_ASSIGN_TASK.complete;
 			return await OrderProduct.update({ status: WORKER_ASSIGN_TASK.complete }, { where: { order_product_id: orderProductId } }).then(
 				async (data) => {
 					await this.orderProductService.get_order_status(checkOrderProductData.order_id).then(async (status_data) => {
-						if (status_data.status == "complete") {
-							// Uncomment Below Logic To send notification
-							// await TwilioMessageService.sendMessage(status_data.mobile_number, NOTIFICATION_TEMPLATE.COMPLETE, {
-							// 	customer_name: status_data.customer_name,
-							// 	order_number: status_data.bill_no.toString(),
-							// });
+						if (!wasAlreadyComplete && status_data.status == "complete" && status_data.mobile_number) {
+							WhatsAppAPIService.sendMessage(status_data.mobile_number, NOTIFICATION_TEMPLATE.COMPLETE, {
+								customer_name: status_data.customer_name,
+								order_number: status_data.bill_no.toString(),
+							}).catch((error) => logger.error(`Failed to send order-ready WhatsApp notification: ${error}`));
 						}
 					});
-					// });
 					return res.api.create("Worker Task Completed");
 				}
 			);

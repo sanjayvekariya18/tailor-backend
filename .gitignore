@@ -140,3 +140,7 @@ public/invoicePdf/*
 *.key
 
 local.sh
+# Baileys WhatsApp session -- this is effectively your login credentials for the
+# linked WhatsApp number. Never commit it; losing it just means re-scanning a
+# QR code, but leaking it lets someone else send as your business number.
+baileys_auth/

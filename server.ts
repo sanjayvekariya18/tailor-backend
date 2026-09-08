@@ -15,7 +15,7 @@ import { testDBConnections } from "./server/InitialDBSetup";
 import http from "http";
 import nodeCron from "node-cron";
 import DatabaseBackupService from "./server/services/databaseBackup.service";
-import { OrderService } from "./server/services";
+import { OrderService, WhatsAppAPIService } from "./server/services";
 
 const app: Application = express();
 const port = config.port;
@@ -128,6 +128,11 @@ try {
 		// Test DB Connection and init relations
 		await testDBConnections();
 		logger.info(`Server running on http://localhost:${port}`);
+
+		// First run: watch this terminal for a QR code and scan it with the
+		// business phone (WhatsApp > Linked Devices). After that, the saved
+		// session keeps it connected across restarts without scanning again.
+		WhatsAppAPIService.initialize().catch((error) => logger.error(`WhatsApp (Baileys) failed to start: ${error}`));
 	});
 } catch (error) {
 	logger.error(`Error occurred: ${error}`);

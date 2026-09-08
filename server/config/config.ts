@@ -25,10 +25,13 @@ const envVarsSchema = Joi.object()
 		FRONTEND_URL: Joi.string().required(),
 		BACKEND_URL: Joi.string().required(),
 
-		WHATSAPP_VERSION: Joi.string().required().description("WHATSAPP_VERSION is required"),
-		WHATSAPP_MOBILE_NUMBER_ID: Joi.string().required().description("WHATSAPP_MOBILE_NUMBER_ID is required"),
-		WHATSAPP_BUSINESS_ACCOUNT_ID: Joi.string().required().description("WHATSAPP_BUSINESS_ACCOUNT_ID is required"),
-		WHATSAPP_TOKEN: Joi.string().required().description("WHATSAPP_TOKEN is required"),
+		// Sent via Baileys (unofficial WhatsApp Web automation), not Meta's Cloud API.
+		// WHATSAPP_DAILY_LIMIT is a self-imposed safety cap: past this many messages in
+		// a rolling day, WhatsAppAPIService stops sending and just logs a warning, to
+		// keep volume low and reduce the chance of the number being flagged/banned.
+		WHATSAPP_ENABLED: Joi.boolean().default(true).description("Master on/off switch for outbound WhatsApp notifications"),
+		WHATSAPP_DAILY_LIMIT: Joi.number().default(200).description("Max WhatsApp messages to send per day"),
+		WHATSAPP_AUTH_DIR: Joi.string().default("baileys_auth").description("Folder to persist the Baileys login session in"),
 	})
 	.unknown();
 
@@ -63,9 +66,8 @@ export = {
 	frontend_url: envVars.FRONTEND_URL,
 	backend_url: envVars.BACKEND_URL,
 	whatsapp: {
-		whatsapp_version: envVars.WHATSAPP_VERSION,
-		whatsapp_mobile_number_id: envVars.WHATSAPP_MOBILE_NUMBER_ID,
-		whatsapp_business_account_id: envVars.WHATSAPP_BUSINESS_ACCOUNT_ID,
-		whatsapp_token: envVars.WHATSAPP_TOKEN,
+		enabled: envVars.WHATSAPP_ENABLED,
+		daily_limit: envVars.WHATSAPP_DAILY_LIMIT,
+		auth_dir: envVars.WHATSAPP_AUTH_DIR,
 	},
 };

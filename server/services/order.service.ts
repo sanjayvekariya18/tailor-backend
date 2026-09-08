@@ -11,9 +11,8 @@ import {
 } from "../dto";
 import { executeTransaction, sequelizeConnection } from "../config/database";
 import { OrderProductAttributes } from "../models/orderProduct.model";
-import { BILL_STATUS, NOTIFICATION_TEMPLATE, WORKER_ASSIGN_TASK } from "../constants";
+import { BILL_STATUS, WORKER_ASSIGN_TASK } from "../constants";
 import { NotFoundHandler } from "../errorHandler";
-import WhatsAppAPIService from "./whatsApp.service";
 import moment from "moment";
 
 export default class OrderService {
@@ -451,14 +450,9 @@ export default class OrderService {
 					});
 				});
 				await OrderProduct.bulkCreate(orderDetailsBulkData, { transaction });
-				// Uncomment Below Logic To send notification
-				// const customer_data = await Customer.findByPk(customerId);
-				// if (customer_data && customer_data.customer_mobile != "") {
-				// 	// await WhatsAppAPIService.sendMessage(customer_data.customer_mobile, NOTIFICATION_TEMPLATE.CREATE, {
-				// 	// 	customer_name: customer_data.customer_name,
-				// 	// 	order_number: data.bill_no.toString(),
-				// 	// });
-				// }
+				// WhatsApp "order created" notification is sent from OrderController.create,
+				// after this transaction commits — never from inside the transaction, so a
+				// slow/failed WhatsApp call can't hold a DB lock or roll back the order.
 				const images_data = orderData.image_name.map((row) => {
 					return {
 						order_id: data.order_id,

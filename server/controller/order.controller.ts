@@ -1,13 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 import { fileType, removeFile, saveFile } from "../utils/helper";
 import { OrderValidation } from "../validations";
-import { CategoryService, MeasurementService, OrderService } from "../services";
+import { CategoryService, MeasurementService, OrderService, WhatsAppAPIService } from "../services";
 import { CreateOrderDTO, SearchDeliveryOrderRemainDTO, SearchOrderDTO } from "../dto";
-import { image } from "../constants";
+import { image, NOTIFICATION_TEMPLATE } from "../constants";
 import { BadResponseHandler, FormErrorsHandler } from "../errorHandler";
 import { OrderPaymentDTO, findCustomerMeasurementDTO, getCustomerBillDTO, getCustomerPaymentDataDTO } from "../dto/order.dto";
 import moment from "moment";
 import { Category, ChestDetails, Measurement, OrderImages } from "../models";
+import { logger } from "../config";
 
 export default class OrderController {
 	private orderService = new OrderService();
@@ -154,6 +155,14 @@ export default class OrderController {
 			}
 
 			let data = await this.orderService.create(orderData);
+
+			// Fire-and-forget: an order must never fail (or wait) because WhatsApp is
+			// slow, misconfigured, or Meta is down. Failures are logged, not thrown.
+			WhatsAppAPIService.sendMessage(orderData.customer_mobile, NOTIFICATION_TEMPLATE.CREATE, {
+				customer_name: orderData.customer_name,
+				order_number: (data as any).bill_no?.toString() ?? "",
+			}).catch((error) => logger.error(`Failed to send order-created WhatsApp notification: ${error}`));
+
 			return res.api.create(data);
 		},
 	};
