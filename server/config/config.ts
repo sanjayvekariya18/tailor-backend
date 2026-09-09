@@ -32,6 +32,11 @@ const envVarsSchema = Joi.object()
 		WHATSAPP_ENABLED: Joi.boolean().default(true).description("Master on/off switch for outbound WhatsApp notifications"),
 		WHATSAPP_DAILY_LIMIT: Joi.number().default(200).description("Max WhatsApp messages to send per day"),
 		WHATSAPP_AUTH_DIR: Joi.string().default("baileys_auth").description("Folder to persist the Baileys login session in"),
+		// Lets a non-technical shop user open a browser page to scan the WhatsApp
+		// linking QR code, without ever needing server/SSH access. The page is only
+		// served when this is set, and only to visitors who supply it as ?token=...
+		// Leave unset to disable the page entirely.
+		WHATSAPP_QR_ACCESS_TOKEN: Joi.string().optional().allow("").description("Shared secret required as ?token= to view the WhatsApp QR-linking page"),
 	})
 	.unknown();
 
@@ -69,5 +74,6 @@ export = {
 		enabled: envVars.WHATSAPP_ENABLED,
 		daily_limit: envVars.WHATSAPP_DAILY_LIMIT,
 		auth_dir: envVars.WHATSAPP_AUTH_DIR,
+		qr_access_token: envVars.WHATSAPP_QR_ACCESS_TOKEN,
 	},
 };

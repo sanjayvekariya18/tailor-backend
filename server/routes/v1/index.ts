@@ -15,14 +15,20 @@ import PurchaseRoute from "./purchase.route";
 import PurchasePaymentRoute from "./purchasePayment.route";
 import DeliveryRoute from "./delivery.route";
 import dashboardRoute from "./dashboard.route";
+import whatsappRoute from "./whatsapp.route";
 import { TokenVerifyMiddleware } from "../../middlewares";
-import { UserController } from "../../controller";
+import { UserController, WhatsAppStatusController } from "../../controller";
 
 const router = Router();
 const authorizationController = new AuthorizationController();
 const userController = new UserController();
+const whatsAppStatusController = new WhatsAppStatusController();
 
 router.post("/login", requestValidate(authorizationController.login.validation), use(authorizationController.login.controller));
+// Deliberately NOT behind TokenVerifyMiddleware: this is a plain link (with its own
+// ?token= secret, see WHATSAPP_QR_ACCESS_TOKEN) meant to be opened directly in a
+// browser by a shop user with no app login, to scan the WhatsApp linking QR code.
+router.get("/whatsapp-status", use(whatsAppStatusController.view.controller));
 router.put("/:user_id", TokenVerifyMiddleware, requestValidate(userController.edit.validation), use(userController.edit.controller));
 router.get("/user", TokenVerifyMiddleware, use(userController.getAll.controller));
 router.use("/category", TokenVerifyMiddleware, categoryRoute);
@@ -38,5 +44,6 @@ router.use("/purchase", TokenVerifyMiddleware, PurchaseRoute);
 router.use("/purchase_payment", TokenVerifyMiddleware, PurchasePaymentRoute);
 router.use("/delivery", TokenVerifyMiddleware, DeliveryRoute);
 router.use("/dashboard", TokenVerifyMiddleware, dashboardRoute);
+router.use("/whatsapp", TokenVerifyMiddleware, whatsappRoute);
 
 export default router;

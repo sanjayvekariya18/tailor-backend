@@ -11,3 +11,4 @@ export { default as PurchasePaymentController } from "./purchasePayment.controll
 export { default as DeliveryController } from "./delivery.controller";
 export { default as UserController } from "./user.controller";
 export { default as DashboardController } from "./dashboard.controller";
+export { default as WhatsAppStatusController } from "./whatsAppStatus.controller";

@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs";
 import pino from "pino";
 import qrcodeTerminal from "qrcode-terminal";
+import QRCode from "qrcode";
 import makeWASocket, { DisconnectReason, useMultiFileAuthState, WASocket } from "baileys";
 import { Boom } from "@hapi/boom";
 import { config, logger } from "../config";
@@ -11,6 +12,8 @@ interface MessagePayload {
 	customer_name: string;
 	order_number: string;
 }
+
+export type WhatsAppConnectionStatus = "disabled" | "connecting" | "waiting_for_scan" | "connected" | "disconnected";
 
 // Baileys logs very verbosely at "info" — keep it quiet unless something's wrong.
 const baileysLogger = pino({ level: "warn" }) as any;
@@ -22,18 +25,40 @@ export default class WhatsAppAPIService {
 	private static sock: WASocket | null = null;
 	private static connecting: Promise<void> | null = null;
 
+	// Drives the browser-based QR linking page (see whatsAppStatus.controller.ts) so
+	// a non-technical user can scan the QR from their own phone's browser instead of
+	// needing SSH/terminal access to the server.
+	private static status: WhatsAppConnectionStatus = "disconnected";
+	private static latestQR: string | null = null;
+
 	// Call once at server startup. Safe to call more than once — subsequent
 	// calls are no-ops while a connection already exists or is being made.
 	static initialize = async (): Promise<void> => {
 		if (!config.whatsapp.enabled) {
+			WhatsAppAPIService.status = "disabled";
 			logger.warn("WhatsApp (Baileys) is disabled via WHATSAPP_ENABLED=false — notifications will be skipped.");
 			return;
 		}
 		if (WhatsAppAPIService.sock || WhatsAppAPIService.connecting) {
 			return WhatsAppAPIService.connecting ?? undefined;
 		}
+		WhatsAppAPIService.status = "connecting";
 		WhatsAppAPIService.connecting = WhatsAppAPIService.connect();
 		return WhatsAppAPIService.connecting;
+	};
+
+	// Current connection state plus (when waiting to be scanned) the raw QR payload.
+	// Used by whatsAppStatus.controller.ts to render the browser-based linking page.
+	static getStatus = (): { status: WhatsAppConnectionStatus } => ({ status: WhatsAppAPIService.status });
+
+	static getQrImageDataUrl = async (): Promise<string | null> => {
+		if (!WhatsAppAPIService.latestQR) return null;
+		try {
+			return await QRCode.toDataURL(WhatsAppAPIService.latestQR, { width: 320, margin: 2 });
+		} catch (error) {
+			logger.warn(`WhatsApp: failed to render QR as an image: ${error}`);
+			return null;
+		}
 	};
 
 	private static connect = async (): Promise<void> => {
@@ -55,19 +80,27 @@ export default class WhatsAppAPIService {
 				// Scan this with WhatsApp > Linked Devices on the phone that should
 				// send these notifications. Only needed once — after that, the saved
 				// session in AUTH_DIR keeps you logged in across restarts.
+				// Also exposed as an actual QR image at the browser-based linking page
+				// (whatsAppStatus.controller.ts) so this doesn't require server access.
+				WhatsAppAPIService.latestQR = qr;
+				WhatsAppAPIService.status = "waiting_for_scan";
 				logger.info("WhatsApp: scan this QR code with the business phone (WhatsApp > Linked Devices > Link a Device):");
 				qrcodeTerminal.generate(qr, { small: true });
 			}
 
 			if (connection === "open") {
+				WhatsAppAPIService.status = "connected";
+				WhatsAppAPIService.latestQR = null;
 				logger.info("WhatsApp (Baileys) connected.");
 			}
 
 			if (connection === "close") {
 				WhatsAppAPIService.sock = null;
 				WhatsAppAPIService.connecting = null;
+				WhatsAppAPIService.latestQR = null;
 				const statusCode = (lastDisconnect?.error as Boom)?.output?.statusCode;
 				const loggedOut = statusCode === DisconnectReason.loggedOut;
+				WhatsAppAPIService.status = loggedOut ? "disconnected" : "connecting";
 				logger.warn(`WhatsApp (Baileys) connection closed (loggedOut=${loggedOut}). ${loggedOut ? "" : "Reconnecting..."}`);
 				if (loggedOut) {
 					logger.error(
