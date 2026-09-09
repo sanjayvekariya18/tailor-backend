@@ -10,4 +10,8 @@ const whatsAppStatusController = new WhatsAppStatusController();
 // to render a "WhatsApp: Connected/Not Connected" badge and a "Connect WhatsApp" button.
 router.get("/status", use(whatsAppStatusController.status.controller));
 
+// GET /api/v1/whatsapp/qr -- { status, qr: "data:image/png;base64,..." | null }
+// Powers the in-app "Connect WhatsApp" popup (no separate page/token needed).
+router.get("/qr", use(whatsAppStatusController.qr.controller));
+
 export default router;

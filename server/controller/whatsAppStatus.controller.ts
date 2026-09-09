@@ -54,6 +54,18 @@ ${autoRefresh ? '<meta http-equiv="refresh" content="5">' : ""}
 		},
 	};
 
+	// Authenticated JSON endpoint returning the actual QR code (as a data: URL) when
+	// one is available, so the admin UI can show it in an in-app popup instead of
+	// sending the user to the separate ?token= page. No extra secret needed here --
+	// this is a normal logged-in API call, unlike `view` below.
+	public qr = {
+		controller: async (req: Request, res: Response): Promise<void> => {
+			const { status } = WhatsAppAPIService.getStatus();
+			const qr = status === "waiting_for_scan" ? await WhatsAppAPIService.getQrImageDataUrl() : null;
+			return res.api.create({ status, qr });
+		},
+	};
+
 	public view = {
 		controller: async (req: Request, res: Response): Promise<void> => {
 			res.set("Cache-Control", "no-store");
