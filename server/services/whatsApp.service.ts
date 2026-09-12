@@ -173,8 +173,12 @@ export default class WhatsAppAPIService {
 			return false;
 		}
 
-		if (!WhatsAppAPIService.sock) {
-			logger.warn(`WhatsApp not connected yet (still linking, or reconnecting) — skipped "${template_name}" to ${recipient}`);
+		// sock can exist while still linking/reconnecting; Baileys then throws
+		// "Cannot read properties of undefined (reading 'id')" on sendMessage.
+		if (!WhatsAppAPIService.sock || WhatsAppAPIService.status !== "connected") {
+			logger.warn(
+				`WhatsApp not ready (status=${WhatsAppAPIService.status}) — skipped "${template_name}" to ${recipient}`
+			);
 			return false;
 		}
 

@@ -1,5 +1,5 @@
 import nodemailer, { Transporter } from "nodemailer";
-import { config } from "../config";
+import { config, logger } from "../config";
 import path from "path";
 const fs = require("fs");
 
@@ -10,27 +10,45 @@ interface EmailData {
 }
 
 export default class EmailService {
-	private transporter: Transporter;
+	private transporter: Transporter | null = null;
 
 	constructor() {
+		const user = config.sys_email_details.email;
+		const pass = config.sys_email_details.password;
+		if (!user || !pass) {
+			logger.warn("SYS_EMAIL / SYS_EMAIL_PASSWORD not configured — outbound email is disabled.");
+			return;
+		}
+
 		this.transporter = nodemailer.createTransport(
 			{
-				service: "Gmail", // E.g., 'Gmail' for Gmail
+				service: "Gmail",
 				auth: {
-					user: config.sys_email_details.email, // Your gmail address.
-					pass: config.sys_email_details.password,
+					user,
+					pass,
 				},
 			},
 			{
-				from: config.sys_email_details.email,
+				from: user,
 			}
 		);
 	}
 
 	private sendEmail = async (emailData: EmailData) => {
-		// Send the email
-		return await this.transporter.sendMail(emailData).catch((error) => {
-			console.error("Error sending email: ", error);
+		if (!this.transporter) {
+			logger.warn(`Email skipped (transporter not configured): ${emailData.subject}`);
+			return;
+		}
+
+		return await this.transporter.sendMail(emailData).catch((error: any) => {
+			const authFailed = error?.code === "EAUTH" || error?.responseCode === 535;
+			if (authFailed) {
+				logger.error(
+					"Email auth failed (Gmail rejected SYS_EMAIL / SYS_EMAIL_PASSWORD). Update the Gmail App Password in .env — backups and mail notifications will keep failing until then."
+				);
+				return;
+			}
+			logger.error(`Error sending email: ${error?.message || error}`);
 		});
 	};
 
