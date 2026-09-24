@@ -7,7 +7,6 @@ import fileUpload from "express-fileupload";
 import cookieParser from "cookie-parser";
 import path from "path";
 import routes from "./server/routes/v1";
-import session from "express-session";
 import { config, logger } from "./server/config";
 import { RootErrorHandler } from "./server/errorHandler";
 import { TokenVerifyMiddleware, setApiResponse } from "./server/middlewares";
@@ -25,13 +24,6 @@ app.use(cors());
 
 // parse cookies
 app.use(cookieParser());
-app.use(
-	session({
-		secret: "F23e12WF",
-		resave: true,
-		saveUninitialized: true,
-	})
-);
 
 //socket start
 var httpServer: any;
