@@ -131,9 +131,9 @@ export default class WhatsAppAPIService {
 	private static messageTextFor = (template_name: NOTIFICATION_TEMPLATE, message_data: MessagePayload): string => {
 		switch (template_name) {
 			case NOTIFICATION_TEMPLATE.CREATE:
-				return `Hi ${message_data.customer_name}, your order #${message_data.order_number} has been received. We'll notify you when it's ready.`;
+				return `Dear ${message_data.customer_name}, your order #${message_data.order_number} has been received. We'll notify you when it's ready.`;
 			case NOTIFICATION_TEMPLATE.COMPLETE:
-				return `Hi ${message_data.customer_name}, your order #${message_data.order_number} is ready for pickup!`;
+				return `Dear ${message_data.customer_name}, your customer number #${message_data.order_number} is ready, so kindly collect it from us. Parth Tailor`;
 			default:
 				return `Hi ${message_data.customer_name}, update on your order #${message_data.order_number}.`;
 		}
