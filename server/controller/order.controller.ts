@@ -160,7 +160,7 @@ export default class OrderController {
 			// slow, misconfigured, or Meta is down. Failures are logged, not thrown.
 			WhatsAppAPIService.sendMessage(orderData.customer_mobile, NOTIFICATION_TEMPLATE.CREATE, {
 				customer_name: orderData.customer_name,
-				order_number: (data as any).bill_no?.toString() ?? "",
+				customer_id: (data as any).customer_id?.toString() ?? "",
 			}).catch((error) => logger.error(`Failed to send order-created WhatsApp notification: ${error}`));
 
 			return res.api.create(data);

@@ -10,7 +10,7 @@ import { NOTIFICATION_TEMPLATE } from "../constants";
 
 interface MessagePayload {
 	customer_name: string;
-	order_number: string;
+	customer_id: string;
 }
 
 export type WhatsAppConnectionStatus = "disabled" | "connecting" | "waiting_for_scan" | "connected" | "disconnected";
@@ -131,11 +131,11 @@ export default class WhatsAppAPIService {
 	private static messageTextFor = (template_name: NOTIFICATION_TEMPLATE, message_data: MessagePayload): string => {
 		switch (template_name) {
 			case NOTIFICATION_TEMPLATE.CREATE:
-				return `Dear ${message_data.customer_name}, your order #${message_data.order_number} has been received. We'll notify you when it's ready.`;
+				return `Dear ${message_data.customer_name}, your order #${message_data.customer_id} has been received. We'll notify you when it's ready.\nParth Tailor`;
 			case NOTIFICATION_TEMPLATE.COMPLETE:
-				return `Dear ${message_data.customer_name}, your customer number #${message_data.order_number} is ready, so kindly collect it from us. Parth Tailor`;
+				return `Dear ${message_data.customer_name}, your customer number #${message_data.customer_id} is ready, so kindly collect it from us.\nParth Tailor`;
 			default:
-				return `Hi ${message_data.customer_name}, update on your order #${message_data.order_number}.`;
+				return `Hi ${message_data.customer_name}, update on your order (customer #${message_data.customer_id}).`;
 		}
 	};
 

@@ -192,7 +192,7 @@ export default class OrderController {
 						if (!wasAlreadyComplete && status_data.status == "complete" && status_data.mobile_number) {
 							WhatsAppAPIService.sendMessage(status_data.mobile_number, NOTIFICATION_TEMPLATE.COMPLETE, {
 								customer_name: status_data.customer_name,
-								order_number: status_data.bill_no.toString(),
+								customer_id: status_data.customer_no.toString(),
 							}).catch((error) => logger.error(`Failed to send order-ready WhatsApp notification: ${error}`));
 						}
 					});
